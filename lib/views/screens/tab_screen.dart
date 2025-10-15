@@ -175,12 +175,15 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:skillsbank/views/screens/splash.dart';
+
+import 'swipe.dart';
 
 class TabScreen extends StatelessWidget {
   const TabScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return  SwipeScreen();
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'home_page.dart'; // Assuming this is your HomePage widget
+import 'home_screen.dart'; // Assuming this is your HomePage widget
 
 class SwipeScreen extends StatefulWidget {
   const SwipeScreen({super.key});
@@ -14,11 +14,9 @@ class _SwipeScreenState extends State<SwipeScreen>
     with TickerProviderStateMixin {
   // Page View Controller
   PageController? _pageController;
-  // int _currentPage = 0; // Tracks the fully visible page index
-  double _scrollPosition =
-      0.0; // Tracks the scroll position (e.g., 0.5 between page 0 and 1)
+  double _scrollPosition = 0.0;
 
-  // List of PageView content (moved here for easier use)
+  // List of PageView content (omitted for brevity)
   final List<String> corouselTitles = [
     "Learn New Skills",
     "Connect with Experts",
@@ -29,26 +27,27 @@ class _SwipeScreenState extends State<SwipeScreen>
     "Get personalized guidance and insights from industry-leading experts",
     "Stay ahead in your field by exploring the latest and most trending topics",
   ];
-  final int pageCount = 3; // Total number of pages
+  final int pageCount = 3;
 
-  // Hint Animation (Pulsating "SWIPE UP" text)
+  // Hint Animation, Drag Offset, and Snap Controllers (omitted for brevity)
   late AnimationController _hintController;
   late Animation<double> _opacityAnimation;
-
   double _dragOffset = 0.0;
   late AnimationController _snapToZeroController;
   late Animation<double> _snapToZeroAnimation;
 
-  // Constants
+  // Constants (omitted for brevity)
   static const double _snapBackMaxPullDown = 50.0;
   static const double _navThreshold = -150.0;
   static const double _navVelocity = -1000.0;
+  // ... (rest of initState, dispose, and gesture handlers)
 
+  // Note: Your _snapToZeroController duration is very short (3 milliseconds)
+  // which might make the snap back animation barely visible. Consider changing it to
+  // const Duration(milliseconds: 300) for a smooth effect.
   @override
   void initState() {
     super.initState();
-
-    // Initialize PageController
     _pageController = PageController();
     _pageController!.addListener(_pageListener);
 
@@ -63,7 +62,9 @@ class _SwipeScreenState extends State<SwipeScreen>
 
     _snapToZeroController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(
+        milliseconds: 300,
+      ), // <-- Recommended change for smooth snap
     )..addListener(() {
       setState(() {
         _dragOffset = _snapToZeroAnimation.value;
@@ -74,9 +75,7 @@ class _SwipeScreenState extends State<SwipeScreen>
   void _pageListener() {
     if (_pageController!.page != null) {
       setState(() {
-        // Update both the integer page index and the double scroll position
         _scrollPosition = _pageController!.page!;
-        // _currentPage = _pageController!.page!.round();
       });
     }
   }
@@ -90,7 +89,8 @@ class _SwipeScreenState extends State<SwipeScreen>
     super.dispose();
   }
 
-  // --- GESTURE HANDLERS (Unchanged) ---
+  // ... (rest of gesture handlers: _onVerticalDragUpdate, _onVerticalDragEnd, _snapBackToZero, _navigateToNextPage)
+
   void _onVerticalDragUpdate(DragUpdateDetails details) {
     if (_snapToZeroController.isAnimating) {
       _snapToZeroController.stop();
@@ -123,36 +123,23 @@ class _SwipeScreenState extends State<SwipeScreen>
   }
 
   void _navigateToNextPage() {
-    Navigator.of(context).push(
+    Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 0),
         pageBuilder:
-            (context, animation, secondaryAnimation) => const HomePage(),
+            (context, animation, secondaryAnimation) => const HomeScreen(),
       ),
     );
   }
-  // -------------------------------------
 
-  // --- WIDGET BUILDER METHOD ---
-
-  // Helper method to build a single dot with dynamic color
+  // Helper method to build a single dot with dynamic color (omitted for brevity)
   Widget _buildDot(int index) {
-    // Determine the alpha/opacity based on distance from the current scroll position
     double opacity = 1.0 - (_scrollPosition - index).abs();
-    opacity = opacity.clamp(0.4, 1.0); // Clamp opacity between 40% and 100%
-
-    // Color interpolation for smooth transition
+    opacity = opacity.clamp(0.4, 1.0);
     Color color =
-        Color.lerp(
-          Colors.white54, // Inactive color
-          Colors.white, // Active color
-          opacity * 2 - 1, // Map opacity (0.4-1.0) to lerp factor (0.0-1.0)
-        ) ??
-        Colors.white54; // Default to inactive color
-
-    // Size interpolation (optional, but enhances visual feedback)
-    double size = 10.0 + (opacity - 0.4) * (15.0 / 0.6); // Scale size slightly
-
+        Color.lerp(Colors.white54, Colors.white, opacity * 2 - 1) ??
+        Colors.white54;
+    double size = 10.0 + (opacity - 0.4) * (15.0 / 0.6);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: Icon(Icons.circle, size: size.clamp(10.0, 12.0), color: color),
@@ -181,7 +168,46 @@ class _SwipeScreenState extends State<SwipeScreen>
             color: const Color.fromARGB(255, 0, 40, 40).withOpacity(.4),
           ),
 
-          // 3. PAGE VIEW CONTENT
+          // 3. PAGE VIEW CONTENT (MOVED HERE - STATIC BACKGROUND)
+          // It must be placed OUTSIDE the GestureDetector/Transform
+          PageView.builder(
+            controller: _pageController, // Attach controller
+            itemCount: pageCount,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  top: screenHeight / 1.8,
+                  left: 20,
+                  right: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      corouselTitles[index],
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        fontSize: 45,
+                        height: 1,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      corouselSubtitles[index],
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
 
           // 4. BOTTOM GRADIENT (STATIC - not moving with the drag)
           Positioned(
@@ -207,53 +233,18 @@ class _SwipeScreenState extends State<SwipeScreen>
             ),
           ),
 
-          // 5. DRAGGABLE UNIT (DOTS + SWIPE HINT)
+          // 5. DRAGGABLE UNIT (DOTS + SWIPE HINT - Now only contains the moving parts)
           GestureDetector(
             onVerticalDragUpdate: _onVerticalDragUpdate,
             onVerticalDragEnd: _onVerticalDragEnd,
-            // Use Positioned.fill to allow gestures across the whole screen
-            child: Positioned.fill(
+            // *** FIX 1: Replace Positioned.fill with SizedBox.expand ***
+            // This ensures the GestureDetector fills the Stack without adding layout constraints
+            child: SizedBox.expand(
               child: Transform.translate(
                 offset: Offset(0, _dragOffset),
                 child: Stack(
+                  // This stack now ONLY holds the draggable UI elements (Dots and Hint)
                   children: [
-                    PageView.builder(
-                      controller: _pageController, // Attach controller
-                      itemCount: pageCount,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            top: screenHeight / 1.8,
-                            left: 20,
-                            right: 20,
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                corouselTitles[index],
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                  fontSize: 50,
-                                  height: 1,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Text(
-                                corouselSubtitles[index],
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
                     // DOTS (Dynamically colored)
                     Positioned(
                       bottom: screenHeight / 7,

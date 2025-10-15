@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:skillsbank/theme/app_colors.dart';
 
+import '../../constants/app_brand.dart';
 import 'tab_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -34,33 +36,13 @@ class _SplashScreenState extends State<SplashScreen> {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Color(0xFF084C4D), 
-                  Color(0xFF071919), 
-                ],
-                begin: Alignment.topCenter, 
-                end: Alignment.bottomCenter, 
+                colors: [AppColors.secondaryColor, AppColors.primaryColor],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
-          Center(
-            child: Row(mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset('assets/icons/brain.png', width: 35, height: 35),
-                SizedBox(width: 10),
-                // Image.asset('assets/icons/skillsbank.png',  ),
-                Text(
-                  'Skillsbank',
-                  style: TextStyle(
-                    fontFamily: "Nunito Sans",
-                    fontSize: 25,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          Center(child: appBrand()),
         ],
       ),
     );

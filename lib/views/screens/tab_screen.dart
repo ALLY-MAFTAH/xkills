@@ -175,7 +175,6 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:skillsbank/views/screens/splash.dart';
 
 import 'swipe.dart';
 

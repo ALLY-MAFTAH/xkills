@@ -5,4 +5,15 @@ class Endpoints {
 
   // Auth
   static String login = dotenv.env['LOGIN']!;
+  static String signup = dotenv.env['SIGNUP']!;
+  static String changePassowrd = dotenv.env['CHANGE_PASSWORD']!;
+  static String forgotPassowrd = dotenv.env['FORGOT_PASSWORD']!;
+  // Categories
+  static String getCategories = dotenv.env['GET_CATEGORIES']!;
+  // Courses
+  static String getCourses = dotenv.env['GET_COURSES']!;
+  static String getMyCourses = dotenv.env['GET_MY_COURSES']!;
+  // Sections
+  static String getSections = dotenv.env['GET_SECTIONS']!;
+  static String updateWatchHistory = dotenv.env['UPDATE_WATCH_HISTORY']!;
 }

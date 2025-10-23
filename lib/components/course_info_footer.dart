@@ -6,7 +6,6 @@ class CourseInfoFooter extends StatelessWidget {
   final String courseDescription;
   final double rating; // Rating variable (e.g., 4.5)
   final bool isBookmarked;
-  final bool isPremium;
   final VoidCallback onBookmarkPressed;
 
   const CourseInfoFooter({
@@ -15,7 +14,6 @@ class CourseInfoFooter extends StatelessWidget {
     required this.courseDescription,
     required this.rating,
     required this.isBookmarked,
-    required this.isPremium,
     required this.onBookmarkPressed,
   });
 
@@ -66,27 +64,20 @@ class CourseInfoFooter extends StatelessWidget {
       child: Stack(
         children: [
           // 1. White Overlay for the "White Overlay" requirement
-          Positioned.fill(
-            child: Container(
-              color: Colors.white.withOpacity(
-                0.12,
-              ), // Subtle white overlay effect
-            ),
-          ),
-          if (isPremium)
             Positioned.fill(
-              child: CircleAvatar(
-                child: Text(
-                  '👑',
-                  style: TextStyle(
-                    fontSize: 18,
-                    height: 1,
-                    color: Colors.amber[700],
-                  ),
-                ), // Subtle white overlay effect
+            child: Container(
+              decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                Colors.white.withOpacity(0.1),
+                AppColors.secondaryColor.withOpacity(0.3),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
               ),
             ),
-
+            ),
           // 2. Original content (Padding added for clean spacing)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),

@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:skillsbank/views/screens/tab_screen.dart';
 import '../constants/endpoints.dart';
 import '../enums/enums.dart';
-import '/controllers/auth_controller.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_storage/get_storage.dart';
@@ -26,10 +25,11 @@ class HttpService {
       final storage = GetStorage();
       // final authController = Get.put(AuthController());
 
-      // final userToken =
-      //     isFirstLogin
-      //         ? authController.temporaryUserToken
-      //         : storage.read("userToken");
+      final userToken =
+          // isFirstLogin
+          //     ? authController.temporaryUserToken
+          //     : 
+              storage.read("userToken");
 
       final fullUrl = '${Endpoints.baseUrl}/$url';
 
@@ -37,7 +37,7 @@ class HttpService {
           ? headers = <String, String>{'Content-Type': 'application/json'}
           : headers = <String, String>{
             'Content-Type': 'application/json',
-            // 'Authorization': 'Bearer $userToken',
+            'Authorization': 'Bearer $userToken',
           };
 
       print("SEEEE THEEEEEESEEEEEEEEE");

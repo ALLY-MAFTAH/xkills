@@ -41,6 +41,18 @@ dependencies:
   pinput: ^5.0.2
   sms_autofill: ^2.4.1
   swipe: ^0.0.1
+  hexcolor: ^3.0.1
+  shimmer: ^3.0.0
+  pod_player: ^0.2.2
+  flutter_svg: ^2.0.9
+  universal_html: ^2.2.4
+  flutter_html: ^3.0.0-beta.2
+  webview_flutter: ^4.4.4
+  logging: ^1.2.0
+  video_player: ^2.9.1
+  youtube_player_flutter: ^9.1.1
+  vimeo_embed_player: ^1.0.2
+
 
 
 
@@ -58,3 +70,10 @@ flutter:
     - assets/fonts/
     - assets/icons/
     - .env
+
+  fonts:
+    - family: Nunito Sans
+      fonts:
+        - asset: assets/fonts/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf
+        - asset: assets/fonts/NunitoSans-Italic-VariableFont_YTLC,opsz,wdth,wght.ttf
+

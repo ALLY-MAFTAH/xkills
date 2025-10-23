@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import 'avatar_widget.dart';
+import 'validations.dart';
 
 class GridCategoryCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final bool isPremium;
+  final bool isGolden;
 
   const GridCategoryCard({
     super.key,
     required this.title,
     required this.subtitle,
-    required this.isPremium,
+    required this.isGolden,
   });
 
   @override
@@ -82,7 +84,7 @@ class GridCategoryCard extends StatelessWidget {
                           fontSize: 12,
                         ),
                       ),
-                      if (isPremium)
+                      if (isGolden)
                         Text(
                           '👑',
                           style: TextStyle(
@@ -103,6 +105,42 @@ class GridCategoryCard extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 70, left: 10),
+              child: SizedBox(
+              height: 20,
+              width: 160,
+              child: Stack(
+                children: [
+                  for (int i = 0; i < 3 && i < 5; i++)
+                    Positioned(
+                      left: i * 14.0,
+                      child: AvatarWidget(
+                        photoUrl: "assets/images/teacher02.png",
+                        index: i,
+                        initial: getInitial("Ally Maftah"),
+                        radius: 8,
+                      ),
+                    ),
+                  if (3 > 5)
+                    Positioned(
+                      left: 6 * 14.0,
+                      child: CircleAvatar(
+                        radius: 10,
+                        backgroundColor: Colors.grey[300],
+                        child: Text(
+                          '+${3 - 5}',
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Color.fromARGB(255, 71, 71, 71),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
             ),
           ],
         ),

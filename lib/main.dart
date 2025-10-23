@@ -36,6 +36,12 @@ class MainApp extends StatelessWidget {
           tertiary: AppColors.tertiaryColor,
         ),
         useMaterial3: true,
+                textTheme: const TextTheme(
+        ).apply(
+          bodyColor: Colors.white, 
+          displayColor: Colors.white,
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),

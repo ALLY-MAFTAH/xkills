@@ -25,11 +25,8 @@ class HttpService {
       final storage = GetStorage();
       // final authController = Get.put(AuthController());
 
-      final userToken =
-          // isFirstLogin
-          //     ? authController.temporaryUserToken
-          //     : 
-              storage.read("userToken");
+      final userToken = "4|oQsrj7gsZK6TiSc4jmT0yErQsGTybqWjfpENMiAZcf22035d";
+      // final userToken = storage.read("userToken");
 
       final fullUrl = '${Endpoints.baseUrl}/$url';
 
@@ -49,8 +46,19 @@ class HttpService {
       }
 
       if (requestType == RequestType.GET) {
+        Map<String, String> queryParams = {};
+        if (body is Map) {
+          body.forEach((key, value) {
+            if (key != null && value != null) {
+              queryParams[key.toString()] = value.toString();
+            }
+          });
+        }
+        final urlWithParams = Uri.parse(
+          fullUrl,
+        ).replace(queryParameters: queryParams);
         final response = await http
-            .get(Uri.parse(fullUrl), headers: headers)
+            .get(urlWithParams, headers: headers)
             .timeout(const Duration(seconds: 30));
 
         return _handleResponse(response);

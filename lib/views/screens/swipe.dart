@@ -154,24 +154,21 @@ class _SwipeScreenState extends State<SwipeScreen>
       backgroundColor: const Color(0xFF071919),
       body: Stack(
         children: [
-          // 1. BACKGROUND IMAGE
+          // 1. BACKGROUND IMAGE & OVERLAY (Unchanged)
           Image.asset(
             "assets/images/swipe_back.png",
             width: Get.width,
             fit: BoxFit.fill,
           ),
-
-          // 2. BACKGROUND OVERLAY COLOR
           Container(
             height: screenHeight,
             width: Get.width,
             color: const Color.fromARGB(255, 0, 40, 40).withOpacity(.4),
           ),
 
-          // 3. PAGE VIEW CONTENT (MOVED HERE - STATIC BACKGROUND)
-          // It must be placed OUTSIDE the GestureDetector/Transform
+          // 2. PAGE VIEW (Unchanged)
           PageView.builder(
-            controller: _pageController, // Attach controller
+            controller: _pageController,
             itemCount: pageCount,
             itemBuilder: (context, index) {
               return Padding(
@@ -209,7 +206,7 @@ class _SwipeScreenState extends State<SwipeScreen>
             },
           ),
 
-          // 4. BOTTOM GRADIENT (STATIC - not moving with the drag)
+          // 3. BOTTOM GRADIENT (Unchanged)
           Positioned(
             bottom: 0,
             left: 0,
@@ -233,75 +230,81 @@ class _SwipeScreenState extends State<SwipeScreen>
             ),
           ),
 
-          // 5. DRAGGABLE UNIT (DOTS + SWIPE HINT - Now only contains the moving parts)
+          // ⭐️ 4. GESTURE DETECTOR and ANIMATED INDICATORS
+          // We wrap the entire swipe region in GestureDetector
           GestureDetector(
             onVerticalDragUpdate: _onVerticalDragUpdate,
             onVerticalDragEnd: _onVerticalDragEnd,
-            // *** FIX 1: Replace Positioned.fill with SizedBox.expand ***
-            // This ensures the GestureDetector fills the Stack without adding layout constraints
-            child: SizedBox.expand(
-              child: Transform.translate(
-                offset: Offset(0, _dragOffset),
-                child: Stack(
-                  // This stack now ONLY holds the draggable UI elements (Dots and Hint)
-                  children: [
-                    // DOTS (Dynamically colored)
-                    Positioned(
-                      bottom: screenHeight / 7,
-                      left: 0,
-                      right: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(pageCount, (index) {
-                          return _buildDot(index);
-                        }),
-                      ),
+            
+            // Limit the gesture detection area to the bottom half of the screen
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                // This makes the target hit box span the full width
+                width: Get.width, 
+                // Adjust height to cover the region where user might swipe
+                height: screenHeight / 2.5, 
+                color: Colors.transparent, // Important: Use transparent color for hit testing
+              ),
+            ),
+          ),
+          
+          // ⭐️ 5. ANIMATED INDICATORS (Slightly restructured for cleaner layout)
+          AnimatedBuilder(
+            animation: _opacityAnimation,
+            builder: (context, child) {
+              double dragFade =
+                  1.0 -
+                  (_dragOffset.abs() / _navThreshold.abs()).clamp(0.0, 1.0);
+              return Opacity(
+                opacity: (_opacityAnimation.value * dragFade).clamp(0.0, 1.0),
+                child: child,
+              );
+            },
+            // The indicators and swipe text are now the child of the AnimatedBuilder
+            child: Transform.translate(
+              offset: Offset(0, _dragOffset),
+              child: Stack(
+                children: [
+                  Positioned(
+                    bottom: screenHeight / 7,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(pageCount, (index) {
+                        return _buildDot(index);
+                      }),
                     ),
+                  ),
 
-                    // SWIPE TEXT AND ARROWS
-                    Positioned(
-                      bottom: screenHeight * 0.02,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: AnimatedBuilder(
-                          animation: _opacityAnimation,
-                          builder: (context, child) {
-                            double dragFade =
-                                1.0 -
-                                (_dragOffset.abs() / _navThreshold.abs()).clamp(
-                                  0.0,
-                                  1.0,
-                                );
-                            return Opacity(
-                              opacity: (_opacityAnimation.value * dragFade)
-                                  .clamp(0.0, 1.0),
-                              child: child,
-                            );
-                          },
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                'SWIPE UP',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Icon(
-                                Icons.keyboard_double_arrow_up_rounded,
-                                color: Colors.white,
-                                size: 35,
-                              ),
-                            ],
+                  // SWIPE TEXT AND ARROWS
+                  Positioned(
+                    bottom: screenHeight * 0.02,
+                    left: 0,
+                    right: 0,
+                    child: const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'SWIPE UP',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
+                          Icon(
+                            Icons.keyboard_double_arrow_up_rounded,
+                            color: Colors.white,
+                            size: 35,
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -309,4 +312,5 @@ class _SwipeScreenState extends State<SwipeScreen>
       ),
     );
   }
+
 }

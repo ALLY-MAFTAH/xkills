@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../components/toasts.dart';
 import '../constants/endpoints.dart';
 import '../enums/enums.dart';
@@ -8,12 +9,17 @@ import '../services/http_service.dart';
 
 class CourseController extends GetxController {
   Course selectedCourse = Course();
-
   Future<List<Course>>? coursesFuture;
   List<Course> _courses = [];
   List<Course> get courses => _courses;
   final List<DropdownMenuItem<String>> _courseList = [];
   List<DropdownMenuItem<String>> get coursesDropdown => _courseList;
+
+  Duration cartTimeout = Duration(hours: 1);
+  Future<List<Course>>? cartListFuture;
+  List<Course> _cartList = [];
+  List<Course> get cartList => _cartList;
+  bool isLoading = false;
 
   Future<List<Course>> getCourses() async {
     try {
@@ -43,6 +49,65 @@ class CourseController extends GetxController {
     }
     await updateCourseDropdownList();
     return courses;
+  }
+
+  Future<List<Course>> getCartList() async {
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.GET,
+        Endpoints.getCartList,
+        {},
+        false,
+      );
+      if (responseData == null) return cartList;
+
+      final List fetchedCarts = responseData;
+      _cartList = [];
+      if (fetchedCarts.isNotEmpty) {
+        for (var cart in fetchedCarts) {
+          final calledDataSet = Course.fromJson(cart);
+          _cartList.add(calledDataSet);
+        }
+      }
+      print(cartList);
+      update();
+      return cartList;
+    } catch (e) {
+      print(e.toString());
+      errorToast(e.toString());
+    } finally {
+      isLoading = false;
+      update();
+    }
+    return cartList;
+  }
+
+  Future<String> addOrRemoveCart(int courseId) async {
+    print("Reached here");
+    isLoading = true;
+    update();
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.GET,
+        Endpoints.addOrRemoveCart,
+        {"course_id": courseId},
+        false,
+      );
+      if (responseData == null) return "";
+      print(responseData);
+      String returnedStatus = responseData['status'];
+
+      print(returnedStatus);
+      cartListFuture = getCartList();
+      update();
+      return returnedStatus;
+    } catch (e) {
+      print(e.toString());
+      errorToast(e.toString());
+    } finally {
+      update();
+    }
+    return "";
   }
 
   Future<void> updateCourseDropdownList() async {

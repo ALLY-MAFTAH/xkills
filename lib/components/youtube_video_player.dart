@@ -1,18 +1,14 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
 import '../constants/app_brand.dart';
 import '../theme/app_colors.dart';
 
-// Define the main widget for the YouTube video player
-class YoutubeVideoPlayerFlutter extends StatefulWidget {
+class YoutubeVideoPlayer extends StatefulWidget {
   final int courseId;
   final int? lessonId;
   final String videoUrl;
-  const YoutubeVideoPlayerFlutter({
+  const YoutubeVideoPlayer({
     super.key,
     required this.courseId,
     this.lessonId,
@@ -20,19 +16,14 @@ class YoutubeVideoPlayerFlutter extends StatefulWidget {
   });
 
   @override
-  State<YoutubeVideoPlayerFlutter> createState() =>
-      _YoutubeVideoPlayerFlutterState();
+  State<YoutubeVideoPlayer> createState() => _YoutubeVideoPlayerState();
 }
 
-class _YoutubeVideoPlayerFlutterState extends State<YoutubeVideoPlayerFlutter> {
+class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
   late YoutubePlayerController _controller;
   late TextEditingController _idController;
   late TextEditingController _seekToController;
 
-  late PlayerState _playerState;
-  late YoutubeMetaData _videoMetaData;
-  double _volume = 100;
-  bool _muted = false;
   bool _isPlayerReady = false;
 
   @override
@@ -53,16 +44,11 @@ class _YoutubeVideoPlayerFlutterState extends State<YoutubeVideoPlayerFlutter> {
     )..addListener(listener);
     _idController = TextEditingController();
     _seekToController = TextEditingController();
-    _videoMetaData = const YoutubeMetaData();
-    _playerState = PlayerState.unknown;
   }
 
   void listener() {
     if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
-      });
+      setState(() {});
     }
   }
 
@@ -101,15 +87,15 @@ class _YoutubeVideoPlayerFlutterState extends State<YoutubeVideoPlayerFlutter> {
   @override
   Widget build(BuildContext context) {
     return YoutubePlayerBuilder(
-      // onExitFullScreen and player definition are correct here (keep them!)
-      // onExitFullScreen: () {
-      //   // The player forces portraitUp after exiting fullscreen. This overrides the behaviour.
-      //   SystemChrome.setPreferredOrientations(DeviceOrientation.values);
-      // },
       player: YoutubePlayer(
         controller: _controller,
         showVideoProgressIndicator: true,
-        progressIndicatorColor: Colors.blueAccent,
+        progressColors: const ProgressBarColors(
+          playedColor: Colors.white, // The progress bar color (slider)
+          handleColor: Colors.white, // The scrubber handle color
+          bufferedColor: Colors.grey, // The loaded video part (buffer)
+          backgroundColor: Colors.white30, // The remaining track
+        ),
         topActions: <Widget>[
           const SizedBox(width: 8.0),
           Expanded(
@@ -120,12 +106,12 @@ class _YoutubeVideoPlayerFlutterState extends State<YoutubeVideoPlayerFlutter> {
               maxLines: 1,
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.settings, color: Colors.white, size: 25.0),
-            onPressed: () {
-              log('Settings Tapped!');
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.settings, color: Colors.white, size: 25.0),
+          //   onPressed: () {
+          //     log('Settings Tapped!');
+          //   },
+          // ),
         ],
         onReady: () {
           _isPlayerReady = true;
@@ -133,16 +119,9 @@ class _YoutubeVideoPlayerFlutterState extends State<YoutubeVideoPlayerFlutter> {
       ),
       builder:
           (context, player) => Scaffold(
-            // 'player' here is the correct widget
             backgroundColor: Colors.transparent,
             extendBodyBehindAppBar: true,
-            appBar: AppBar(
-              leading: null,
-              automaticallyImplyLeading: false,
-              title: appBrand(),
-              backgroundColor: Colors.transparent,
-              toolbarHeight: Platform.isAndroid ? 60 : 30,
-            ),
+
             body: Stack(
               children: [
                 // 1. Background Gradient
@@ -159,7 +138,10 @@ class _YoutubeVideoPlayerFlutterState extends State<YoutubeVideoPlayerFlutter> {
                   ),
                 ),
                 Positioned(
-                  top: MediaQuery.of(context).padding.top + 15,
+                  top:
+                      Platform.isAndroid
+                          ? MediaQuery.of(context).padding.top + 15
+                          : MediaQuery.of(context).padding.top,
                   left: 10,
                   child: Container(
                     width: 40,
@@ -181,7 +163,16 @@ class _YoutubeVideoPlayerFlutterState extends State<YoutubeVideoPlayerFlutter> {
                     ),
                   ),
                 ),
+                Positioned(
+                  top:
+                      Platform.isAndroid
+                          ? MediaQuery.of(context).padding.top + 15
+                          : MediaQuery.of(context).padding.top,
+                  left: 0,
+                  right: 0,
 
+                  child: appBrand(),
+                ),
                 Center(child: player),
 
                 Visibility(

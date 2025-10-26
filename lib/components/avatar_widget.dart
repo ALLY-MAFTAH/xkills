@@ -1,25 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import '../../constants/endpoints.dart';
 import '../../theme/app_colors.dart';
 
 class AvatarWidget extends StatelessWidget {
-  final String? photoUrl;
+  final IconData? icon;
+  final Color? iconColor;
   final String? initial;
-  final double? radius;
+  final double radius; // Made non-nullable, using 25 as default
   final int index;
 
   const AvatarWidget({
     super.key,
-    this.photoUrl,
+    this.icon,
+    this.iconColor,
     this.initial,
-    this.radius = 25,
+    this.radius = 25, // Default is 25
     required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
+    // 1. Determine Background Color based on index
     final colors = [
       AppColors.primaryColor,
       AppColors.secondaryColor,
@@ -27,43 +27,38 @@ class AvatarWidget extends StatelessWidget {
     ];
     final bgColor = colors[index % colors.length];
 
+    // 2. Determine Content (Icon or Initial Text)
+    Widget content;
+    double contentSize = radius * 0.8; // Icon size or text font size
+
+    if (icon != null) {
+      // Case 1: Display Icon
+      content = Icon(
+        icon,
+        size: contentSize,
+        color: iconColor ?? Colors.white,
+      );
+    } else {
+      // Case 2: Display Initial Text
+      content = Text(
+        initial ?? "",
+        style: TextStyle(
+          fontSize: contentSize * 0.8, // Slightly smaller font than icon size
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    }
+
+    // 3. Build the final CircleAvatar
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: bgColor,
-        ),
-      ),
-      child: CachedNetworkImage(
-        imageUrl: photoUrl == null ? "" : photoUrl!,
-        imageBuilder:
-            (context, imageProvider) => CircleAvatar(
-              radius: radius,
-              backgroundImage: imageProvider,
-              backgroundColor: photoUrl == null ? bgColor : null,
-            ),
-        placeholder:
-            (context, url) => Center(
-              child: SizedBox(
-                width: 2 * (radius ?? 25),
-                height: 2 * (radius ?? 25),
-                child: CupertinoActivityIndicator(
-                  radius: 3,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-            ),
-        errorWidget:
-            (context, url, error) => CircleAvatar(
-              radius: radius,
-              backgroundColor: bgColor,
-              child: Text(
-                initial ?? "",
-                style: TextStyle(fontSize: radius!-0, color: Colors.white),
-              ),
-            ),
+      // Removed redundant border property from the outer Container
+      child: CircleAvatar(
+        radius: radius,
+        backgroundColor: bgColor,
+        child: content,
       ),
     );
   }

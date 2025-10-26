@@ -19,10 +19,10 @@ class GridCategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.all(0),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(10),
         child: Stack(
           children: [
             Positioned.fill(
@@ -81,8 +81,10 @@ class GridCategoryCard extends StatelessWidget {
                         title,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 12,
-                        ),
+                          fontSize: 10,
+                          
+                        ),maxLines: 1,
+                        overflow: TextOverflow.ellipsis
                       ),
                       if (isGolden)
                         Text(
@@ -99,7 +101,7 @@ class GridCategoryCard extends StatelessWidget {
                     subtitle,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 24,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -117,7 +119,8 @@ class GridCategoryCard extends StatelessWidget {
                     Positioned(
                       left: i * 14.0,
                       child: AvatarWidget(
-                        photoUrl: "assets/images/teacher02.png",
+                        icon: Icons.piano,
+                        iconColor:Colors.orange,
                         index: i,
                         initial: getInitial("Ally Maftah"),
                         radius: 8,

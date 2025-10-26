@@ -145,10 +145,7 @@ class _GridCourseCardState extends State<GridCourseCard> {
               right: 0,
               bottom: 0,
               child: CourseInfoFooter(
-                courseTitle: widget.thisCourse.title!,
-                courseDescription: widget.thisCourse.shortDescription!,
-                rating: widget.thisCourse.averageRating!,
-                isBookmarked: widget.thisCourse.isBest!,
+                thisCourse: widget.thisCourse,
                 onBookmarkPressed: () {},
               ),
             ),

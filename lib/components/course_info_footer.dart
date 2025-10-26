@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
+import '../models/course.dart';
 import '/theme/app_colors.dart'; // Ensure this path is correct
 
 class CourseInfoFooter extends StatelessWidget {
-  final String courseTitle;
-  final String courseDescription;
-  final double rating; // Rating variable (e.g., 4.5)
-  final bool isBookmarked;
+  final Course thisCourse;
   final VoidCallback onBookmarkPressed;
 
   const CourseInfoFooter({
     super.key,
-    required this.courseTitle,
-    required this.courseDescription,
-    required this.rating,
-    required this.isBookmarked,
+    required this.thisCourse,
     required this.onBookmarkPressed,
   });
 
@@ -33,13 +28,11 @@ class CourseInfoFooter extends StatelessWidget {
         icon = Icons.star_half;
       } else {
         icon = Icons.star_border;
-        color = Colors.white70; // Use a dimmer color for empty stars
+        color = Colors.white70;
       }
 
       stars.add(Icon(icon, color: color, size: 12));
     }
-
-    // Add the numeric rating next to the stars
     stars.add(
       Padding(
         padding: const EdgeInsets.only(left: 4.0),
@@ -64,20 +57,20 @@ class CourseInfoFooter extends StatelessWidget {
       child: Stack(
         children: [
           // 1. White Overlay for the "White Overlay" requirement
-            Positioned.fill(
+          Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                Colors.white.withOpacity(0.1),
-                AppColors.secondaryColor.withOpacity(0.3),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.white.withOpacity(0.1),
+                    AppColors.secondaryColor.withOpacity(0.3),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
             ),
-            ),
+          ),
           // 2. Original content (Padding added for clean spacing)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -89,7 +82,7 @@ class CourseInfoFooter extends StatelessWidget {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: '$courseTitle: ',
+                        text: '${thisCourse.title}: ',
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -98,7 +91,7 @@ class CourseInfoFooter extends StatelessWidget {
                       ),
                       // Course Description (Gray, Not Bolded, Truncated)
                       TextSpan(
-                        text: courseDescription,
+                        text: thisCourse.shortDescription,
                         style: TextStyle(
                           color: Colors.grey[300], // Gray color
                           fontWeight: FontWeight.normal,
@@ -114,13 +107,17 @@ class CourseInfoFooter extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildRatingStars(rating),
-                    InkWell(
-                      onTap: onBookmarkPressed,
-                      child: Icon(
-                        isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                        color: Colors.white,
-                        size: 20,
+                    _buildRatingStars(thisCourse.averageRating ?? 0.0),
+                    Text(
+                      thisCourse.isPaid!
+                          ? thisCourse.discountedPrice != null
+                              ? '\$${thisCourse.discountedPrice}'
+                              : '${thisCourse.price}'
+                          : "Free",
+                      style: const TextStyle(
+                        color: Color(0xFFE6C068),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ],

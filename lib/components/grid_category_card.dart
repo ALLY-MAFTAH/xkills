@@ -69,7 +69,7 @@ class GridCategoryCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -77,20 +77,23 @@ class GridCategoryCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          
-                        ),maxLines: 1,
-                        overflow: TextOverflow.ellipsis
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
+                      SizedBox(width: 10),
                       if (isGolden)
                         Text(
                           '👑',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             height: 1,
                             color: Colors.amber[700],
                           ),
@@ -104,46 +107,48 @@ class GridCategoryCard extends StatelessWidget {
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 70, left: 10),
+              padding: EdgeInsets.only(top: 55, left: 10),
               child: SizedBox(
-              height: 20,
-              width: 160,
-              child: Stack(
-                children: [
-                  for (int i = 0; i < 3 && i < 5; i++)
-                    Positioned(
-                      left: i * 14.0,
-                      child: AvatarWidget(
-                        icon: Icons.piano,
-                        iconColor:Colors.orange,
-                        index: i,
-                        initial: getInitial("Ally Maftah"),
-                        radius: 8,
+                height: 20,
+                width: 160,
+                child: Stack(
+                  children: [
+                    for (int i = 0; i < 3 && i < 5; i++)
+                      Positioned(
+                        left: i * 14.0,
+                        child: AvatarWidget(
+                          icon: Icons.piano,
+                          iconColor: Colors.orange,
+                          index: i,
+                          initial: getInitial("Ally Maftah"),
+                          radius: 8,
+                        ),
                       ),
-                    ),
-                  if (3 > 5)
-                    Positioned(
-                      left: 6 * 14.0,
-                      child: CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.grey[300],
-                        child: Text(
-                          '+${3 - 5}',
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: Color.fromARGB(255, 71, 71, 71),
+                    if (3 > 5)
+                      Positioned(
+                        left: 6 * 14.0,
+                        child: CircleAvatar(
+                          radius: 10,
+                          backgroundColor: Colors.grey[300],
+                          child: Text(
+                            '+${3 - 5}',
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Color.fromARGB(255, 71, 71, 71),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
             ),
           ],
         ),

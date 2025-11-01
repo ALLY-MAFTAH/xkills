@@ -1,65 +1,48 @@
-
 class User {
   int? id;
+  String? name;
+  String? role;
   String? email;
   String? phone;
-  String? accountType;
-  bool? isFirstLogin;
-  bool? isActive;
-  bool? isSuperAdmin;
-  DateTime? lastLogin;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  String? resetToken;
-  DateTime? resetTokenExpiry;
-  String? profilePictureUrl;
-  String? fullName;
+  int? status;
+  String? photo;
+  String? address;
 
   User({
     this.id,
+    this.name,
+    this.role,
     this.email,
     this.phone,
-    this.accountType,
-    this.isFirstLogin,
-    this.isActive,
-    this.isSuperAdmin,
-    this.lastLogin,
-    this.createdAt,
-    this.updatedAt,
-    this.resetToken,
-    this.resetTokenExpiry,
-    this.profilePictureUrl,
-    this.fullName,
+    this.status,
+    this.photo,
+    this.address,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
-
     var user = User(
-      id: json['userId'] as int?,
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      role: json['role'] as String?,
       email: json['email'] as String?,
       phone: json['phone'] as String?,
-      accountType: json['accountType'] as String?,
-      isFirstLogin: json['isFirstLogin'] as bool?,
-      isActive: json['isActive'] as bool?,
-      isSuperAdmin: json['isSuperAdmin'] as bool?,
+      status: json['status'] as int?,
+      photo: json['photo'] as String?,
+      address: json['address'] as String?,
     );
-    user._setFullName();
     return user;
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'userId': id,
+      'id': id,
+      'role': role,
+      'name': name,
       'email': email,
       'phone': phone,
-      'accountType': accountType,
-      'isFirstLogin': isFirstLogin,
-      'isActive': isActive,
-      'isSuperAdmin': isSuperAdmin,
+      'status': status,
+      'photo': photo,
+      'address': address,
     };
-  }
-
-  void _setFullName() {
-    fullName = phone;
   }
 }

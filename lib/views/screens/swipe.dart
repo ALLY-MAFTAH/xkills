@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'home_screen.dart'; // Assuming this is your HomePage widget
+import '../auth/login_page.dart';
 
 class SwipeScreen extends StatefulWidget {
   const SwipeScreen({super.key});
@@ -127,7 +127,7 @@ class _SwipeScreenState extends State<SwipeScreen>
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 0),
         pageBuilder:
-            (context, animation, secondaryAnimation) => const HomeScreen(),
+            (context, animation, secondaryAnimation) => const LoginPage(),
       ),
     );
   }

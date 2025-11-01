@@ -15,7 +15,8 @@ import '../theme/app_colors.dart';
 Widget buildLessonItem(
   String title,
   String duration,
-  bool hasDownloadIcon,
+  bool userValidity,
+  bool hasAccess,
   Gradient gradient,
   double screenWidth,
   void Function()? onPlayPressed,
@@ -23,10 +24,10 @@ Widget buildLessonItem(
   void Function()? onUnlockPressed,
 ) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8),
+    padding: const EdgeInsets.symmetric(vertical: 5),
     child: Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         gradient: gradient,
         borderRadius: BorderRadius.circular(10),
@@ -44,21 +45,36 @@ Widget buildLessonItem(
           ),
           child: IconButton(
             style: IconButton.styleFrom(padding: EdgeInsets.zero),
-            icon: const Icon(
+            icon: Icon(
               Icons.play_arrow_rounded,
-              color: Colors.white,
+              color:
+                  hasAccess
+                      ? Colors.white
+                      : userValidity
+                      ? Colors.white
+                      : Colors.grey,
               size: 24,
             ),
-            onPressed: onPlayPressed,
+            onPressed:
+                hasAccess
+                    ? onPlayPressed
+                    : userValidity
+                    ? onPlayPressed
+                    : null,
           ),
         ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
-            color: Colors.white.withOpacity(0.9),
-            letterSpacing: 0.32,
+        horizontalTitleGap: 10,
+        title: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              color: Colors.white.withOpacity(0.9),
+            ),
           ),
         ),
 
@@ -77,8 +93,8 @@ Widget buildLessonItem(
                   color: Colors.white.withOpacity(0.9),
                 ),
               ),
-              const SizedBox(width: 15),
-              if (hasDownloadIcon)
+              const SizedBox(width: 5),
+              if( hasAccess)
                 SizedBox(
                   width: 30,
                   height: 30,
@@ -92,7 +108,23 @@ Widget buildLessonItem(
                     onPressed: onDownloadPressed,
                   ),
                 ),
-              if (!hasDownloadIcon)
+              if (! hasAccess
+                    )
+              if (userValidity)
+                SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: IconButton(
+                    style: IconButton.styleFrom(padding: EdgeInsets.zero),
+                    icon: const Icon(
+                      Icons.file_download_outlined,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                    onPressed: onDownloadPressed,
+                  ),
+                ),
+              if (!userValidity)
                 SizedBox(
                   width: 30,
                   height: 30,
@@ -116,8 +148,8 @@ Widget buildLessonItem(
 }
 
 Widget buildSectionHeader(String title) {
-  return Padding(
-    padding: const EdgeInsets.only(top: 15.0, bottom: 5.0),
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
     child: Text(
       title,
       style: const TextStyle(
@@ -152,7 +184,6 @@ Widget buildBuyButton(
   void Function()? onAddToCartPressed,
   void Function()? onViewCartPressed,
 ) {
-  final courseController = Get.put(CourseController());
   return Positioned(
     left: 0,
     right: 0,
@@ -215,7 +246,12 @@ Widget buildBuyButton(
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            '\$${thisCourse.discountedPrice}',
+                            thisCourse.isPaid!
+                                ? thisCourse.discountFlag! &&
+                                        thisCourse.discountedPrice != null
+                                    ? '\$${thisCourse.discountedPrice}'
+                                    : '${thisCourse.price}'
+                                : "Free",
                             style: const TextStyle(
                               color: Color(0xFF071B1A),
                               fontSize: 18,

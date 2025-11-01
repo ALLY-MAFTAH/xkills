@@ -123,7 +123,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         } else if (asyncSnapshot.data == null ||
                             asyncSnapshot.data!.isEmpty) {
-                          return Center(child: Text('No category yet'.tr));
+                          return Center(
+                            child: Text(
+                              'No category yet',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
                         } else {
                           final List<Category> categories = asyncSnapshot.data!;
 
@@ -138,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 10,
                                   mainAxisSpacing: 10,
-                                  childAspectRatio: 1.8,
+                                  childAspectRatio: 2.3,
                                 ),
                             itemBuilder: (context, index) {
                               final item = categories[index];
@@ -189,7 +194,34 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         } else if (asyncSnapshot.data == null ||
                             asyncSnapshot.data!.isEmpty) {
-                          return Center(child: Text('No course yet'.tr, style: TextStyle(color: Colors.white),));
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'No course yet'.tr,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                SizedBox(height: Get.height/10),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(elevation: 8,
+                                    backgroundColor: Colors.white.withOpacity(.1)
+                                  ),
+                                  onPressed: () {
+                                   _refreshData();
+                                  },
+                                  child: Text(
+                                    "Reload",
+                                    style: TextStyle(
+                                      color: const Color(0xFFE6C068),
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                              ],
+                            ),
+                          );
                         } else {
                           final List<Course> courses = asyncSnapshot.data!;
 

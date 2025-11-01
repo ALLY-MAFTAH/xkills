@@ -110,7 +110,7 @@ class CourseInfoFooter extends StatelessWidget {
                     _buildRatingStars(thisCourse.averageRating ?? 0.0),
                     Text(
                       thisCourse.isPaid!
-                          ? thisCourse.discountedPrice != null
+                          ? thisCourse.discountFlag!&&thisCourse.discountedPrice != null
                               ? '\$${thisCourse.discountedPrice}'
                               : '${thisCourse.price}'
                           : "Free",

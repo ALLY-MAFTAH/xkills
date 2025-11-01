@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:skillsbank/views/screens/tab_screen.dart';
-import '../constants/endpoints.dart';
-import '../enums/enums.dart';
 import 'package:get/get.dart';
+import '../constants/endpoints.dart';
+import '../controllers/auth_controller.dart';
+import '../enums/enums.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_storage/get_storage.dart';
 import 'package:http_parser/http_parser.dart';
@@ -23,10 +23,9 @@ class HttpService {
     Map<String, String> headers;
     try {
       final storage = GetStorage();
-      // final authController = Get.put(AuthController());
+      final authController = Get.put(AuthController());
 
-      final userToken = "4|oQsrj7gsZK6TiSc4jmT0yErQsGTybqWjfpENMiAZcf22035d";
-      // final userToken = storage.read("userToken");
+      final userToken = storage.read("userToken");
 
       final fullUrl = '${Endpoints.baseUrl}/$url';
 
@@ -116,11 +115,12 @@ class HttpService {
     print(response.statusCode);
     final storage = GetStorage();
     if (response.statusCode == 401) {
-      storage.remove("userToken");
-      storage.remove("refreshToken");
+      print(response.statusCode);
+      print(response);
+      final responseData = jsonDecode(response.body);
+      String message = responseData['message'];
+           throw message;
 
-      Get.off(() => TabScreen());
-      return null;
     } else if (response.statusCode == 200 || response.statusCode == 201) {
       print("object");
       final responseData = jsonDecode(response.body);
@@ -129,9 +129,7 @@ class HttpService {
     if (response.statusCode == 500) {
       print("HAAAAAApA");
       print(response);
-      // final responseData = jsonDecode(response.body);
-      // String message = responseData['errors'].toString();
-      String message = "server_error".tr;
+      String message = "Server error";
 
       throw message;
     } else if (response.statusCode == 400 || response.statusCode == 404) {

@@ -285,17 +285,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
 
                               if (asyncSnapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                // 1. Shimmer/Loading State for both the count and the list
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // ⭐️ Shimmer for the Lesson Count/Duration Row
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         const Text(
-                                          'Lessons in This Class',
+                                          'Lessons in This Course',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -328,35 +326,36 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                 );
                               } else if (asyncSnapshot.hasError) {
                                 return Center(
-                                  child: Text('Error: ${asyncSnapshot.error}'),
+                                  child: Text(
+                                    'Error: ${asyncSnapshot.error}',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 );
                               } else if (asyncSnapshot.data == null ||
                                   asyncSnapshot.data!.isEmpty) {
-                                return Center(child: Text('No section yet'.tr));
+                                return Center(
+                                  child: Text(
+                                    'No section yet',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                );
                               } else {
                                 final List<Section> sections =
                                     asyncSnapshot.data!;
-
-                                // 1. Calculate Total Lessons
                                 int totalLessons = sections.fold(
                                   0,
                                   (sum, section) =>
                                       sum + section.lessons!.length,
                                 );
-
-                                // 2. Calculate Total Duration in seconds
                                 int totalSeconds = sections.fold(0, (
                                   sum,
                                   section,
                                 ) {
-                                  // Use section.totalDuration and handle null/empty case
                                   String durationString =
                                       section.totalDuration ?? '00:00:00';
                                   return sum +
                                       durationToSeconds(durationString);
                                 });
-
-                                // 4. Format for display (e.g., "9h 28m")
                                 String displayDurationString;
                                 if (totalSeconds < 3600) {
                                   // Less than an hour: show M minutes and S seconds
@@ -384,7 +383,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         const Text(
-                                          'Lessons in This Class',
+                                          'Lessons in This Course',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -403,7 +402,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                     ),
                                     const SizedBox(height: 10),
                                     if (sections.length == 1)
-                                      // CASE 1: Only ONE Section - Display lessons directly
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -411,15 +409,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                             sections.first.lessons!.map((
                                               lesson,
                                             ) {
-                                              // Re-use the lesson item builder logic
                                               final lessonGradient =
                                                   getLessonGradient(lesson);
-
                                               return buildLessonItem(
                                                 lesson.title!,
                                                 lesson.duration!,
-                                                lesson.isFree == true ||
-                                                    lesson.userValidity == true,
+                                                lesson.userValidity!,
+                                                true,
                                                 lessonGradient,
                                                 screenWidth,
                                                 () {
@@ -460,82 +456,110 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                         children:
                                             sections.map((section) {
                                               return Theme(
-                                                // Use Theme to override divider color for ExpansionTile
                                                 data: Theme.of(
                                                   context,
                                                 ).copyWith(
-                                                  dividerColor:
-                                                      Colors.transparent,
+                                                  dividerColor: AppColors
+                                                      .secondaryColor
+                                                      .withOpacity(.5),
                                                 ),
-                                                child: ExpansionTile(
-                                                  // Customize ExpansionTile appearance for dark background
-                                                  iconColor: Colors.white,
-                                                  collapsedIconColor:
-                                                      Colors.white,
-                                                  tilePadding: EdgeInsets.zero,
-                                                  title: buildSectionHeader(
-                                                    section.title!,
-                                                  ), // Use your header style
-                                                  children:
-                                                      section.lessons!.map((
-                                                        lesson,
-                                                      ) {
-                                                        final lessonGradient =
-                                                            getLessonGradient(
-                                                              lesson,
-                                                            );
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        bottom: 5,
+                                                      ),
+                                                  child: ExpansionTile(
+                                                    iconColor: Colors.white,
+                                                    collapsedIconColor:
+                                                        Colors.white,
+                                                    tilePadding:
+                                                        EdgeInsets.symmetric(
+                                                          horizontal: 5,
+                                                        ),
+                                                    title: buildSectionHeader(
+                                                      "${(sections.indexOf(section) + 1).toString()}. ${section.title!}",
+                                                    ),
+                                                    collapsedBackgroundColor:
+                                                        AppColors.secondaryColor
+                                                            .withOpacity(.2),
+                                                    backgroundColor: AppColors
+                                                        .secondaryColor
+                                                        .withOpacity(.3),
+                                                    collapsedShape:
+                                                        RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10,
+                                                              ),
+                                                        ),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            10,
+                                                          ),
+                                                    ),
+                                                    childrenPadding:
+                                                        EdgeInsets.all(5),
+                                                    children:
+                                                        section.lessons!.map((
+                                                          lesson,
+                                                        ) {
+                                                          final lessonGradient =
+                                                              getLessonGradient(
+                                                                lesson,
+                                                              );
 
-                                                        return buildLessonItem(
-                                                          lesson.title!,
-                                                          lesson.duration!,
-                                                          lesson.isFree ==
-                                                                  true ||
-                                                              lesson.userValidity ==
-                                                                  true,
-                                                          lessonGradient,
-                                                          screenWidth,
-                                                          () {
-                                                            if (lesson.videoUrl !=
-                                                                    null &&
-                                                                lesson.id !=
-                                                                    null) {
-                                                              // ⭐️ CALL THE REUSABLE FUNCTION
-                                                              navigateToVideoPlayer(
-                                                                context:
-                                                                    context,
-                                                                videoUrl:
-                                                                    lesson
-                                                                        .videoUrl!,
-                                                                courseId:
-                                                                    thisCourse
-                                                                        .id!,
-                                                                lessonId:
-                                                                    lesson.id!,
-                                                              );
-                                                            } else {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (
-                                                                        context,
-                                                                      ) =>
-                                                                          NoPreviewVideo(),
-                                                                ),
-                                                              );
-                                                              print(
-                                                                "Lesson video URL is null",
-                                                              );
-                                                            }
-                                                          },
-                                                          () => print(
-                                                            "Lesson ${lesson.title} downloaded",
-                                                          ),
-                                                          () => print(
-                                                            "Lesson ${lesson.title} unlocked",
-                                                          ),
-                                                        );
-                                                      }).toList(),
+                                                          return buildLessonItem(
+                                                            lesson.title!,
+                                                            lesson.duration!,
+                                                            !lesson
+                                                                .userValidity!,
+                                                            false,
+                                                            lessonGradient,
+                                                            screenWidth,
+                                                            () {
+                                                              if (lesson.videoUrl !=
+                                                                      null &&
+                                                                  lesson.id !=
+                                                                      null) {
+                                                                navigateToVideoPlayer(
+                                                                  context:
+                                                                      context,
+                                                                  videoUrl:
+                                                                      lesson
+                                                                          .videoUrl!,
+                                                                  courseId:
+                                                                      thisCourse
+                                                                          .id!,
+                                                                  lessonId:
+                                                                      lesson
+                                                                          .id!,
+                                                                );
+                                                              } else {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (
+                                                                          context,
+                                                                        ) =>
+                                                                            NoPreviewVideo(),
+                                                                  ),
+                                                                );
+                                                                print(
+                                                                  "Lesson video URL is null",
+                                                                );
+                                                              }
+                                                            },
+                                                            () => print(
+                                                              "Lesson ${lesson.title} downloaded",
+                                                            ),
+                                                            () => print(
+                                                              "Lesson ${lesson.title} unlocked",
+                                                            ),
+                                                          );
+                                                        }).toList(),
+                                                  ),
                                                 ),
                                               );
                                             }).toList(),
@@ -545,7 +569,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                               }
                             },
                           ),
-                          const SizedBox(height: 85),
+                          SizedBox(height: thisCourse.isPaid! ? 85 : 170),
                         ],
                       ),
                     ),
@@ -558,6 +582,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               future: courseController.cartListFuture,
               builder: (context, cartSnapshot) {
                 if (cartSnapshot.connectionState == ConnectionState.waiting) {
+                  return Container();
+                }
+                if (!thisCourse.isPaid!) {
                   return Container();
                 }
                 return GetBuilder<CourseController>(

@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:skillsbank/components/toasts.dart';
+import '/components/toasts.dart';
 import '../../components/no_preview_video.dart';
 import '../../components/shimmer_widgets/section_list_shimmer.dart';
 import '../../controllers/course_controller.dart';
@@ -512,7 +512,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                           return buildLessonItem(
                                                             lesson.title!,
                                                             lesson.duration!,
-                                                            !lesson
+                                                            lesson
                                                                 .userValidity!,
                                                             false,
                                                             lessonGradient,
@@ -583,47 +583,47 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               builder: (context, cartSnapshot) {
                 if (cartSnapshot.connectionState == ConnectionState.waiting) {
                   return Container();
-                }
-                if (!thisCourse.isPaid!) {
+                } else if (!thisCourse.isPaid!) {
                   return Container();
-                }
-                return GetBuilder<CourseController>(
-                  builder: (courseController) {
-                    return buildBuyButton(
-                      thisCourse,
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (_) => PaymentOptionsScreen(
-                                totalAmount: double.parse(
-                                  thisCourse.discountedPrice.toString(),
-                                ),
-                              ),
-                        ),
-                      ),
-                      () {
-                        if (!courseController.isLoading) {
-                          courseController.addOrRemoveCart(thisCourse.id!).then(
-                            (status) {
-                              if (status == "added") {
-                                successToast("Course added to cart".tr);
-                              } else if (status == "removed") {
-                                successToast("Course removed from cart".tr);
-                              }
-                            },
-                          );
-                        }
-                      },
-                      () {
-                        Navigator.push(
+                } else {
+                  return GetBuilder<CourseController>(
+                    builder: (courseController) {
+                      return buildBuyButton(
+                        thisCourse,
+                        () => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => CartScreen()),
-                        );
-                      },
-                    );
-                  },
-                );
+                          MaterialPageRoute(
+                            builder:
+                                (_) => PaymentOptionsScreen(
+                                  totalAmount: double.parse(
+                                    thisCourse.discountedPrice.toString(),
+                                  ),
+                                ),
+                          ),
+                        ),
+                        () {
+                          if (!courseController.isLoading) {
+                            courseController
+                                .addOrRemoveCart(thisCourse.id!)
+                                .then((status) {
+                                  if (status == "added") {
+                                    successToast("Course added to cart".tr);
+                                  } else if (status == "removed") {
+                                    successToast("Course removed from cart".tr);
+                                  }
+                                });
+                          }
+                        },
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => CartScreen()),
+                          );
+                        },
+                      );
+                    },
+                  );
+                }
               },
             ),
           ],

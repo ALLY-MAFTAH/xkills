@@ -1,10 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:skillsbank/theme/app_colors.dart';
-
+import 'package:get_storage/get_storage.dart';
+import 'package:skillsbank/components/toasts.dart';
+import 'package:skillsbank/views/screens/tab_screen.dart';
+import '/views/screens/home_screen.dart';
+import '/views/screens/swipe.dart';
+import '/theme/app_colors.dart';
 import '../../constants/app_brand.dart';
-import 'tab_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,15 +19,29 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    donLogin();
+    checkIfSignedIn();
     super.initState();
   }
 
-  void donLogin() {
+  void checkIfSignedIn() {
     Future.delayed(const Duration(seconds: 3), () async {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const TabScreen()),
-      );
+      var navigator = Navigator.of(context);
+      final GetStorage storage = GetStorage();
+      final userToken = storage.read("userToken");
+      try {
+        if (userToken == null) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const SwipeScreen()),
+          );
+        } else {
+          navigator.pushReplacement(
+            MaterialPageRoute(builder: (context) => const TabsScreen()),
+          );
+        }
+      } catch (e) {
+        errorToast(e.toString());
+        print("Exception is $e");
+      }
     });
   }
 

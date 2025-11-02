@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skillsbank/components/shimmer_widgets/cart_items_shimmer.dart';
+import '/components/shimmer_widgets/cart_items_shimmer.dart';
 import '../../components/custom_loader.dart';
 import '../../constants/app_brand.dart';
 import '../../controllers/course_controller.dart';

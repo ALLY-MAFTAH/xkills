@@ -2,26 +2,30 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '/views/auth/forgot_password_page.dart';
+import '../../includes/auth_inputs_decoration.dart';
 import '/components/toasts.dart';
 import '/components/validations.dart';
-import '../../components/custom_loader.dart';
-import '../../constants/app_brand.dart';
-import '../../includes/auth_inputs_decoration.dart';
+import '/components/custom_loader.dart';
+import '/constants/app_brand.dart';
 import '/controllers/auth_controller.dart';
 
 import '../../theme/app_colors.dart';
+import 'signup_page.dart';
 
-class SignupPage extends StatefulWidget {
-  static const routeName = '/signup';
-  const SignupPage({super.key});
+class SigninPage extends StatefulWidget {
+  static const routeName = '/login';
+  const SigninPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<SigninPage> createState() => _SigninPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SigninPageState extends State<SigninPage> {
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final authController = Get.put(AuthController());
 
   @override
   void initState() {
@@ -47,32 +51,6 @@ class _SignupPageState extends State<SignupPage> {
                 Platform.isAndroid
                     ? MediaQuery.of(context).padding.top + 15
                     : MediaQuery.of(context).padding.top,
-            left: 10,
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                icon: const Icon(
-                  Icons.arrow_back,
-                  size: 28,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ),
-          Positioned(
-            top:
-                Platform.isAndroid
-                    ? MediaQuery.of(context).padding.top + 15
-                    : MediaQuery.of(context).padding.top,
             left: 0,
             right: 0,
 
@@ -88,7 +66,7 @@ class _SignupPageState extends State<SignupPage> {
                       children: [
                         const Center(
                           child: Text(
-                            'Sign Up',
+                            'Sign In',
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.w500,
@@ -97,33 +75,6 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Container(
-                          height: 60,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 5,
-                          ),
-                          child: TextFormField(
-                            style: TextStyle(
-                              color:
-                                  authController.isSubmitting
-                                      ? Colors.grey[700]
-                                      : Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration('Full Name'),
-                            cursorColor: Colors.white,
-                            controller: authController.nameController,
-                            keyboardType: TextInputType.name,
-                            onSaved: (value) {
-                              setState(() {
-                                authController.nameController.text =
-                                    value as String;
-                              });
-                            },
-                          ),
-                        ),
                         Container(
                           height: 60,
                           padding: const EdgeInsets.symmetric(
@@ -175,44 +126,52 @@ class _SignupPageState extends State<SignupPage> {
                                     input as String;
                               });
                             },
+
                             obscureText: authController.passwordObscure,
                             decoration: getInputDecoration('Password'),
                           ),
                         ),
-                        Container(
-                          height: 60,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 5,
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: 15,
+                            top: 5,
+                            bottom: 10,
                           ),
-                          child: TextFormField(
-                            style: TextStyle(
-                              color:
-                                  authController.isSubmitting
-                                      ? Colors.grey[700]
-                                      : Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            enabled: !authController.isSubmitting,
-                            keyboardType: TextInputType.text,
-                            cursorColor: Colors.white,
-                            controller:
-                                authController.confirmPasswordController,
-                            onSaved: (input) {
-                              setState(() {
-                                authController.confirmPasswordController.text =
-                                    input as String;
-                              });
-                            },
-                            obscureText: authController.confirmPasswordObscure,
-                            decoration: getInputDecoration('Confirm Password'),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Forgot password? ',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ForgotPasswordPage(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  ' Reset',
+                                  style: TextStyle(
+                                    color: AppColors.tertiaryColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
-                            vertical: 5,
+                            vertical: 10,
                           ),
                           child: Center(
                             child: Stack(
@@ -238,11 +197,15 @@ class _SignupPageState extends State<SignupPage> {
                                           ? null
                                           : () {
                                             if (authController
-                                                .nameController
-                                                .text
-                                                .isEmpty) {
+                                                    .emailController
+                                                    .text
+                                                    .isEmpty &&
+                                                authController
+                                                    .passwordController
+                                                    .text
+                                                    .isEmpty) {
                                               errorToast(
-                                                "Full name field cannot be empty",
+                                                "Email & password field cannot be empty",
                                               );
                                             } else if (authController
                                                 .emailController
@@ -251,13 +214,6 @@ class _SignupPageState extends State<SignupPage> {
                                               errorToast(
                                                 "Email field cannot be empty",
                                               );
-                                            } else if (!isEmailValid(
-                                              authController
-                                                  .emailController
-                                                  .text
-                                                  .trim(),
-                                            )) {
-                                              errorToast("Email not valid");
                                             } else if (authController
                                                 .passwordController
                                                 .text
@@ -265,27 +221,16 @@ class _SignupPageState extends State<SignupPage> {
                                               errorToast(
                                                 "Password field cannot be empty",
                                               );
-                                            } else if (authController
-                                                .confirmPasswordController
-                                                .text
-                                                .isEmpty) {
-                                              errorToast(
-                                                "Confirm password field cannot be empty",
-                                              );
-                                            } else if (authController
-                                                    .passwordController
-                                                    .text
-                                                    .trim() !=
-                                                authController
-                                                    .confirmPasswordController
-                                                    .text
-                                                    .trim()) {
-                                              errorToast(
-                                                "Passwords do not match",
-                                              );
+                                            } else if (!isEmailValid(
+                                              authController
+                                                  .emailController
+                                                  .text
+                                                  .trim(),
+                                            )) {
+                                              errorToast("Email not valid");
                                             } else {
                                               setState(() {
-                                                authController.signup();
+                                                authController.login();
                                               });
                                             }
                                           },
@@ -310,7 +255,7 @@ class _SignupPageState extends State<SignupPage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Sign Up',
+                                                'Sign In',
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   color: Colors.white,
@@ -322,6 +267,42 @@ class _SignupPageState extends State<SignupPage> {
                                 ),
                               ],
                             ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Don't you have an account yet? ",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => SignupPage(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  ' Sign Up',
+                                  style: TextStyle(
+                                    color: AppColors.tertiaryColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: 10),

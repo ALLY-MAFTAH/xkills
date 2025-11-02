@@ -11,17 +11,19 @@ import '/controllers/auth_controller.dart';
 
 import '../../theme/app_colors.dart';
 
-class SignupPage extends StatefulWidget {
-  static const routeName = '/signup';
-  const SignupPage({super.key});
+class ForgotPasswordPage extends StatefulWidget {
+  static const routeName = '/forgot_password';
+  const ForgotPasswordPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final authController = Get.put(AuthController());
 
   @override
   void initState() {
@@ -88,7 +90,7 @@ class _SignupPageState extends State<SignupPage> {
                       children: [
                         const Center(
                           child: Text(
-                            'Sign Up',
+                            'Forgot Password',
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.w500,
@@ -97,33 +99,7 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Container(
-                          height: 60,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 5,
-                          ),
-                          child: TextFormField(
-                            style: TextStyle(
-                              color:
-                                  authController.isSubmitting
-                                      ? Colors.grey[700]
-                                      : Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration('Full Name'),
-                            cursorColor: Colors.white,
-                            controller: authController.nameController,
-                            keyboardType: TextInputType.name,
-                            onSaved: (value) {
-                              setState(() {
-                                authController.nameController.text =
-                                    value as String;
-                              });
-                            },
-                          ),
-                        ),
+
                         Container(
                           height: 60,
                           padding: const EdgeInsets.symmetric(
@@ -151,68 +127,11 @@ class _SignupPageState extends State<SignupPage> {
                             },
                           ),
                         ),
-                        Container(
-                          height: 60,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 5,
-                          ),
-                          child: TextFormField(
-                            style: TextStyle(
-                              color:
-                                  authController.isSubmitting
-                                      ? Colors.grey[700]
-                                      : Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            enabled: !authController.isSubmitting,
-                            keyboardType: TextInputType.text,
-                            cursorColor: Colors.white,
-                            controller: authController.passwordController,
-                            onSaved: (input) {
-                              setState(() {
-                                authController.passwordController.text =
-                                    input as String;
-                              });
-                            },
-                            obscureText: authController.passwordObscure,
-                            decoration: getInputDecoration('Password'),
-                          ),
-                        ),
-                        Container(
-                          height: 60,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 5,
-                          ),
-                          child: TextFormField(
-                            style: TextStyle(
-                              color:
-                                  authController.isSubmitting
-                                      ? Colors.grey[700]
-                                      : Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            enabled: !authController.isSubmitting,
-                            keyboardType: TextInputType.text,
-                            cursorColor: Colors.white,
-                            controller:
-                                authController.confirmPasswordController,
-                            onSaved: (input) {
-                              setState(() {
-                                authController.confirmPasswordController.text =
-                                    input as String;
-                              });
-                            },
-                            obscureText: authController.confirmPasswordObscure,
-                            decoration: getInputDecoration('Confirm Password'),
-                          ),
-                        ),
 
                         Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
-                            vertical: 5,
+                            vertical: 15,
                           ),
                           child: Center(
                             child: Stack(
@@ -238,13 +157,6 @@ class _SignupPageState extends State<SignupPage> {
                                           ? null
                                           : () {
                                             if (authController
-                                                .nameController
-                                                .text
-                                                .isEmpty) {
-                                              errorToast(
-                                                "Full name field cannot be empty",
-                                              );
-                                            } else if (authController
                                                 .emailController
                                                 .text
                                                 .isEmpty) {
@@ -258,34 +170,9 @@ class _SignupPageState extends State<SignupPage> {
                                                   .trim(),
                                             )) {
                                               errorToast("Email not valid");
-                                            } else if (authController
-                                                .passwordController
-                                                .text
-                                                .isEmpty) {
-                                              errorToast(
-                                                "Password field cannot be empty",
-                                              );
-                                            } else if (authController
-                                                .confirmPasswordController
-                                                .text
-                                                .isEmpty) {
-                                              errorToast(
-                                                "Confirm password field cannot be empty",
-                                              );
-                                            } else if (authController
-                                                    .passwordController
-                                                    .text
-                                                    .trim() !=
-                                                authController
-                                                    .confirmPasswordController
-                                                    .text
-                                                    .trim()) {
-                                              errorToast(
-                                                "Passwords do not match",
-                                              );
                                             } else {
                                               setState(() {
-                                                authController.signup();
+                                                authController.forgotPassword();
                                               });
                                             }
                                           },
@@ -310,7 +197,7 @@ class _SignupPageState extends State<SignupPage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Sign Up',
+                                                'Send',
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   color: Colors.white,
@@ -321,6 +208,19 @@ class _SignupPageState extends State<SignupPage> {
                                           ),
                                 ),
                               ],
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text(
+                            "Reset link will be sent to this email.",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),

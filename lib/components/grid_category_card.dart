@@ -30,7 +30,6 @@ class GridCategoryCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      // const Color.fromARGB(255, 6, 98, 100),
                       AppColors.secondaryColor,
                       AppColors.primaryColor,
                     ],
@@ -104,7 +103,7 @@ class GridCategoryCard extends StatelessWidget {
                     subtitle,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                     maxLines: 1,

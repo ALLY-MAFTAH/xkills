@@ -1,8 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:skillsbank/controllers/home_controller.dart';
-import 'package:skillsbank/views/auth/login_page.dart';
+import 'package:skillsbank/views/auth/signin_page.dart';
 import '../views/screens/home_screen.dart';
 import '/components/validations.dart';
 
@@ -19,6 +18,10 @@ class AuthController extends GetxController {
   bool isForgotPassword = false;
   GetStorage storage = GetStorage();
 
+  bool passwordObscure = true;
+  bool confirmPasswordObscure = true;
+
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController resetCodeController = TextEditingController();
@@ -27,24 +30,6 @@ class AuthController extends GetxController {
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-
-  bool emailHasError = false;
-  bool passwordHasError = false;
-  bool resetCodeHasError = false;
-
-  bool oldPasswordHasError = false;
-  bool newPasswordHasError = false;
-  bool confirmPasswordHasError = false;
-
-  final FocusNode emailFocusNode = FocusNode();
-  final FocusNode passwordFocusNode = FocusNode();
-  final FocusNode loginBtnFocusNode = FocusNode();
-  final FocusNode resetCodeFocusNode = FocusNode();
-
-  final FocusNode oldPasswordFocusNode = FocusNode();
-  final FocusNode newPasswordFocusNode = FocusNode();
-  final FocusNode confirmPasswordFocusNode = FocusNode();
-  final FocusNode changePasswordBtnFocusNode = FocusNode();
 
   int? temporaryUserId;
   String? temporaryUserToken;
@@ -75,21 +60,99 @@ class AuthController extends GetxController {
       User authUser = User.fromJson(responseData['user']);
       storage.write("userToken", userToken);
       Auth().saveAuthUser(authUser);
-
-      final homeController = Get.put(HomeController());
-
       isSubmitting = false;
-      emailController.clear();
+      clearFields();
       update();
-
       Get.offAll(() => HomeScreen());
     } catch (ex) {
-      isSubmitting = false;
       update();
       print(ex.toString());
       errorToast(ex.toString());
     } finally {
       passwordController.clear();
+      isSubmitting = false;
+      update();
+    }
+  }
+
+  // SIGNUP
+  Future<void> signup() async {
+    isSubmitting = true;
+    update();
+    try {
+      await Future.delayed(Duration(seconds: 1));
+      String name = nameController.text.trim();
+      String email = emailController.text.trim();
+      String password = passwordController.text.trim();
+      String confirmPassword = confirmPasswordController.text.trim();
+
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.POST,
+        Endpoints.signup,
+        {
+          "name": name,
+          "email": email,
+          "password": password,
+          'password_confirmation': confirmPassword,
+        },
+        false,
+        isAuthRequest: false,
+      );
+      if (responseData == null) return;
+
+      String message = responseData['message'];
+      bool succeeded = responseData['success'];
+      print(message);
+      if (succeeded) {
+        await login();
+      }
+      clearFields();
+      update();
+      Get.offAll(() => HomeScreen());
+    } catch (ex) {
+      update();
+      print(ex.toString());
+      errorToast(ex.toString());
+    } finally {
+      passwordController.clear();
+      confirmPasswordController.clear();
+      isSubmitting = false;
+      update();
+    }
+  }
+
+  // FORGOT PASSWORD
+  Future<void> forgotPassword() async {
+    isSubmitting = true;
+    update();
+    try {
+      await Future.delayed(Duration(seconds: 1));
+      String email = emailController.text.trim();
+
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.POST,
+        Endpoints.forgotPassowrd,
+        {"email": email},
+        false,
+        isAuthRequest: false,
+      );
+      if (responseData == null) return;
+
+      String message = responseData['message'];
+      bool succeeded = responseData['success'];
+      print(message);
+      if (succeeded) {
+        successToast(message);
+        clearFields();
+        update();
+        Get.offAll(() => SigninPage());
+      }
+    } catch (ex) {
+      update();
+      print(ex.toString());
+      errorToast(ex.toString());
+    } finally {
+      isSubmitting = false;
       update();
     }
   }
@@ -337,14 +400,6 @@ class AuthController extends GetxController {
     newPasswordController.clear();
     confirmPasswordController.clear();
     resetCodeController.clear();
-    resetCodeFocusNode.unfocus();
-    passwordFocusNode.unfocus();
-    emailFocusNode.unfocus();
-    emailHasError = false;
-    passwordHasError = false;
-    oldPasswordHasError = false;
-    newPasswordHasError = false;
-    confirmPasswordHasError = false;
   }
 
   @override

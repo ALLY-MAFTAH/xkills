@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../auth/login_page.dart';
+import '../auth/signin_page.dart';
 
 class SwipeScreen extends StatefulWidget {
   const SwipeScreen({super.key});
@@ -89,8 +89,6 @@ class _SwipeScreenState extends State<SwipeScreen>
     super.dispose();
   }
 
-  // ... (rest of gesture handlers: _onVerticalDragUpdate, _onVerticalDragEnd, _snapBackToZero, _navigateToNextPage)
-
   void _onVerticalDragUpdate(DragUpdateDetails details) {
     if (_snapToZeroController.isAnimating) {
       _snapToZeroController.stop();
@@ -127,7 +125,7 @@ class _SwipeScreenState extends State<SwipeScreen>
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 0),
         pageBuilder:
-            (context, animation, secondaryAnimation) => const LoginPage(),
+            (context, animation, secondaryAnimation) => const SigninPage(),
       ),
     );
   }

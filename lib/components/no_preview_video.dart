@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skillsbank/constants/app_brand.dart';
+import '/constants/app_brand.dart';
 
 class NoPreviewVideo extends StatefulWidget {
   const NoPreviewVideo({super.key});

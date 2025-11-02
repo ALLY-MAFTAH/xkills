@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skillsbank/components/grid_course_card.dart';
-import 'package:skillsbank/theme/app_colors.dart';
-import 'package:skillsbank/views/screens/courses_screen.dart';
+import '/components/grid_course_card.dart';
+import '/theme/app_colors.dart';
+import '/views/screens/courses_screen.dart';
 import '../../components/custom_search.dart';
 import '../../components/grid_category_card.dart';
 import '../../components/shimmer_widgets/category_grid_shimmer.dart';

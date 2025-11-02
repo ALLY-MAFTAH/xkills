@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skillsbank/components/course_info_footer.dart';
-
+import '/components/course_info_footer.dart';
 import '../controllers/course_controller.dart';
 import '../models/course.dart';
 import '../theme/app_colors.dart';
@@ -23,7 +22,6 @@ class _GridCourseCardState extends State<GridCourseCard> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine the height of the info footer, estimated at ~80 pixels for calculation
     const double footerHeight = 85.0;
 
     return InkWell(
@@ -41,9 +39,7 @@ class _GridCourseCardState extends State<GridCourseCard> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Stack(
-          // This is the main container for the card
           children: [
-            // 1. Full Background Gradient (Fills the entire card)
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
@@ -55,20 +51,15 @@ class _GridCourseCardState extends State<GridCourseCard> {
                 ),
               ),
             ),
-
-            // 2. Course Cover Image (Must be sized to fit above the footer)
-            // We use Positioned to explicitly define its area.
             Positioned(
               top: 0,
               left: 0,
               right: 0,
-              // Height is the card height minus the footer height
               bottom: footerHeight + 45,
               child:
                   widget.thisCourse.thumbnail!.isNotEmpty
                       ? CachedNetworkImage(
                         imageUrl: widget.thisCourse.thumbnail!,
-                        // width: double.infinity,
                         fit: BoxFit.cover,
                         placeholder: (context, url) => customLoader(),
                         errorWidget:
@@ -91,11 +82,9 @@ class _GridCourseCardState extends State<GridCourseCard> {
                 ),
               ),
 
-            // 3. Teacher Info (Placed just below the image, above the footer)
             Positioned(
               left: 5,
               right: 5,
-              // Positioned above the footer
               bottom: footerHeight,
               child: Container(
                 color: Colors.transparent,

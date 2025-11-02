@@ -30,9 +30,13 @@ class HttpService {
       final fullUrl = '${Endpoints.baseUrl}/$url';
 
       isAuthRequest == false
-          ? headers = <String, String>{'Content-Type': 'application/json'}
+          ? headers = <String, String>{
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          }
           : headers = <String, String>{
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'Authorization': 'Bearer $userToken',
           };
 
@@ -119,8 +123,7 @@ class HttpService {
       print(response);
       final responseData = jsonDecode(response.body);
       String message = responseData['message'];
-           throw message;
-
+      throw message;
     } else if (response.statusCode == 200 || response.statusCode == 201) {
       print("object");
       final responseData = jsonDecode(response.body);
@@ -134,22 +137,8 @@ class HttpService {
       throw message;
     } else if (response.statusCode == 400 || response.statusCode == 404) {
       final responseData = jsonDecode(response.body);
-
-      String? message;
-      if (responseData is String) {
-        message = responseData;
-
-        throw message;
-      } else if (responseData is Map && responseData.containsKey('message')) {
-        message = responseData['message'];
-        print("object");
-        if (responseData["message"] == "No attendance records provided.") {
-          print(responseData["message"].toString());
-          return null;
-        } else {
-          return responseData;
-        }
-      }
+      String message = responseData['message'];
+      throw message;
     } else if (response.statusCode == 409) {
       final responseData = jsonDecode(response.body);
 

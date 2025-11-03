@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import '../constants/endpoints.dart';
-import '../controllers/auth_controller.dart';
 import '../enums/enums.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_storage/get_storage.dart';
@@ -23,10 +21,7 @@ class HttpService {
     Map<String, String> headers;
     try {
       final storage = GetStorage();
-      final authController = Get.put(AuthController());
-
       final userToken = storage.read("userToken");
-
       final fullUrl = '${Endpoints.baseUrl}/$url';
 
       isAuthRequest == false
@@ -117,7 +112,6 @@ class HttpService {
   static dynamic _handleResponse(http.Response response) async {
     print(response.body);
     print(response.statusCode);
-    final storage = GetStorage();
     if (response.statusCode == 401) {
       print(response.statusCode);
       print(response);
@@ -125,8 +119,10 @@ class HttpService {
       String message = responseData['message'];
       throw message;
     } else if (response.statusCode == 200 || response.statusCode == 201) {
-      print("object");
+      print("Success Code");
+      print(response.statusCode);
       final responseData = jsonDecode(response.body);
+      print(responseData);
       return responseData;
     }
     if (response.statusCode == 500) {

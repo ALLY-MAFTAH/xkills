@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../components/from_network.dart';
 import '../components/from_vimeo_player.dart';
 import '../components/youtube_video_player.dart';
-import '../components/no_preview_video.dart';
+import '../components/no_video_url.dart';
 
 /// Handles routing to the correct video player based on the video URL type.
 Future<void> navigateToVideoPlayer({
@@ -16,7 +16,7 @@ Future<void> navigateToVideoPlayer({
   if (videoUrl.isEmpty) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => NoPreviewVideo()),
+      MaterialPageRoute(builder: (context) => NoVideoUrl()),
     );
     debugPrint("Video URL is null or empty");
     return;
@@ -36,7 +36,7 @@ Future<void> navigateToVideoPlayer({
 
   if (isYouTube) {
     nextPage = YoutubeVideoPlayer(
-      courseId: courseId, // Passing courseId as courseId
+      courseId: courseId,
       lessonId: lessonId,
       videoUrl: videoUrl,
     );
@@ -48,17 +48,17 @@ Future<void> navigateToVideoPlayer({
       String driveUrl =
           'https://drive.google.com/uc?export=download&id=${match.group(0)}';
       nextPage = PlayVideoFromNetwork(
-        courseId: courseId, // Passing courseId as courseId
+        courseId: courseId,
         lessonId: lessonId,
         videoUrl: driveUrl,
       );
     } else {
-      nextPage = NoPreviewVideo();
+      nextPage = NoVideoUrl();
     }
   } else if (isVimeo) {
     String vimeoVideoId = videoUrl.split('/').last;
     nextPage = FromVimeoPlayer(
-      courseId: courseId, // Passing courseId as courseId
+      courseId: courseId,
       vimeoVideoId: vimeoVideoId,
       lessonId: lessonId,
     );
@@ -69,7 +69,7 @@ Future<void> navigateToVideoPlayer({
       videoUrl: videoUrl,
     );
   } else {
-    nextPage = NoPreviewVideo();
+    nextPage = NoVideoUrl();
   }
 
   // --- Navigation ---

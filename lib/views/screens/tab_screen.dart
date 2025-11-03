@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, use_super_parameters, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:skillsbank/components/custom_loader.dart';
-import 'package:skillsbank/theme/app_colors.dart';
+import '/theme/app_colors.dart';
 import 'account_screen.dart';
 import 'home_screen.dart';
 import 'instructors_screen.dart';
@@ -19,8 +18,6 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedPageIndex = 0;
-  bool isLoggedIn = false;
-  bool _isInit = true;
 
   @override
   void initState() {
@@ -35,12 +32,6 @@ class _TabsScreenState extends State<TabsScreen> {
       InstructorsScreen(),
       AccountScreen(),
     ];
-  }
-
-  void _selectPage(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
   }
 
   @override

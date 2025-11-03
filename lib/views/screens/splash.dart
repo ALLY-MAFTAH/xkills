@@ -2,12 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:skillsbank/components/toasts.dart';
-import 'package:skillsbank/views/screens/tab_screen.dart';
-import '/views/screens/home_screen.dart';
-import '/views/screens/swipe.dart';
+import '/components/toasts.dart';
+import '/views/screens/tab_screen.dart';
 import '/theme/app_colors.dart';
 import '../../constants/app_brand.dart';
+import 'swipe.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

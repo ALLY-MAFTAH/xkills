@@ -56,6 +56,7 @@ class AuthController extends GetxController {
 
       String message = responseData['message'];
       String userToken = responseData['token'];
+      print(message);
       print(userToken);
       User authUser = User.fromJson(responseData['user']);
       storage.write("userToken", userToken);

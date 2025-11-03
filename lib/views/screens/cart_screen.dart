@@ -8,6 +8,7 @@ import '../../constants/app_brand.dart';
 import '../../controllers/course_controller.dart';
 import '../../models/course.dart';
 import '../../theme/app_colors.dart';
+import 'course_details_screen.dart';
 import 'payment_options_screen.dart';
 
 class CartScreen extends StatefulWidget {
@@ -41,121 +42,139 @@ class _CartScreenState extends State<CartScreen> {
   Widget _buildCartItem(Course thisCourse) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Container(
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child:
-                  thisCourse.thumbnail!.isNotEmpty
-                      ? ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: CachedNetworkImage(
-                          imageUrl: thisCourse.thumbnail!,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => customLoader(),
-                          errorWidget:
-                              (context, url, error) => const Icon(Icons.error),
+      child: InkWell(
+        onTap: () {
+          courseController.selectedCourse = thisCourse;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => CourseDetailsScreen()),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:
+                    thisCourse.thumbnail!.isNotEmpty
+                        ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                            imageUrl: thisCourse.thumbnail!,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => customLoader(),
+                            errorWidget:
+                                (context, url, error) =>
+                                    const Icon(Icons.error),
+                          ),
+                        )
+                        : Icon(
+                          Icons.movie_filter,
+                          size: 70,
+                          color: Colors.grey,
                         ),
-                      )
-                      : Icon(Icons.movie_filter, size: 70, color: Colors.grey),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    thisCourse.title!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      thisCourse.title!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    const SizedBox(height: 4),
+                    Text(
+                      '${thisCourse.shortDescription}',
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 241, 239, 234),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap:
+                        courseController.isLoading
+                            ? null
+                            : () {
+                              courseController
+                                  .addOrRemoveCart(thisCourse.id!)
+                                  .then((status) {
+                                    if (status == "removed") {
+                                      setState(() {
+                                        courseController.cartListFuture =
+                                            courseController.getCartList();
+                                      });
+                                    }
+                                  });
+                            },
+                    child:
+                        courseController.isLoading
+                            ? customLoader()
+                            : Icon(
+                              size: 28,
+                              Icons.delete_forever_outlined,
+                              color: Colors.redAccent,
+                            ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: thisCourse.discountFlag! ? 8 : 25),
+                  if (thisCourse.isPaid! && thisCourse.discountFlag!)
+                    Text(
+                      '${thisCourse.price}', // Assuming originalPrice exists
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                        decoration:
+                            TextDecoration
+                                .lineThrough, // The strikethrough effect
+                        decorationColor: Colors.grey.withOpacity(0.9),
+                        decorationThickness: 2,
+                      ),
+                    ),
                   Text(
-                    '${thisCourse.shortDescription}',
+                    thisCourse.isPaid!
+                        ? thisCourse.discountFlag! &&
+                                thisCourse.discountedPrice != null
+                            ? '\$${thisCourse.discountedPrice}'
+                            : '${thisCourse.price}'
+                        : "Free",
+
                     style: const TextStyle(
-                      color: Color.fromARGB(255, 241, 239, 234),
-                      fontSize: 10,
+                      color: Color(0xFFE6C068),
+                      fontSize: 18,
                       fontWeight: FontWeight.w800,
                     ),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap:
-                      courseController.isLoading
-                          ? null
-                          : () {
-                            courseController
-                                .addOrRemoveCart(thisCourse.id!)
-                                .then((status) {
-                                  if (status == "removed") {
-                                    setState(() {
-                                      courseController.cartListFuture =
-                                          courseController.getCartList();
-                                    });
-                                  }
-                                });
-                          },
-                  child:
-                      courseController.isLoading
-                          ? customLoader()
-                          : Icon(
-                            size: 28,
-                            Icons.delete_forever_outlined,
-                            color: Colors.redAccent,
-                          ),
-                ),
-            SizedBox(height: thisCourse.discountFlag!?8:25),
-                if (thisCourse.discountFlag!)
-                  Text(
-                    '${thisCourse.price}', // Assuming originalPrice exists
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                      decoration:
-                          TextDecoration
-                              .lineThrough, // The strikethrough effect
-                      decorationColor: Colors.grey.withOpacity(0.9),
-                      decorationThickness: 2,
-                    ),
-                  ),
-                Text(
-                  thisCourse.discountedPrice != null
-                      ? '\$${thisCourse.discountedPrice}'
-                      : '${thisCourse.price}',
-                  style: const TextStyle(
-                    color: Color(0xFFE6C068),
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

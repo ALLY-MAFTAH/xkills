@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _loadInitialData() {
     categoryController.categoriesFuture = categoryController.getCategories();
     courseController.coursesFuture = courseController.getCourses();
+    courseController.myCoursesFuture = courseController.getMyCourses();
   }
 
   Future<void> _refreshData() async {
@@ -45,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await Future.wait([
       categoryController.categoriesFuture!,
       courseController.coursesFuture!,
+      courseController.myCoursesFuture!,
     ]);
     setState(() {});
   }
@@ -202,13 +204,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'No course yet'.tr,
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                SizedBox(height: Get.height/10),
+                                SizedBox(height: Get.height / 10),
                                 ElevatedButton(
-                                  style: ElevatedButton.styleFrom(elevation: 8,
-                                    backgroundColor: Colors.white.withOpacity(.1)
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 8,
+                                    backgroundColor: Colors.white.withOpacity(
+                                      .1,
+                                    ),
                                   ),
                                   onPressed: () {
-                                   _refreshData();
+                                    _refreshData();
                                   },
                                   child: Text(
                                     "Reload",

@@ -6,8 +6,9 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../models/lesson.dart';
 import '/components/toasts.dart';
-import '../../components/no_preview_video.dart';
+import '../../components/no_video_url.dart';
 import '../../components/shimmer_widgets/section_list_shimmer.dart';
 import '../../controllers/course_controller.dart';
 import '../../components/custom_loader.dart';
@@ -38,6 +39,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     ConnectionState.none,
     [],
   );
+  bool hasEnrolled = false;
 
   @override
   void initState() {
@@ -159,6 +161,28 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             ),
                           ),
                         ),
+                        if (!thisCourse.isPaid!)
+                          Positioned(
+                            top:
+                                Platform.isAndroid
+                                    ? MediaQuery.of(context).padding.top + 15
+                                    : MediaQuery.of(context).padding.top,
+                            right: 10,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white.withOpacity(.3),
+                              ),
+                              child: Text(
+                                "Free",
+                                style: TextStyle(
+                                  color: AppColors.tertiaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
                         Positioned(
                           top: screenHeight / 3,
                           left: 10,
@@ -192,8 +216,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                               context,
                                               MaterialPageRoute(
                                                 builder:
-                                                    (context) =>
-                                                        NoPreviewVideo(),
+                                                    (context) => NoVideoUrl(),
                                               ),
                                             );
                                             print("Preview URL is null");
@@ -419,32 +442,58 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                 lessonGradient,
                                                 screenWidth,
                                                 () {
-                                                  if (lesson.videoUrl != null &&
-                                                      lesson.id != null) {
-                                                    navigateToVideoPlayer(
-                                                      context: context,
-                                                      videoUrl:
-                                                          lesson.videoUrl!,
-                                                      courseId: thisCourse.id!,
-                                                      lessonId: lesson.id!,
-                                                    );
+                                                  if (courseController.myCourses
+                                                      .any(
+                                                        (myCourse) =>
+                                                            myCourse.id ==
+                                                            thisCourse.id,
+                                                      )) {
+                                                    if (lesson.videoUrl !=
+                                                            null &&
+                                                        lesson.id != null) {
+                                                      navigateToVideoPlayer(
+                                                        context: context,
+                                                        videoUrl:
+                                                            lesson.videoUrl!,
+                                                        courseId:
+                                                            thisCourse.id!,
+                                                        lessonId: lesson.id!,
+                                                      );
+                                                    } else {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder:
+                                                              (context) =>
+                                                                  NoVideoUrl(),
+                                                        ),
+                                                      );
+                                                      print(
+                                                        "Lesson video URL is null",
+                                                      );
+                                                    }
                                                   } else {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder:
-                                                            (context) =>
-                                                                NoPreviewVideo(),
-                                                      ),
-                                                    );
-                                                    print(
-                                                      "Lesson video URL is null",
+                                                    openConfirmEnrollDialog(
+                                                      "Play",
+                                                      lesson,
                                                     );
                                                   }
                                                 },
-                                                () => print(
-                                                  "Lesson ${lesson.title} downloaded",
-                                                ),
+                                                () {
+                                                  if (courseController.myCourses
+                                                      .any(
+                                                        (myCourse) =>
+                                                            myCourse.id ==
+                                                            thisCourse.id,
+                                                      )) {
+                                                    print("Download course");
+                                                  } else {
+                                                    openConfirmEnrollDialog(
+                                                      "Download",
+                                                      lesson,
+                                                    );
+                                                  }
+                                                },
                                                 () => print(
                                                   "Lesson ${lesson.title} unlocked",
                                                 ),
@@ -518,42 +567,78 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                             lessonGradient,
                                                             screenWidth,
                                                             () {
-                                                              if (lesson.videoUrl !=
-                                                                      null &&
-                                                                  lesson.id !=
-                                                                      null) {
-                                                                navigateToVideoPlayer(
-                                                                  context:
-                                                                      context,
-                                                                  videoUrl:
-                                                                      lesson
-                                                                          .videoUrl!,
-                                                                  courseId:
-                                                                      thisCourse
-                                                                          .id!,
-                                                                  lessonId:
-                                                                      lesson
-                                                                          .id!,
-                                                                );
+                                                              if (courseController
+                                                                  .myCourses
+                                                                  .any(
+                                                                    (
+                                                                      myCourse,
+                                                                    ) =>
+                                                                        myCourse
+                                                                            .id ==
+                                                                        thisCourse
+                                                                            .id,
+                                                                  )) {
+                                                                if (lesson.videoUrl !=
+                                                                        null &&
+                                                                    lesson.id !=
+                                                                        null) {
+                                                                  navigateToVideoPlayer(
+                                                                    context:
+                                                                        context,
+                                                                    videoUrl:
+                                                                        lesson
+                                                                            .videoUrl!,
+                                                                    courseId:
+                                                                        thisCourse
+                                                                            .id!,
+                                                                    lessonId:
+                                                                        lesson
+                                                                            .id!,
+                                                                  );
+                                                                } else {
+                                                                  Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder:
+                                                                          (
+                                                                            context,
+                                                                          ) =>
+                                                                              NoVideoUrl(),
+                                                                    ),
+                                                                  );
+                                                                  print(
+                                                                    "Lesson video URL is null",
+                                                                  );
+                                                                }
                                                               } else {
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (
-                                                                          context,
-                                                                        ) =>
-                                                                            NoPreviewVideo(),
-                                                                  ),
-                                                                );
-                                                                print(
-                                                                  "Lesson video URL is null",
+                                                                openConfirmEnrollDialog(
+                                                                  "Play",
+                                                                  lesson,
                                                                 );
                                                               }
                                                             },
-                                                            () => print(
-                                                              "Lesson ${lesson.title} downloaded",
-                                                            ),
+                                                            () {
+                                                              if (courseController
+                                                                  .myCourses
+                                                                  .any(
+                                                                    (
+                                                                      myCourse,
+                                                                    ) =>
+                                                                        myCourse
+                                                                            .id ==
+                                                                        thisCourse
+                                                                            .id,
+                                                                  )) {
+                                                                print(
+                                                                  "Download course",
+                                                                );
+                                                              } else {
+                                                                openConfirmEnrollDialog(
+                                                                  "Download",
+                                                                  lesson,
+                                                                );
+                                                              }
+                                                            },
                                                             () => print(
                                                               "Lesson ${lesson.title} unlocked",
                                                             ),
@@ -630,5 +715,109 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         ),
       ),
     );
+  }
+
+  openConfirmEnrollDialog(String playOrDownload, Lesson lesson) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      barrierDismissible: !courseController.isLoading,
+      builder:
+          (BuildContext dialogContext) => GetBuilder<CourseController>(
+            builder: (courseController) {
+              return AlertDialog(
+                backgroundColor: Colors.grey,
+                title: Text(
+                  'Confirm Enroll',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
+                content: Text(
+                  playOrDownload == "Play"
+                      ? 'By playing this lesson you confirm enrollment to this course'
+                      : 'By downloading this lesson you confirm enrollment to this course',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
+                actions: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      foregroundColor: AppColors.tertiaryColor,
+                      backgroundColor: AppColors.tertiaryColor.withOpacity(.1),
+                    ),
+                    onPressed:
+                        courseController.isLoading
+                            ? null
+                            : () => Navigator.pop(dialogContext, false),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      foregroundColor: AppColors.secondaryColor,
+                      backgroundColor: AppColors.secondaryColor.withOpacity(.1),
+                    ),
+                    onPressed:
+                        courseController.isLoading
+                            ? null
+                            : () async {
+                              if (thisCourse.isPaid!) {
+                                // CALL PAID ENROLL
+                                hasEnrolled = await courseController
+                                    .freeCourseEnroll(thisCourse.id!);
+                              } else {
+                                hasEnrolled = await courseController
+                                    .freeCourseEnroll(thisCourse.id!);
+                              }
+                              Navigator.pop(dialogContext, true);
+                            },
+                    child:
+                        courseController.isLoading
+                            ? customLoader(color: AppColors.secondaryColor)
+                            : Text(
+                              'Enroll',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                  ),
+                ],
+              );
+            },
+          ),
+    );
+    if (confirm == true) {
+      if (hasEnrolled) {
+        if (playOrDownload == "Play") {
+          print("Playyyyyy ::::::");
+
+          if (lesson.videoUrl != null && lesson.id != null) {
+            navigateToVideoPlayer(
+              context: context,
+              videoUrl: lesson.videoUrl!,
+              courseId: thisCourse.id!,
+              lessonId: lesson.id!,
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NoVideoUrl()),
+            );
+            print("Lesson video URL is null");
+          }
+        } else {
+          print("Download ::::::");
+        }
+      } else {
+        errorToast("Failed to enroll, please try again");
+      }
+      setState(() {});
+    }
   }
 }

@@ -13,6 +13,7 @@ class Endpoints {
   // Courses
   static String getCourses = dotenv.env['GET_COURSES']!;
   static String getMyCourses = dotenv.env['GET_MY_COURSES']!;
+  static String freeCourseEnroll = dotenv.env['FREE_COURSE_ENROLL']!;
   // Sections
   static String getSections = dotenv.env['GET_SECTIONS']!;
   static String getCartList = dotenv.env['CART_LIST']!;

@@ -4,6 +4,7 @@ import '../components/toasts.dart';
 import '../constants/endpoints.dart';
 import '../enums/enums.dart';
 import '../models/course.dart';
+import '../models/my_course.dart';
 import '../services/http_service.dart';
 
 class CourseController extends GetxController {
@@ -11,6 +12,12 @@ class CourseController extends GetxController {
   Future<List<Course>>? coursesFuture;
   List<Course> _courses = [];
   List<Course> get courses => _courses;
+
+  MyCourse mySelectedCourse = MyCourse();
+  Future<List<MyCourse>>? myCoursesFuture;
+  List<MyCourse> _myCourses = [];
+  List<MyCourse> get myCourses => _myCourses;
+
   final List<DropdownMenuItem<String>> _courseList = [];
   List<DropdownMenuItem<String>> get coursesDropdown => _courseList;
 
@@ -50,6 +57,34 @@ class CourseController extends GetxController {
     return courses;
   }
 
+  Future<List<MyCourse>> getMyCourses() async {
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.GET,
+        Endpoints.getMyCourses,
+        {},
+        false,
+      );
+      if (responseData == null) return myCourses;
+
+      final List myFetchedCourses = responseData;
+      if (myFetchedCourses.isNotEmpty) {
+        _myCourses = [];
+        for (var myCourse in myFetchedCourses) {
+          final calledDataSet = MyCourse.fromJson(myCourse);
+          _myCourses.add(calledDataSet);
+        }
+      }
+      print("Fetched ${myCourses.length} my courses");
+      print(myCourses);
+      return myCourses;
+    } catch (e) {
+      print(e.toString());
+      errorToast(e.toString());
+    }
+    return myCourses;
+  }
+
   Future<List<Course>> getCartList() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
@@ -79,6 +114,44 @@ class CourseController extends GetxController {
       update();
     }
     return cartList;
+  }
+
+  Future<bool> freeCourseEnroll(int courseId) async {
+    print("Reached here");
+    isLoading = true;
+    update();
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.GET,
+        "${Endpoints.freeCourseEnroll}/$courseId",
+        {},
+        false,
+      );
+      if (responseData == null) return false;
+      print(responseData);
+        print("IS CHECKING");
+      if (responseData==[]) {
+        print("IS EMPTY");
+        return false;
+      }
+      bool status = responseData['status'];
+      String message = responseData['message'];
+
+      print(status);
+      if (status) {
+        successToast(message);
+      }
+      myCoursesFuture = getMyCourses();
+      update();
+      return status;
+    } catch (e) {
+      print(e.toString());
+      errorToast(e.toString());
+    } finally {
+      isLoading = false;
+      update();
+    }
+    return false;
   }
 
   Future<String> addOrRemoveCart(int courseId) async {

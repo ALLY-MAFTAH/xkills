@@ -44,7 +44,7 @@ class _GridCourseCardState extends State<GridCourseCard> {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [AppColors.primaryColor, AppColors.secondaryColor],
+                    colors: [AppColors.primaryColor, const Color.fromARGB(255, 8, 65, 66)],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),

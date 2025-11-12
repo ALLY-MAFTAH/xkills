@@ -30,18 +30,16 @@ class SectionController extends GetxController {
         _sections = [];
         for (var section in fetchedSections) {
           final calledDataSet = Section.fromJson(section);
+     
           _sections.add(calledDataSet);
+          print(_sections);
         }
       }
-      await updateSectionDropdownList();
-
-      print(sections);
       return sections;
     } catch (e) {
       print(e.toString());
       errorToast(e.toString());
     }
-    await updateSectionDropdownList();
     return sections;
   }
 

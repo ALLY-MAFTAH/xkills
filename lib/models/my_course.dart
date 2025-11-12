@@ -1,3 +1,8 @@
+import 'package:get/get.dart';
+import '/controllers/section_controller.dart';
+import '../utils/time_conversion.dart';
+import 'section.dart';
+
 class MyCourse {
   int? id;
   String? title;
@@ -39,6 +44,11 @@ class MyCourse {
   String? shareableLink;
   int? totalReviews;
 
+  int? totalNumberOfCompletedLessons;
+  int? totalNumberOfLessons;
+  num? completion;
+  String? totalDuration;
+
   MyCourse({
     this.id,
     this.title,
@@ -79,10 +89,14 @@ class MyCourse {
     this.totalEnrollment,
     this.shareableLink,
     this.totalReviews,
+    this.totalNumberOfCompletedLessons,
+    this.totalNumberOfLessons,
+    this.completion,
+    this.totalDuration,
   });
 
   factory MyCourse.fromJson(Map<String, dynamic> json) {
-    return MyCourse(
+    MyCourse myCourse = MyCourse(
       id: json['id'] as int?,
       title: json['title'] as String?,
       slug: json['slug'] as String?,
@@ -113,7 +127,9 @@ class MyCourse {
       faqs: json['faqs'] as List<dynamic>?,
       instructorIds: json['instructor_ids'] as String?,
       // Convert String to double
-      averageRating: double.tryParse(json['average_rating'] as String? ?? '0.0'),
+      averageRating: double.tryParse(
+        json['average_rating'] as String? ?? '0.0',
+      ),
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
       expiryPeriod: json['expiry_period'] as String?,
@@ -126,7 +142,13 @@ class MyCourse {
       totalEnrollment: json['total_enrollment'] as int?,
       shareableLink: json['shareable_link'] as String?,
       totalReviews: json['total_reviews'] as int?,
+
+      totalNumberOfCompletedLessons:
+          json['total_number_of_completed_lessons'] as int?,
+      totalNumberOfLessons: json['total_number_of_lessons'] as int?,
+      completion: json['completion'] as num?,
     );
+    return myCourse;
   }
 
   Map<String, dynamic> toJson() {
@@ -172,6 +194,41 @@ class MyCourse {
       'total_enrollment': totalEnrollment,
       'shareable_link': shareableLink,
       'total_reviews': totalReviews,
+      'total_number_of_completed_lessons': totalNumberOfCompletedLessons,
+      'total_number_of_lessons': totalNumberOfLessons,
+      'completion': completion,
     };
+  }
+
+Future<void> calculateTotalDuration() async {
+    // Check if the course ID is valid before fetching sections
+    if (id == null) return; 
+
+    final sectionController = Get.put(SectionController());
+    final List<Section> sections = await sectionController.getSections(id!);
+    
+    // (Ensure durationToSeconds is accessible/imported)
+    int totalSeconds = sections.fold(0, (sum, section) {
+      String durationString = section.totalDuration ?? '00:00:00';
+      return sum + durationToSeconds(durationString);
+    });
+
+    String displayDurationString;
+    if (totalSeconds < 3600) {
+      int minutes = totalSeconds ~/ 60;
+      int seconds = totalSeconds % 60;
+      if (minutes > 0) {
+        displayDurationString = '${minutes}m ${seconds}s';
+      } else {
+        displayDurationString = '${seconds}s';
+      }
+    } else {
+      int hours = totalSeconds ~/ 3600;
+      int remainingMinutes = (totalSeconds % 3600) ~/ 60;
+      displayDurationString = '${hours}h ${remainingMinutes}m';
+    }
+    
+    // ⭐️ Assign the calculated value directly to the property
+    totalDuration = displayDurationString;
   }
 }

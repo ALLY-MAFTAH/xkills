@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
-import 'package:skillsbank/views/screens/course_details_screen.dart';
+import '../../includes/ratings.dart';
+import '/models/course.dart';
+import '/views/screens/course_details_screen.dart';
 import '/views/screens/courses_screen.dart';
 import '../../models/my_course.dart';
 import '/components/shimmer_widgets/cart_items_shimmer.dart';
@@ -38,116 +41,248 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
   }
 
   Widget _buildMyCourseItem(MyCourse myCourse) {
+    Course course = Course(
+      id: myCourse.id,
+      title: myCourse.title,
+      slug: myCourse.slug,
+      shortDescription: myCourse.shortDescription,
+      userId: myCourse.userId,
+      categoryId: myCourse.categoryId,
+      courseType: myCourse.courseType,
+      status: myCourse.status,
+      level: myCourse.level,
+      language: myCourse.language,
+      isPaid: myCourse.isPaid,
+      isBest: myCourse.isBest,
+      discountedPrice: myCourse.discountedPrice,
+      discountFlag: myCourse.discountFlag,
+      enableDripContent: myCourse.enableDripContent,
+      dripContentSettings: myCourse.dripContentSettings,
+      metaKeywords: myCourse.metaKeywords,
+      metaDescription: myCourse.metaDescription,
+      thumbnail: myCourse.thumbnail,
+      banner: myCourse.banner,
+      preview: myCourse.preview,
+      description: myCourse.description,
+      requirements: myCourse.requirements,
+      outcomes: myCourse.outcomes,
+      faqs: myCourse.faqs,
+      instructorIds: myCourse.instructorIds,
+      averageRating: myCourse.averageRating,
+      createdAt: myCourse.createdAt,
+      updatedAt: myCourse.updatedAt,
+      expiryPeriod: myCourse.expiryPeriod,
+      instructors: myCourse.instructors,
+      priceCart: myCourse.priceCart,
+      instructorName: myCourse.instructorName,
+      instructorProfile: myCourse.instructorProfile,
+      instructorImage: myCourse.instructorImage,
+      totalEnrollment: myCourse.totalEnrollment,
+      shareableLink: myCourse.shareableLink,
+      totalReviews: myCourse.totalReviews,
+    );
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: InkWell(
         onTap: () {
-          // courseController.selectedCourse = myCourse;
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (_) => CourseDetailsScreen()),
-          // );
+          courseController.selectedCourse = course;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => CourseDetailsScreen()),
+          );
         },
-        child: Container(
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 80,
-                height: 80,
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Container(
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
+                  color: Colors.white.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child:
-                    myCourse.thumbnail!.isNotEmpty
-                        ? ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: CachedNetworkImage(
-                            imageUrl: myCourse.thumbnail!,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => customLoader(),
-                            errorWidget:
-                                (context, url, error) =>
-                                    const Icon(Icons.error),
-                          ),
-                        )
-                        : Icon(
-                          Icons.movie_filter,
-                          size: 70,
-                          color: Colors.grey,
-                        ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      myCourse.title!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 110,
+                          height: 110,
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child:
+                              myCourse.thumbnail!.isNotEmpty
+                                  ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl: myCourse.thumbnail!,
+                                      fit: BoxFit.cover,
+                                      placeholder:
+                                          (context, url) => customLoader(),
+                                      errorWidget:
+                                          (context, url, error) =>
+                                              const Icon(Icons.error),
+                                    ),
+                                  )
+                                  : Icon(
+                                    Icons.movie_filter,
+                                    size: 70,
+                                    color: Colors.grey,
+                                  ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 20),
+                              Text(
+                                myCourse.title!,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${myCourse.shortDescription}',
+                                style: const TextStyle(
+                                  color: Color.fromARGB(255, 224, 232, 236),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${myCourse.shortDescription}',
-                      style: const TextStyle(
-                        color: Color.fromARGB(255, 241, 239, 234),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
+                    SizedBox(height: 10),
+                    // 📚 Lessons Count
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  // Value (White Color)
+                                  TextSpan(
+                                    text:
+                                        "${myCourse.totalNumberOfLessons.toString()} ",
+                                    style: const TextStyle(
+                                      color:
+                                          Colors.white, // Value color is White
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  // Label (Gray Color)
+                                  TextSpan(
+                                    text: " Total Lessons",
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(
+                                        .7,
+                                      ), // Label color is Gray
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  // Value (White Color)
+                                  TextSpan(
+                                    text:
+                                        "${myCourse.totalDuration.toString()} ",
+                                    style: const TextStyle(
+                                      color:
+                                          Colors.white, // Value color is White
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  // Label (Gray Color)
+                                  TextSpan(
+                                    text: " Total Duration",
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(
+                                        .7,
+                                      ), // Label color is Gray
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        buildRatingStars(
+                          myCourse.averageRating ?? 0.0,
+                          fontSize: 14,
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(height: myCourse.discountFlag! ? 8 : 25),
-                  if (myCourse.isPaid! && myCourse.discountFlag!)
-                    Text(
-                      '${myCourse.price}', // Assuming originalPrice exists
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                        decoration:
-                            TextDecoration
-                                .lineThrough, // The strikethrough effect
-                        decorationColor: Colors.grey.withOpacity(0.9),
-                        decorationThickness: 2,
+            ),
+
+            Positioned(
+              right: 0,
+              top: 0,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 4,
+                    width: 5,
+                    child: CustomPaint(painter: TrianglePainter()),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 120, 105, 76),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
                       ),
                     ),
-                  Text(
-                    myCourse.isPaid!
-                        ? myCourse.discountFlag! &&
-                                myCourse.discountedPrice != null
-                            ? '\$${myCourse.discountedPrice}'
-                            : '${myCourse.price}'
-                        : "Free",
-
-                    style: const TextStyle(
-                      color: Color(0xFFE6C068),
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            !myCourse.isPaid! ? "Purchased" : "Free",
+                            style: const TextStyle(
+                              color: Color(0xFFE6C068),
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -163,7 +298,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
             const Icon(Icons.school_rounded, size: 80, color: Colors.white54),
             const SizedBox(height: 15),
             const Text(
-              "You haven't purchased any course yet.",
+              "You haven't enrolled to any course yet.",
               style: TextStyle(color: Colors.white70, fontSize: 18),
             ),
             const SizedBox(height: 20),
@@ -267,7 +402,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
 
                           final List<MyCourse> myCourses = snapshot.data ?? [];
                           final bool isEmpty = myCourses.isEmpty;
-
                           return SliverList(
                             delegate: SliverChildListDelegate([
                               Container(
@@ -336,3 +470,25 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
     );
   }
 }
+
+class TrianglePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint =
+        Paint()
+          ..color = Colors.grey
+          ..strokeWidth = 2.0;
+    Path path = Path();
+    path.moveTo(0.0, size.height);
+    path.lineTo(size.width, 0.0);
+    path.lineTo(size.width, size.height);
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+

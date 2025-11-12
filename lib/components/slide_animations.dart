@@ -5,8 +5,7 @@ class RightLeftSlide extends StatefulWidget {
   final double delay;
   final Widget child;
 
-  const RightLeftSlide({Key? key, this.delay = 0, required this.child})
-      : super(key: key);
+  const RightLeftSlide({super.key, this.delay = 0, required this.child});
 
   @override
   _RightLeftSlideState createState() => _RightLeftSlideState();
@@ -63,8 +62,7 @@ class TopBottomSlide extends StatefulWidget {
   final double delay;
   final Widget child;
 
-  const TopBottomSlide({Key? key, this.delay = 0, required this.child})
-      : super(key: key);
+  const TopBottomSlide({super.key, this.delay = 0, required this.child});
 
   @override
   _TopBottomSlideState createState() => _TopBottomSlideState();
@@ -121,8 +119,7 @@ class LeftRightSlide extends StatefulWidget {
   final double delay;
   final Widget child;
 
-  const LeftRightSlide({Key? key, this.delay = 0, required this.child})
-      : super(key: key);
+  const LeftRightSlide({super.key, this.delay = 0, required this.child});
 
   @override
   _LeftRightSlideState createState() => _LeftRightSlideState();
@@ -175,8 +172,7 @@ class BottomTopSlide extends StatefulWidget {
   final double delay;
   final Widget child;
 
-  const BottomTopSlide({Key? key, this.delay = 0, required this.child})
-      : super(key: key);
+  const BottomTopSlide({super.key, this.delay = 0, required this.child});
 
   @override
   _BottomTopSlideState createState() => _BottomTopSlideState();

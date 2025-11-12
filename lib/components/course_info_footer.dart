@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../includes/ratings.dart';
 import '../models/course.dart';
 import '/theme/app_colors.dart'; // Ensure this path is correct
 
@@ -12,44 +13,7 @@ class CourseInfoFooter extends StatelessWidget {
     required this.onBookmarkPressed,
   });
 
-  // Helper method to build the star rating row
-  Widget _buildRatingStars(double rating) {
-    List<Widget> stars = [];
-    int fullStars = rating.floor();
-    double fractionalPart = rating - fullStars;
-
-    for (int i = 0; i < 5; i++) {
-      IconData icon;
-      Color color = Colors.amber;
-
-      if (i < fullStars) {
-        icon = Icons.star;
-      } else if (i == fullStars && fractionalPart > 0) {
-        icon = Icons.star_half;
-      } else {
-        icon = Icons.star_border;
-        color = Colors.white70;
-      }
-
-      stars.add(Icon(icon, color: color, size: 12));
-    }
-    stars.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 4.0),
-        child: Text(
-          rating.toStringAsFixed(1),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-
-    return Row(children: stars);
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,11 +26,11 @@ class CourseInfoFooter extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.white.withOpacity(0.1),
-                    AppColors.secondaryColor.withOpacity(0.3),
+                    const Color.fromARGB(255, 2, 49, 50),
+                    AppColors.secondaryColor.withOpacity(0.1),
                   ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
               ),
             ),
@@ -107,7 +71,7 @@ class CourseInfoFooter extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildRatingStars(thisCourse.averageRating ?? 0.0),
+                    buildRatingStars(thisCourse.averageRating ?? 0.0),
                     Text(
                       thisCourse.isPaid!
                           ? thisCourse.discountFlag!&&thisCourse.discountedPrice != null

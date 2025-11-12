@@ -169,10 +169,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                     : MediaQuery.of(context).padding.top,
                             right: 10,
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
-                                color: Colors.white.withOpacity(.3),
+                                color: AppColors.primaryColor,
                               ),
                               child: Text(
                                 "Free",
@@ -654,7 +654,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                               }
                             },
                           ),
-                          SizedBox(height: thisCourse.isPaid! ? 85 : 170),
+                          SizedBox(height: thisCourse.isPaid! ? 85 : 20),
                         ],
                       ),
                     ),
@@ -663,7 +663,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               ],
             ),
             FutureBuilder(
-              // Listen to the cart list future from the controller
               future: courseController.cartListFuture,
               builder: (context, cartSnapshot) {
                 if (cartSnapshot.connectionState == ConnectionState.waiting) {

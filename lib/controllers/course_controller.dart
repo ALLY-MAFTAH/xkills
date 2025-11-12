@@ -65,24 +65,41 @@ class CourseController extends GetxController {
         {},
         false,
       );
-      if (responseData == null) return myCourses;
+      if (responseData == null) return _myCourses;
 
       final List myFetchedCourses = responseData;
+
+      // ⭐️ 1. List to hold the MyCourse objects
+      List<MyCourse> temporaryCourses = [];
+
+      // ⭐️ 2. List to hold all the duration calculation Futures
+      List<Future<void>> durationCalculations = [];
+
       if (myFetchedCourses.isNotEmpty) {
-        _myCourses = [];
-        for (var myCourse in myFetchedCourses) {
-          final calledDataSet = MyCourse.fromJson(myCourse);
-          _myCourses.add(calledDataSet);
+        for (var myCourseJson in myFetchedCourses) {
+          // A. Synchronously create the model object
+          final MyCourse courseModel = MyCourse.fromJson(myCourseJson);
+          temporaryCourses.add(courseModel);
+
+          // B. Start the ASYNCHRONOUS duration calculation
+          // and add the Future to the list.
+          durationCalculations.add(courseModel.calculateTotalDuration());
         }
       }
+
+      // ⭐️ 3. CRITICAL: Wait for ALL duration calculations to complete
+      await Future.wait(durationCalculations);
+
+      // 4. Update the controller state now that all data is ready
+      _myCourses = temporaryCourses;
+
       print("Fetched ${myCourses.length} my courses");
-      print(myCourses);
-      return myCourses;
+      return _myCourses;
     } catch (e) {
       print(e.toString());
       errorToast(e.toString());
+      return _myCourses;
     }
-    return myCourses;
   }
 
   Future<List<Course>> getCartList() async {
@@ -129,8 +146,8 @@ class CourseController extends GetxController {
       );
       if (responseData == null) return false;
       print(responseData);
-        print("IS CHECKING");
-      if (responseData==[]) {
+      print("IS CHECKING");
+      if (responseData == []) {
         print("IS EMPTY");
         return false;
       }

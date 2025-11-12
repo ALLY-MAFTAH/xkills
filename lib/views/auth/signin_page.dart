@@ -230,7 +230,7 @@ class _SigninPageState extends State<SigninPage> {
                                               errorToast("Email not valid");
                                             } else {
                                               setState(() {
-                                                authController.login();
+                                                authController.signin();
                                               });
                                             }
                                           },

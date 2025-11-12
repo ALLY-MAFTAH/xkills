@@ -6,7 +6,7 @@ Future<bool> hasInternet() async {
         .checkConnectivity()
         .timeout(const Duration(seconds: 30));
 
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult.isEmpty) {
       print("THERE IS NO INTERNET :::::::::::");
       return false;
     } else {

@@ -40,7 +40,6 @@ class Section {
                 .map((i) => Lesson.fromJson(i as Map<String, dynamic>))
                 .toList()
             : [];
-
     return Section(
       id: json['id'] as int,
       userId: json['user_id'] as int,
@@ -50,7 +49,6 @@ class Section {
       createdAt: json['created_at'] as String,
       updatedAt: json['updated_at'] as String,
       lessons: parsedLessons,
-      // The total duration is a string like "00:00:00"
       totalDuration: json['total_duration'] as String,
       lessonCounterStarts: json['lesson_counter_starts'] as int,
       lessonCounterEnds: json['lesson_counter_ends'] as int,

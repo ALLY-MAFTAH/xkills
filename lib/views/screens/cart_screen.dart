@@ -30,11 +30,12 @@ class _CartScreenState extends State<CartScreen> {
 
   void _calculateTotal(List<Course> cartItems) {
     _totalPrice = cartItems.fold(0.0, (sum, item) {
-      final priceString = item.discountedPrice.toString();
-      final price =
-          double.tryParse(priceString) ??
-          double.tryParse(item.price.toString()) ??
-          0.0;
+      final rawPriceString =
+          item.discountFlag == true && item.discountedPrice != null
+              ? item.discountedPrice.toString()
+              : item.price.toString();
+      final cleanPriceString = rawPriceString.replaceAll(RegExp(r'[^\d.]'), '');
+      final price = double.tryParse(cleanPriceString) ?? 0.0;
       return sum + price;
     });
   }

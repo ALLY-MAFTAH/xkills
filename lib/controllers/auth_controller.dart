@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:skillsbank/views/auth/signin_page.dart';
+import 'package:skillsbank/views/screens/tab_screen.dart';
 import '../views/screens/home_screen.dart';
 import '/components/validations.dart';
 
@@ -37,7 +38,7 @@ class AuthController extends GetxController {
   String? phoneForOTP;
 
   // LOGIN
-  Future<void> login() async {
+  Future<void> signin() async {
     isSubmitting = true;
     update();
     try {
@@ -64,7 +65,7 @@ class AuthController extends GetxController {
       isSubmitting = false;
       clearFields();
       update();
-      Get.offAll(() => HomeScreen());
+      Get.offAll(() => TabsScreen());
     } catch (ex) {
       update();
       print(ex.toString());
@@ -105,7 +106,7 @@ class AuthController extends GetxController {
       bool succeeded = responseData['success'];
       print(message);
       if (succeeded) {
-        await login();
+        await signin();
       }
       clearFields();
       update();
@@ -403,8 +404,4 @@ class AuthController extends GetxController {
     resetCodeController.clear();
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 }

@@ -80,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             // 2. Main Content
             SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
@@ -94,25 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     // Category Section Header
                     ListTile(
                       contentPadding: const EdgeInsets.symmetric(horizontal: 1),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CategoriesScreen(),
-                          ),
-                        );
-                      },
+
                       title: const Text(
                         'Choose Category',
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
-                      trailing: const Icon(
-                        Icons.arrow_forward_rounded,
-                        color: Colors.white,
-                      ),
                     ),
 
-                    // --- CATEGORIES FUTUREBUILDER (UPDATED) ---
                     FutureBuilder(
                       future: categoryController.categoriesFuture,
                       builder: (context, asyncSnapshot) {
@@ -160,7 +149,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
 
-                    // Top Courses Section Header
                     Divider(color: Colors.grey[700]),
                     ListTile(
                       contentPadding: const EdgeInsets.symmetric(horizontal: 1),
@@ -245,7 +233,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                             itemBuilder: (context, index) {
                               final course = courses[index];
-                              return GridCourseCard(thisCourse: course);
+                              return GridCourseCard(
+                                thisCourse: course,
+                                fromInstructorsScreen: false,
+                              );
                             },
                           );
                         }

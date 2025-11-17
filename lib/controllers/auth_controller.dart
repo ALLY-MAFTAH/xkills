@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:skillsbank/views/auth/signin_page.dart';
 import 'package:skillsbank/views/screens/tab_screen.dart';
-import '../views/screens/home_screen.dart';
 import '/components/validations.dart';
 
 import '../components/toasts.dart';
@@ -110,7 +109,6 @@ class AuthController extends GetxController {
       }
       clearFields();
       update();
-      Get.offAll(() => HomeScreen());
     } catch (ex) {
       update();
       print(ex.toString());

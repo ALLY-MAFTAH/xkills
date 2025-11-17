@@ -2,16 +2,23 @@ import 'dart:async';
 import 'package:pod_player/pod_player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../constants/app_brand.dart';
+import '/constants/endpoints.dart';
 
 import '../theme/app_colors.dart';
+import '../utils/get_video_id.dart';
 
 class PlayVideoFromNetwork extends StatefulWidget {
   static const routeName = '/fromNetwork';
   final int courseId;
   final int? lessonId;
   final String videoUrl;
-  const PlayVideoFromNetwork(
-      {super.key, required this.courseId, this.lessonId, required this.videoUrl});
+  const PlayVideoFromNetwork({
+    super.key,
+    required this.courseId,
+    this.lessonId,
+    required this.videoUrl,
+  });
 
   @override
   State<PlayVideoFromNetwork> createState() => _PlayVideoFromAssetState();
@@ -24,17 +31,22 @@ class _PlayVideoFromAssetState extends State<PlayVideoFromNetwork> {
 
   @override
   void initState() {
+    String fullUrl = "";
+    if (widget.lessonId != null) {
+      final videoFile = getVideoWithExtension(widget.videoUrl);
+      fullUrl =
+          Endpoints.baseUrl + "/public/uploads/lesson_file/videos/$videoFile";
+      print("LESSON ID: ${widget.lessonId}");
+    } else {
+      fullUrl = widget.videoUrl;
+    }
+
+    print("LESSON ID: ${widget.lessonId}");
     controller = PodPlayerController(
       playVideoFrom: PlayVideoFrom.networkQualityUrls(
         videoUrls: [
-          VideoQalityUrls(
-            quality: 360,
-            url: widget.videoUrl,
-          ),
-          VideoQalityUrls(
-            quality: 720,
-            url: widget.videoUrl,
-          ),
+          VideoQalityUrls(quality: 360, url: fullUrl),
+          VideoQalityUrls(quality: 720, url: fullUrl),
         ],
       ),
     )..initialise();
@@ -97,36 +109,72 @@ class _PlayVideoFromAssetState extends State<PlayVideoFromNetwork> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: AppColors.secondaryColor,
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-      ),
-      backgroundColor: AppColors.secondaryColor,
-      body: SafeArea(
-        child: Center(
-          child: PodVideoPlayer(
-            controller: controller,
-            podProgressBarConfig: const PodProgressBarConfig(
-              padding: kIsWeb
-                  ? EdgeInsets.zero
-                  : EdgeInsets.only(
-                      bottom: 20,
-                      left: 20,
-                      right: 20,
-                    ),
-              playingBarColor: Colors.blue,
-              circleHandlerColor: Colors.blue,
-              backgroundColor: Colors.blueGrey,
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.transparent,
+    extendBodyBehindAppBar: true,
+    body: Stack(
+      children: [
+        // Background gradient (same as YouTube screen)
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.secondaryColor,
+                AppColors.primaryColor,
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
             ),
           ),
         ),
-      ),
-    );
-  }
+
+        // Back button
+        Positioned(
+          top: MediaQuery.of(context).padding.top + 10,
+          left: 10,
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(Icons.arrow_back, size: 26, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+        ),
+
+        // Centered appBrand (same UI look as YouTube screen)
+        Positioned(
+          top: MediaQuery.of(context).padding.top + 10,
+          left: 0,
+          right: 0,
+          child: appBrand(),
+        ),
+
+        // Video Player (center)
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: PodVideoPlayer(
+              controller: controller,
+              podProgressBarConfig: const PodProgressBarConfig(
+                playingBarColor: Colors.white,
+                circleHandlerColor: Colors.white,
+                backgroundColor: Colors.white30,
+                padding: EdgeInsets.only(bottom: 20),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 }

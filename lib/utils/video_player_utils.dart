@@ -13,6 +13,7 @@ Future<void> navigateToVideoPlayer({
   required int courseId,
   required int? lessonId,
 }) async {
+  print("VIDEO DATA::::: $videoUrl");
   if (videoUrl.isEmpty) {
     Navigator.push(
       context,
@@ -30,6 +31,7 @@ Future<void> navigateToVideoPlayer({
   final isMp4 = RegExp(r"\.mp4(\?|$)").hasMatch(videoUrl);
   final isWebm = RegExp(r"\.webm(\?|$)").hasMatch(videoUrl);
   final isOgg = RegExp(r"\.ogg(\?|$)").hasMatch(videoUrl);
+  final isMkv = RegExp(r"\.mkv(\?|$)").hasMatch(videoUrl);
   // -----------------------
 
   Widget nextPage;
@@ -62,7 +64,7 @@ Future<void> navigateToVideoPlayer({
       vimeoVideoId: vimeoVideoId,
       lessonId: lessonId,
     );
-  } else if (isMp4 || isOgg || isWebm) {
+  } else if (isMp4 || isOgg || isWebm || isMkv) {
     nextPage = PlayVideoFromNetwork(
       courseId: courseId,
       lessonId: lessonId,

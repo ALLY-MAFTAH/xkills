@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../controllers/auth_controller.dart';
 
-InputDecoration getInputDecoration(String hintext) {
+InputDecoration getInputDecoration(String hintext, VoidCallback toggleObscure) {
 
 
   final authController = Get.put(AuthController());
@@ -47,14 +47,7 @@ InputDecoration getInputDecoration(String hintext) {
                   authController.isSubmitting
                       ? null
                       : () {
-                        // setState(() {
-                        //   if (hintext == "Password") {
-                        //     passwordObscure = !passwordObscure;
-                        //   }
-                        //   if (hintext == "Confirm Password") {
-                        //     confirmPasswordObscure = !confirmPasswordObscure;
-                        //   }
-                        // });
+                        toggleObscure();
                       },
               disabledColor: Colors.grey[700],
               color: Colors.white,

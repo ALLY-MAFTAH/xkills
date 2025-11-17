@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,6 +7,10 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:share_plus/share_plus.dart';
+import '/controllers/instructor_controller.dart';
+import '../components/toasts.dart';
+import '../models/instructor.dart';
+import '../views/screens/instructor_details_screen.dart';
 import '/components/custom_loader.dart';
 import '/components/slide_animations.dart';
 import '../controllers/course_controller.dart';
@@ -13,6 +18,7 @@ import '../models/course.dart';
 import '../theme/app_colors.dart';
 
 Widget buildLessonItem(
+  BuildContext context,
   String title,
   String duration,
   bool userValidity,
@@ -94,7 +100,7 @@ Widget buildLessonItem(
                 ),
               ),
               const SizedBox(width: 5),
-              if( hasAccess)
+              if (hasAccess)
                 SizedBox(
                   width: 30,
                   height: 30,
@@ -108,22 +114,21 @@ Widget buildLessonItem(
                     onPressed: onDownloadPressed,
                   ),
                 ),
-              if (! hasAccess
-                    )
-              if (userValidity)
-                SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: IconButton(
-                    style: IconButton.styleFrom(padding: EdgeInsets.zero),
-                    icon: const Icon(
-                      Icons.file_download_outlined,
-                      color: Colors.white,
-                      size: 24,
+              if (!hasAccess)
+                if (userValidity)
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: IconButton(
+                      style: IconButton.styleFrom(padding: EdgeInsets.zero),
+                      icon: const Icon(
+                        Icons.file_download_outlined,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                      onPressed: onDownloadPressed,
                     ),
-                    onPressed: onDownloadPressed,
                   ),
-                ),
               if (!userValidity)
                 SizedBox(
                   width: 30,
@@ -354,9 +359,9 @@ Widget buildBuyButton(
   );
 }
 
-List<Widget> buildCourseSection(Course thisCourse) {
+List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
   final GlobalKey shareWidgetKey = GlobalKey();
-
+  final instructorController = Get.find<InstructorController>();
   return [
     Padding(
       padding: EdgeInsetsGeometry.symmetric(vertical: 10),
@@ -473,27 +478,60 @@ List<Widget> buildCourseSection(Course thisCourse) {
         ),
         const SizedBox(width: 16),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                thisCourse.instructorName ?? 'Unknown',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+          child: InkWell(
+            onTap: () async {
+              try {
+                print("Instructor tapped");
+
+                final String instructorIdsJson = thisCourse.instructorIds!;
+                final List<dynamic> idList = json.decode(instructorIdsJson);
+                print(idList);
+                if (idList != []) {
+                  final int instructorId = int.parse(idList.first.toString());
+
+                  Instructor? thisInstructor = await instructorController
+                      .getInstructorById(instructorId);
+                  print(thisInstructor.name);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) => InstructorDetailsScreen(
+                            thisInstructor: thisInstructor,
+                            fromInstructorsScreen: true,
+                          ),
+                    ),
+                  );
+                                } else {
+                  errorToast("Instructor not found.");
+                }
+              } catch (e) {
+                print(e.toString());
+                errorToast("Instructor not found.");
+              }
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  thisCourse.instructorName ?? 'Unknown',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                thisCourse.instructorProfile ?? "",
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white.withOpacity(0.6),
+                const SizedBox(height: 4),
+                Text(
+                  thisCourse.instructorProfile ?? "",
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white.withOpacity(0.6),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         // Follow Button

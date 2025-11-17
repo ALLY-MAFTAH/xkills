@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
+import '../../controllers/instructor_controller.dart';
 import '../../includes/ratings.dart';
 import '/models/course.dart';
 import '/views/screens/course_details_screen.dart';
@@ -23,6 +23,7 @@ class MyCoursesScreen extends StatefulWidget {
 
 class _MyCoursesScreenState extends State<MyCoursesScreen> {
   final courseController = Get.put(CourseController());
+  final instructorController = Get.put(InstructorController());
 
   @override
   void initState() {
@@ -145,6 +146,16 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                "By ${myCourse.instructorName!}",
+                                style: TextStyle(
+                                  color: AppColors.tertiaryColor,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 maxLines: 2,
@@ -407,6 +418,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,
+                                  vertical: 10
                                 ),
                                 child:
                                     isEmpty
@@ -440,24 +452,15 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                     right: 0,
                     child: appBrand(),
                   ),
-                  Visibility(
-                    visible: false,
-                    child: Positioned(
-                      top:
-                          Platform.isAndroid
-                              ? topPadding + 45
-                              : topPadding + 30,
-                      left: 0,
-                      right: 0,
-                      child: const Center(
-                        child: Text(
-                          "My Courses",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                  Positioned(
+                    top: Platform.isAndroid ? topPadding + 45 : topPadding + 30,
+                    left: 10,
+                    child: Text(
+                      "My Courses",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
                     ),
                   ),
@@ -490,5 +493,3 @@ class TrianglePainter extends CustomPainter {
     return false;
   }
 }
-
-

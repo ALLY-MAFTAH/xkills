@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skillsbank/views/auth/signin_page.dart';
 import '/components/toasts.dart';
 import '/components/validations.dart';
 import '../../components/custom_loader.dart';
@@ -112,7 +113,7 @@ class _SignupPageState extends State<SignupPage> {
                               fontWeight: FontWeight.bold,
                             ),
                             enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration('Full Name'),
+                            decoration: getInputDecoration('Full Name', () {}),
                             cursorColor: Colors.white,
                             controller: authController.nameController,
                             keyboardType: TextInputType.name,
@@ -139,7 +140,7 @@ class _SignupPageState extends State<SignupPage> {
                               fontWeight: FontWeight.bold,
                             ),
                             enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration('E-mail'),
+                            decoration: getInputDecoration('E-mail', () {}),
                             cursorColor: Colors.white,
                             controller: authController.emailController,
                             keyboardType: TextInputType.emailAddress,
@@ -176,7 +177,12 @@ class _SignupPageState extends State<SignupPage> {
                               });
                             },
                             obscureText: authController.passwordObscure,
-                            decoration: getInputDecoration('Password'),
+                            decoration: getInputDecoration('Password', () {
+                              setState(() {
+                                authController.passwordObscure =
+                                    !authController.passwordObscure;
+                              });
+                            }),
                           ),
                         ),
                         Container(
@@ -205,9 +211,18 @@ class _SignupPageState extends State<SignupPage> {
                               });
                             },
                             obscureText: authController.confirmPasswordObscure,
-                            decoration: getInputDecoration('Confirm Password'),
+                            decoration: getInputDecoration(
+                              'Confirm Password',
+                              () {
+                                setState(() {
+                                  authController.confirmPasswordObscure =
+                                      !authController.confirmPasswordObscure;
+                                });
+                              },
+                            ),
                           ),
                         ),
+                        const SizedBox(height: 10),
 
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -325,6 +340,35 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Already have an account? ",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  ' Sign In',
+                                  style: TextStyle(
+                                    color: AppColors.tertiaryColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     );
                   },

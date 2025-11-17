@@ -13,6 +13,10 @@ class CourseController extends GetxController {
   List<Course> _courses = [];
   List<Course> get courses => _courses;
 
+  Future<List<Course>>? instructorCoursesFuture;
+  List<Course> _instructorCourses = [];
+  List<Course> get instructorCourses => _instructorCourses;
+
   MyCourse mySelectedCourse = MyCourse();
   Future<List<MyCourse>>? myCoursesFuture;
   List<MyCourse> _myCourses = [];
@@ -68,29 +72,17 @@ class CourseController extends GetxController {
       if (responseData == null) return _myCourses;
 
       final List myFetchedCourses = responseData;
-
-      // ⭐️ 1. List to hold the MyCourse objects
       List<MyCourse> temporaryCourses = [];
-
-      // ⭐️ 2. List to hold all the duration calculation Futures
       List<Future<void>> durationCalculations = [];
 
       if (myFetchedCourses.isNotEmpty) {
         for (var myCourseJson in myFetchedCourses) {
-          // A. Synchronously create the model object
           final MyCourse courseModel = MyCourse.fromJson(myCourseJson);
           temporaryCourses.add(courseModel);
-
-          // B. Start the ASYNCHRONOUS duration calculation
-          // and add the Future to the list.
           durationCalculations.add(courseModel.calculateTotalDuration());
         }
       }
-
-      // ⭐️ 3. CRITICAL: Wait for ALL duration calculations to complete
       await Future.wait(durationCalculations);
-
-      // 4. Update the controller state now that all data is ready
       _myCourses = temporaryCourses;
 
       print("Fetched ${myCourses.length} my courses");
@@ -100,6 +92,33 @@ class CourseController extends GetxController {
       errorToast(e.toString());
       return _myCourses;
     }
+  }
+
+  Future<List<Course>> getCoursesByInstructor(int id) async {
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.GET,
+        Endpoints.getCoursesByInstructor,
+        {"instructor_id": id},
+        false,
+      );
+      if (responseData == null) return _instructorCourses;
+
+      final List fetchedInstructorCourses = responseData;
+      if (fetchedInstructorCourses.isNotEmpty) {
+        _instructorCourses = [];
+        for (var course in fetchedInstructorCourses) {
+          final calledDataSet = Course.fromJson(course);
+          _instructorCourses.add(calledDataSet);
+        }
+      }
+      print(instructorCourses);
+      return instructorCourses;
+    } catch (e) {
+      print(e.toString());
+      errorToast(e.toString());
+    }
+    return instructorCourses;
   }
 
   Future<List<Course>> getCartList() async {

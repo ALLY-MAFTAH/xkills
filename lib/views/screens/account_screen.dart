@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:skillsbank/constants/auth_user.dart';
@@ -23,6 +24,7 @@ void handleLogout(BuildContext context) {
     MaterialPageRoute(builder: (context) => const SigninPage()),
   );
 }
+
 Widget buildMyCourseItem(BuildContext context, dynamic course) => Container();
 // --- End Placeholder/Mock Functions ---
 
@@ -98,29 +100,29 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
         const SizedBox(height: 4),
         // User Email
-        Text(
-          thisUser?.email ?? "",
-          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14),
-        ),
-        const SizedBox(height: 4),
         // User Email
         Text(
           thisUser?.phone ?? "",
-          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14),
+          style: TextStyle(color: Colors.white.withOpacity(0.6),fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          thisUser?.email ?? "",
+          style: TextStyle(color: Colors.white.withOpacity(0.6),fontWeight: FontWeight.bold, fontSize: 14),
         ),
         const SizedBox(height: 4),
         // User Email
         Text(
           thisUser?.address ?? "",
-          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14),
+          style: TextStyle(color: Colors.white.withOpacity(0.6),fontWeight: FontWeight.bold, fontSize: 14),
         ),
         const SizedBox(height: 4),
         // User Email
         Text(
-          thisUser?.role ?? "",
+          "Role: ${GetUtils.capitalize(thisUser!.role!)}",
           style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -204,14 +206,10 @@ class _AccountScreenState extends State<AccountScreen> {
                       SliverList(
                         delegate: SliverChildListDelegate([
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // --- A. Profile Header ---
-                                const SizedBox(height: 40),
                                 _buildProfileHeader(),
                                 Divider(color: Colors.white.withOpacity(0.2)),
                                 const SizedBox(height: 10),
@@ -227,15 +225,6 @@ class _AccountScreenState extends State<AccountScreen> {
                                 ),
                                 const SizedBox(height: 10),
 
-                                // 1. Edit Profile Info
-                                _buildAccountActionTile(
-                                  title: 'Edit Profile Information',
-                                  icon: Icons.person_outline,
-                                  onTap:
-                                      () => navigateToChangeInfoScreen(context),
-                                ),
-
-                                // 2. Change Password
                                 _buildAccountActionTile(
                                   title: 'Change Password',
                                   icon: Icons.lock_outline,
@@ -289,6 +278,15 @@ class _AccountScreenState extends State<AccountScreen> {
                     left: 0,
                     right: 0,
                     child: appBrand(),
+                  ),
+                  Positioned(
+                    top: topPadding-5,
+                    // left: 0,
+                    right: 0,
+                    child: IconButton(iconSize: 20,
+                      icon: Icon(FontAwesomeIcons.edit),
+                      onPressed: (){},
+                    ),
                   ),
                 ],
               ),

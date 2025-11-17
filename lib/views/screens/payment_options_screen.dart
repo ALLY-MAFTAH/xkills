@@ -73,6 +73,17 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
 
             // App Brand
             Positioned(top: topPadding, left: 0, right: 0, child: appBrand()),
+            Positioned(
+              top: topPadding + 200,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Text(
+                  "Payment Screen",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
           ],
         ),
       ),

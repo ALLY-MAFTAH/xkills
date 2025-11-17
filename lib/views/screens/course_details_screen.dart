@@ -169,7 +169,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                     : MediaQuery.of(context).padding.top,
                             right: 10,
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: AppColors.primaryColor,
@@ -300,7 +303,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ...buildCourseSection(thisCourse),
+                          ...buildCourseSection(context, thisCourse),
                           FutureBuilder(
                             future: sectionController.sectionsFuture,
                             builder: (context, asyncSnapshot) {
@@ -435,6 +438,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                               final lessonGradient =
                                                   getLessonGradient(lesson);
                                               return buildLessonItem(
+                                                context,
                                                 lesson.title!,
                                                 lesson.duration!,
                                                 lesson.userValidity!,
@@ -559,6 +563,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                               );
 
                                                           return buildLessonItem(
+                                                            context,
                                                             lesson.title!,
                                                             lesson.duration!,
                                                             lesson
@@ -747,7 +752,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       foregroundColor: AppColors.tertiaryColor,
-                      backgroundColor: AppColors.tertiaryColor.withOpacity(.1),
+                      backgroundColor: AppColors.tertiaryColor,
                     ),
                     onPressed:
                         courseController.isLoading
@@ -755,14 +760,17 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             : () => Navigator.pop(dialogContext, false),
                     child: Text(
                       'Cancel',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       foregroundColor: AppColors.secondaryColor,
-                      backgroundColor: AppColors.secondaryColor.withOpacity(.1),
+                      backgroundColor: AppColors.secondaryColor,
                     ),
                     onPressed:
                         courseController.isLoading
@@ -780,10 +788,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             },
                     child:
                         courseController.isLoading
-                            ? customLoader(color: AppColors.secondaryColor)
+                            ? customLoader(color: Colors.white)
                             : Text(
                               'Enroll',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                   ),
                 ],

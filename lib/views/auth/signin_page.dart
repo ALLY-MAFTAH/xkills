@@ -90,7 +90,7 @@ class _SigninPageState extends State<SigninPage> {
                               fontWeight: FontWeight.bold,
                             ),
                             enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration('E-mail'),
+                            decoration: getInputDecoration('E-mail', () {}),
                             cursorColor: Colors.white,
                             controller: authController.emailController,
                             keyboardType: TextInputType.emailAddress,
@@ -126,9 +126,16 @@ class _SigninPageState extends State<SigninPage> {
                                     input as String;
                               });
                             },
-
                             obscureText: authController.passwordObscure,
-                            decoration: getInputDecoration('Password'),
+                            decoration: getInputDecoration('Password', () {
+                              print("Clicked");
+                              print(authController.passwordObscure);
+                              setState(() {
+                                authController.passwordObscure =
+                                    !authController.passwordObscure;
+                              });
+                              print(authController.passwordObscure);
+                            }),
                           ),
                         ),
                         Padding(

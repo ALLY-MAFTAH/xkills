@@ -10,10 +10,13 @@ class Endpoints {
   static String forgotPassowrd = dotenv.env['FORGOT_PASSWORD']!;
   // Categories
   static String getCategories = dotenv.env['GET_CATEGORIES']!;
+  // Categories
+  static String getInstructors = dotenv.env['GET_INSTRUCTORS']!;
   // Courses
   static String getCourses = dotenv.env['GET_COURSES']!;
   static String getMyCourses = dotenv.env['GET_MY_COURSES']!;
   static String freeCourseEnroll = dotenv.env['FREE_COURSE_ENROLL']!;
+  static String getCoursesByInstructor = dotenv.env['GET_COURSES_BY_INSTRUCTOR']!;
   // Sections
   static String getSections = dotenv.env['GET_SECTIONS']!;
   static String getCartList = dotenv.env['CART_LIST']!;

@@ -23,7 +23,7 @@ class AvatarWidget extends StatelessWidget {
     final colors = [
       AppColors.primaryColor,
       AppColors.secondaryColor,
-      AppColors.tertiaryColor,
+      AppColors.tertiaryColor.withOpacity(.5),
     ];
     final bgColor = colors[index % colors.length];
 

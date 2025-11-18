@@ -14,7 +14,6 @@ import '../../controllers/category_controller.dart';
 import '../../controllers/course_controller.dart';
 import '../../models/category.dart';
 import '../../models/course.dart';
-import 'categories_screen.dart';
 import 'dart:io';
 
 class HomeScreen extends StatefulWidget {

@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:pod_player/pod_player.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_brand.dart';
 import '/constants/endpoints.dart';
-
 import '../theme/app_colors.dart';
 import '../utils/get_video_id.dart';
 

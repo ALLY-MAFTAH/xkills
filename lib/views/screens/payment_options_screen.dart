@@ -1,19 +1,43 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:skillsbank/components/custom_loader.dart';
+import 'package:skillsbank/components/slide_animations.dart';
+import 'package:skillsbank/controllers/payment_controller.dart';
 
+import '../../components/validations.dart';
 import '../../constants/app_brand.dart';
+import '../../enums/enums.dart';
+import '../../includes/payment_option_tile.dart';
+import '../../models/mno.dart';
 import '../../theme/app_colors.dart';
 
 class PaymentOptionsScreen extends StatefulWidget {
+  final List<int> courseIds;
   final double totalAmount;
-  const PaymentOptionsScreen({super.key, required this.totalAmount});
+  const PaymentOptionsScreen({
+    super.key,
+    required this.totalAmount,
+    required this.courseIds,
+  });
 
   @override
   State<PaymentOptionsScreen> createState() => _PaymentOptionsScreenState();
 }
 
 class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
+  final paymentController = Get.put(PaymentController());
+
+  @override
+  void initState() {
+    paymentController.phoneController.addListener(() {
+      paymentController.update();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
@@ -73,14 +97,254 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
 
             // App Brand
             Positioned(top: topPadding, left: 0, right: 0, child: appBrand()),
-            Positioned(
-              top: topPadding + 200,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Text(
-                  "Payment Screen",
-                  style: TextStyle(color: Colors.white),
+            Positioned.fill(
+              top: topPadding + 55,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: GetBuilder<PaymentController>(
+                    builder: (paymentController) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Choose Payment Method",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          GestureDetector(
+                            onTap:
+                                () => setState(
+                                  () =>
+                                      paymentController.selectedMethod =
+                                          PaymentMethod.MOBILE,
+                                ),
+                            child: paymentOptionTile(
+                              isSelected:
+                                  paymentController.selectedMethod ==
+                                  PaymentMethod.MOBILE,
+                              title: "Mobile Payment",
+                              alignment: MainAxisAlignment.spaceBetween,
+                              options: [
+                                ServiceProvider(
+                                  name: ServiceProviderName.MIXX,
+                                  logo: "assets/images/mixx.png",
+                                  backColor: const Color.fromARGB(
+                                    255,
+                                    4,
+                                    53,
+                                    138,
+                                  ),
+                                  foreColor: Colors.amber,
+                                ),
+                                ServiceProvider(
+                                  name: ServiceProviderName.MPESA,
+                                  logo: "assets/images/mpesa.png",
+                                  backColor: const Color.fromARGB(
+                                    255,
+                                    235,
+                                    36,
+                                    22,
+                                  ),
+                                  foreColor: null,
+                                ),
+                                ServiceProvider(
+                                  name: ServiceProviderName.AIRTEL_MONEY,
+                                  logo: "assets/images/airtelmoney.png",
+                                  backColor: const Color.fromARGB(
+                                    255,
+                                    172,
+                                    24,
+                                    13,
+                                  ),
+                                  foreColor: null,
+                                ),
+                                ServiceProvider(
+                                  name: ServiceProviderName.HALOPESA,
+                                  logo: "assets/images/halopesa.png",
+                                  backColor: const Color.fromARGB(
+                                    255,
+                                    255,
+                                    127,
+                                    7,
+                                  ),
+                                  foreColor: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+
+                          // OPTION 2: Card Payment
+                          GestureDetector(
+                            onTap:
+                                () => setState(
+                                  () =>
+                                      paymentController.selectedMethod =
+                                          PaymentMethod.CARD,
+                                ),
+                            child: paymentOptionTile(
+                              isSelected:
+                                  paymentController.selectedMethod ==
+                                  PaymentMethod.CARD,
+                              title: "Pay by Card",
+                              alignment: MainAxisAlignment.spaceBetween,
+                              options: [
+                                ServiceProvider(
+                                  name: ServiceProviderName.VISA,
+                                  logo: "assets/images/visa.png",
+                                  backColor: Colors.white,
+                                  foreColor: null,
+                                ),
+                                ServiceProvider(
+                                  name: ServiceProviderName.MASTERCARD,
+                                  logo: "assets/images/mastercard.png",
+                                  backColor: Colors.white,
+                                  foreColor: null,
+                                ),
+                                ServiceProvider(
+                                  name: ServiceProviderName.DINERS,
+                                  logo: "assets/images/diners.png",
+                                  backColor: Colors.white,
+                                  foreColor: null,
+                                ),
+                                ServiceProvider(
+                                  name: ServiceProviderName.PCI,
+                                  logo: "assets/images/pci.png",
+                                  backColor: Colors.white,
+                                  foreColor: null,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          if (paymentController.selectedMethod ==
+                              PaymentMethod.MOBILE)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Phone Number",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                BottomTopSlide(
+                                  child: SizedBox(
+                                    height: 60,
+
+                                    child: TextFormField(
+                                      enabled: !paymentController.isLoading,
+                                      cursorColor: Colors.white,
+                                      maxLength: 9,
+                                      maxLengthEnforcement:
+                                          MaxLengthEnforcement.enforced,
+                                      controller:
+                                          paymentController.phoneController,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        TZPhoneValidator(),
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      style: TextStyle(
+                                        color:
+                                            paymentController.isLoading
+                                                ? Colors.grey[700]
+                                                : Colors.white,
+                                      ),
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(5),
+                                        prefixText: "🇹🇿 +255 ",
+                                        prefixStyle: TextStyle(
+                                          color:
+                                              paymentController.isLoading
+                                                  ? Colors.grey[700]
+                                                  : Colors.white,
+                                          fontSize: 16,
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white.withOpacity(
+                                          0.1,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        counterStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                          SizedBox(width: 20),
+                          if (paymentController.selectedMethod !=
+                                  PaymentMethod.NONE &&
+                              paymentController.phoneController.text.length ==
+                                  9)
+                            Align(
+                              alignment: Alignment.center,
+                              child: BottomTopSlide(
+                                child: ElevatedButton(
+                                  onPressed:
+                                      paymentController.isLoading
+                                          ? null
+                                          : () {
+                                            paymentController.selectedMethod ==
+                                                    PaymentMethod.CARD
+                                                ? paymentController
+                                                    .submitCardPayment(
+                                                      widget.courseIds,
+                                                      widget.totalAmount,
+                                                      context,
+                                                    )
+                                                : paymentController
+                                                    .submitMobilePayment(
+                                                      widget.courseIds,
+                                                      widget.totalAmount,
+                                                      context,
+                                                    );
+                                          },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.tertiaryColor,
+                                    surfaceTintColor: AppColors.tertiaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    padding: EdgeInsets.all(10),
+                                  ),
+                                  child:
+                                      paymentController.isLoading
+                                          ? customLoader()
+                                          : Text(
+                                            "Pay ${widget.totalAmount.toString()} TZS",
+                                            style: const TextStyle(
+                                              color: Color(0xFF071B1A),
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

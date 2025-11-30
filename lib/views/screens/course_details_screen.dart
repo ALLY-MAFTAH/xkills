@@ -684,6 +684,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                           MaterialPageRoute(
                             builder:
                                 (_) => PaymentOptionsScreen(
+                                  courseIds: [thisCourse.id!],
                                   totalAmount: double.parse(
                                     thisCourse.discountedPrice.toString(),
                                   ),

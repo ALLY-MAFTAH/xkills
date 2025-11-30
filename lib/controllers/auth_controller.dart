@@ -41,7 +41,6 @@ class AuthController extends GetxController {
     isSubmitting = true;
     update();
     try {
-      await Future.delayed(Duration(seconds: 1));
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
 

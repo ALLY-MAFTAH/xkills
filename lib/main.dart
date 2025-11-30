@@ -29,20 +29,54 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       theme: ThemeData(
-        fontFamily: 'Nunito Sans',
+        useMaterial3: true,
         colorScheme: const ColorScheme.light(
           primary: AppColors.primaryColor,
           secondary: AppColors.secondaryColor,
           tertiary: AppColors.tertiaryColor,
         ),
-        useMaterial3: true,
-                textTheme: const TextTheme(
-        ).apply(
-          bodyColor: Colors.white, 
-          displayColor: Colors.white,
-        ),
+
+        // Default app text uses MYRIAD (body text)
+        fontFamily: "Myriad",
+
+        textTheme: TextTheme(
+          // Headings use UNITEA
+          displayLarge: const TextStyle(
+            fontFamily: "Unitea",
+            fontWeight: FontWeight.w900,
+          ),
+          displayMedium: const TextStyle(
+            fontFamily: "Unitea",
+            fontWeight: FontWeight.w800,
+          ),
+          headlineLarge: const TextStyle(
+            fontFamily: "Unitea",
+            fontWeight: FontWeight.bold,
+          ),
+          headlineMedium: const TextStyle(
+            fontFamily: "Unitea",
+            fontWeight: FontWeight.w600,
+          ),
+          titleLarge: const TextStyle(
+            fontFamily: "Unitea",
+            fontWeight: FontWeight.w600,
+          ),
+
+          // Body text uses Myriad
+          bodyLarge: const TextStyle(fontFamily: "Myriad", fontSize: 18),
+          bodyMedium: const TextStyle(fontFamily: "Myriad", fontSize: 16),
+          bodySmall: const TextStyle(fontFamily: "Myriad", fontSize: 14),
+
+          labelLarge: const TextStyle(
+            fontFamily: "Myriad",
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ).apply(bodyColor: Colors.white, displayColor: Colors.white),
+
         iconTheme: const IconThemeData(color: Colors.white),
       ),
+
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
     );

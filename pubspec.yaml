@@ -1,6 +1,6 @@
 name: skillsbank
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -54,9 +54,7 @@ dependencies:
   vimeo_embed_player: ^1.0.2
   flutterwave_standard: ^1.1.0
   font_awesome_flutter: ^10.12.0
-
-
-
+  dio: ^5.9.0
 
 dev_dependencies:
   flutter_test:
@@ -70,12 +68,22 @@ flutter:
     - assets/images/
     - assets/videos/
     - assets/fonts/
-    - assets/icons/
     - .env
 
   fonts:
-    - family: Nunito Sans
+    - family: Myriad
       fonts:
-        - asset: assets/fonts/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf
-        - asset: assets/fonts/NunitoSans-Italic-VariableFont_YTLC,opsz,wdth,wght.ttf
+        - asset: assets/fonts/MYRIAD/MyriadPro-Regular.otf
+        - asset: assets/fonts/MYRIAD/MyriadVariableConcept-Roman.otf
 
+    - family: Unitea
+      fonts:
+        - asset: assets/fonts/UNITEA/UniteaSans-Regular.otf
+        - asset: assets/fonts/UNITEA/UniteaSans-Bold.otf
+          weight: 700
+        - asset: assets/fonts/UNITEA/UniteaSans-Black.otf
+          weight: 900
+        - asset: assets/fonts/UNITEA/UniteaSans-Medium.otf
+          weight: 500
+        - asset: assets/fonts/UNITEA/UniteaSans-SemiBold.otf
+          weight: 600

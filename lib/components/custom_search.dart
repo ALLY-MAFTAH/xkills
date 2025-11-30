@@ -19,7 +19,7 @@ class _CustomSearchState extends State<CustomSearch> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(10),
       child: Stack(
         children: [
           Positioned.fill(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import 'form_fields/date_form_field.dart';
@@ -123,4 +124,29 @@ String getInitial(String fullName) {
       .characters
       .first
       .toUpperCase();
+}
+
+class TZPhoneValidator extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text;
+
+    // Allow empty (user deleting)
+    if (text.isEmpty) return newValue;
+
+    // Only digits
+    if (!RegExp(r'^[0-9]+$').hasMatch(text)) {
+      return oldValue;
+    }
+
+    // First digit must be 6 or 7
+    if (text.length == 1 && !["6", "7"].contains(text)) {
+      return oldValue;
+    }
+
+    return newValue;
+  }
 }

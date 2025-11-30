@@ -21,6 +21,7 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   final courseController = Get.put(CourseController());
   double _totalPrice = 0.0;
+  List<Course> cartItems = [];
 
   @override
   void initState() {
@@ -146,7 +147,7 @@ class _CartScreenState extends State<CartScreen> {
                   SizedBox(height: thisCourse.discountFlag! ? 8 : 25),
                   if (thisCourse.isPaid! && thisCourse.discountFlag!)
                     Text(
-                      '${thisCourse.price}', // Assuming originalPrice exists
+                      '${thisCourse.price}', 
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -162,7 +163,7 @@ class _CartScreenState extends State<CartScreen> {
                     thisCourse.isPaid!
                         ? thisCourse.discountFlag! &&
                                 thisCourse.discountedPrice != null
-                            ? '\$${thisCourse.discountedPrice}'
+                            ? '${thisCourse.discountedPrice}'
                             : '${thisCourse.price}'
                         : "Free",
 
@@ -292,7 +293,7 @@ class _CartScreenState extends State<CartScreen> {
                           );
                         }
 
-                        final List<Course> cartItems = snapshot.data ?? [];
+                        cartItems = snapshot.data ?? [];
                         final bool isEmpty = cartItems.isEmpty;
                         _calculateTotal(cartItems);
 
@@ -334,7 +335,7 @@ class _CartScreenState extends State<CartScreen> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  '\$${_totalPrice.toStringAsFixed(2)}',
+                                                  '${_totalPrice.toStringAsFixed(2)}',
                                                   style: const TextStyle(
                                                     color: Color(0xFFE6C068),
                                                     fontSize: 22,
@@ -429,6 +430,12 @@ class _CartScreenState extends State<CartScreen> {
                                       MaterialPageRoute(
                                         builder:
                                             (_) => PaymentOptionsScreen(
+                                              courseIds:
+                                                  cartItems
+                                                      .map(
+                                                        (course) => course.id!,
+                                                      )
+                                                      .toList(),
                                               totalAmount: _totalPrice,
                                             ),
                                       ),

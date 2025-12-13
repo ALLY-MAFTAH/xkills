@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:skillsbank/components/custom_loader.dart';
-import 'package:skillsbank/components/slide_animations.dart';
-import 'package:skillsbank/controllers/payment_controller.dart';
+import '/components/custom_loader.dart';
+import '/components/slide_animations.dart';
+import '/controllers/payment_controller.dart';
 
 import '../../components/validations.dart';
 import '../../constants/app_brand.dart';

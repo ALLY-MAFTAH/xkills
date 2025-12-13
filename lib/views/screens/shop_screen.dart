@@ -2,27 +2,28 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../components/grid_instructor_card.dart';
+import '../../components/toasts.dart';
+import '/theme/app_padding.dart';
+import '/controllers/course_controller.dart';
+import '/models/course.dart';
+import '/components/grid_product_card.dart';
+import '/components/shimmer_widgets/instructor_grid_shimmer.dart';
 import '/theme/app_colors.dart';
-import '../../components/custom_search.dart';
-import '../../components/shimmer_widgets/instructor_grid_shimmer.dart';
-import '../../constants/app_brand.dart';
-import '../../controllers/instructor_controller.dart';
-import '../../models/instructor.dart';
+import '/components/custom_search.dart';
+import '/constants/app_brand.dart';
 import 'dart:io';
+import 'payment_options_screen.dart';
 
-import 'instructor_details_screen.dart';
-
-class InstructorsScreen extends StatefulWidget {
-  const InstructorsScreen({super.key});
+class ShopScreen extends StatefulWidget {
+  const ShopScreen({super.key});
 
   @override
-  State<InstructorsScreen> createState() => _InstructorsScreenState();
+  State<ShopScreen> createState() => _ShopScreenState();
 }
 
-class _InstructorsScreenState extends State<InstructorsScreen> {
+class _ShopScreenState extends State<ShopScreen> {
   final TextEditingController searchController = TextEditingController();
-  final instructorController = Get.put(InstructorController());
+  final courseController = Get.put(CourseController());
 
   @override
   void initState() {
@@ -31,14 +32,13 @@ class _InstructorsScreenState extends State<InstructorsScreen> {
   }
 
   void _loadInitialData() {
-    instructorController.instructorsFuture =
-        instructorController.getInstructors();
+    courseController.productsFuture = courseController.getProducts();
   }
 
   Future<void> _refreshData() async {
     _loadInitialData();
     // Wait for the new data fetch to complete
-    await Future.wait([instructorController.instructorsFuture!]);
+    await Future.wait([courseController.productsFuture!]);
     setState(() {});
   }
 
@@ -78,7 +78,10 @@ class _InstructorsScreenState extends State<InstructorsScreen> {
             SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppPadding.horizontal,
+                  vertical: AppPadding.vertical,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -91,18 +94,22 @@ class _InstructorsScreenState extends State<InstructorsScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 15, bottom: 2),
                       child: const Text(
-                        'Instructors',
-                        style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 16),
+                        'Products',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
 
                     // --- INSTRUCTOR LIST/EMPTY STATE ---
                     FutureBuilder(
-                      future: instructorController.instructorsFuture,
+                      future: courseController.productsFuture,
                       builder: (context, asyncSnapshot) {
                         if (asyncSnapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const InstructorGridShimmer();
+                          return const ProductGridShimmer();
                         } else if (asyncSnapshot.hasError) {
                           // *** FIX 2: Ensure error message takes up space ***
                           return SizedBox(
@@ -116,7 +123,7 @@ class _InstructorsScreenState extends State<InstructorsScreen> {
                           );
                         } else if (asyncSnapshot.data == null ||
                             asyncSnapshot.data!.isEmpty) {
-                          // *** FIX 3: Ensure 'No instructor' message takes up space ***
+                          // *** FIX 3: Ensure 'No product' message takes up space ***
                           // This forces the SingleChildScrollView to become scrollable
                           return SizedBox(
                             height:
@@ -124,49 +131,78 @@ class _InstructorsScreenState extends State<InstructorsScreen> {
                                 0.7, // Take up a large part of the screen
                             child: const Center(
                               child: Text(
-                                'No instructors found.',
+                                'No products found.',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
                           );
                         } else {
-                          final List<Instructor> instructors =
-                              asyncSnapshot.data!;
+                          final List<Course> products = asyncSnapshot.data!;
 
-                          return GridView.builder(
+                          return ListView.builder(
                             shrinkWrap: true,
                             primary: false,
                             physics: const NeverScrollableScrollPhysics(),
                             padding: const EdgeInsets.only(bottom: 20),
-                            itemCount: instructors.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                  childAspectRatio: 1.4,
-                                ),
+                            itemCount: products.length,
+
                             itemBuilder: (context, index) {
-                              final instructor = instructors[index];
+                              final product = products[index];
                               return InkWell(
-                                onTap:
-                                    () => Navigator.push(
+                                onTap: () {},
+                                // () => Navigator.push(
+                                // context,
+                                // MaterialPageRoute(
+                                //   builder:
+                                // (_) => ProductDetailsScreen(
+                                //   thisProduct: product,
+                                // ),
+                                // ),
+                                // ),
+                                child: GridProductCard(
+                                  thisProduct: product,
+                                  onBuyPressed: () {
+                                    final amount =
+                                        double.tryParse(
+                                          product.price!.replaceAll(
+                                            RegExp(r'[^0-9.]'),
+                                            '',
+                                          ),
+                                        ) ??
+                                        0.0;
+                                    Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder:
-                                            (_) => InstructorDetailsScreen(
-                                              thisInstructor: instructor,
-                                              fromInstructorsScreen: true,
+                                            (_) => PaymentOptionsScreen(
+                                              courseIds: [product.id!],
+                                              totalAmount: amount,
                                             ),
                                       ),
-                                    ),
-                                child: GridInstructorCard(
-                                  title: instructor.name!,
-                                  phone: instructor.phone ?? "",
-                                  biography: instructor.about ?? "",
-                                  photo: instructor.photo ?? "",
-                                  totalCourses: instructor.totalCourses!,
-                                  skills: instructor.skills ?? "",
+                                    );
+                                  },
+                                  onAddToCartPressed: () {
+                                    if (!courseController.isLoading) {
+                                      courseController
+                                          .addOrRemoveCart(product.id!)
+                                          .then((status) {
+                                            if (status == "added") {
+                                              successToast(
+                                                "Product added to cart".tr,
+                                              );
+                                            } else if (status == "removed") {
+                                              successToast(
+                                                "Product removed from cart".tr,
+                                              );
+                                            }
+                                          });
+                                    } else {
+                                      null;
+                                    }
+                                  },
+                                  onDownloadPressed: () {
+                                    // Handle download action
+                                  },
                                 ),
                               );
                             },

@@ -138,8 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               final item = categories[index];
                               return GridCategoryCard(
-                                title: item.keywords!,
-                                subtitle: item.title!,
+                                title: item.keywords??"",
+                                subtitle: item.title??"",
                                 isGolden: item.isGolden!,
                               );
                             },

@@ -34,7 +34,9 @@ class CategoryController extends GetxController {
         _categories = [];
         for (var category in fetchedCategories) {
           final calledDataSet = Category.fromJson(category);
-          _categories.add(calledDataSet);
+          if (calledDataSet.id != 1) {
+            _categories.add(calledDataSet);
+          }
         }
       }
       await updateCategoryDropdownList();

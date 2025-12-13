@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skillsbank/enums/enums.dart';
+import '/enums/enums.dart';
 
 class ServiceProvider {
   ServiceProviderName? name;

@@ -1,18 +1,13 @@
-import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skillsbank/models/instructor.dart';
-import 'package:skillsbank/views/screens/instructor_details_screen.dart';
-import '../controllers/instructor_controller.dart';
 import '/components/course_info_footer.dart';
 import '../controllers/course_controller.dart';
 import '../models/course.dart';
 import '../theme/app_colors.dart';
 import '../views/screens/course_details_screen.dart';
 import 'custom_loader.dart';
-import 'toasts.dart';
 
 class GridCourseCard extends StatefulWidget {
   final Course thisCourse;
@@ -30,7 +25,6 @@ class GridCourseCard extends StatefulWidget {
 
 class _GridCourseCardState extends State<GridCourseCard> {
   final courseController = Get.put(CourseController());
-  final instructorController = Get.put(InstructorController());
 
   @override
   Widget build(BuildContext context) {
@@ -108,38 +102,38 @@ class _GridCourseCardState extends State<GridCourseCard> {
                 bottom: footerHeight,
                 child: InkWell(
                   onTap: () async {
-                    try {
-                      final String instructorIdsJson =
-                          widget.thisCourse.instructorIds!;
-                      final List<dynamic> idList = json.decode(
-                        instructorIdsJson,
-                      );
-                      print(idList);
-                      if (idList != []) {
-                        final int instructorId = int.parse(
-                          idList.first.toString(),
-                        );
+                    // try {
+                    //   final String instructorIdsJson =
+                    //       widget.thisCourse.instructorIds!;
+                    //   final List<dynamic> idList = json.decode(
+                    //     instructorIdsJson,
+                    //   );
+                    //   print(idList);
+                    //   if (idList != []) {
+                    //     final int instructorId = int.parse(
+                    //       idList.first.toString(),
+                    //     );
 
-                        Instructor? thisInstructor = await instructorController
-                            .getInstructorById(instructorId);
-                        print(thisInstructor.name);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) => InstructorDetailsScreen(
-                                  thisInstructor: thisInstructor,
-                                  fromInstructorsScreen: true,
-                                ),
-                          ),
-                        );
-                                            } else {
-                        errorToast("Instructor not found.");
-                      }
-                    } catch (e) {
-                      print(e.toString());
-                      errorToast("Instructor not found.");
-                    }
+                    //     Instructor? thisInstructor = await instructorController
+                    //         .getInstructorById(instructorId);
+                    //     print(thisInstructor.name);
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder:
+                    //             (_) => InstructorDetailsScreen(
+                    //               thisInstructor: thisInstructor,
+                    //               fromInstructorsScreen: true,
+                    //             ),
+                    //       ),
+                    //     );
+                    //                         } else {
+                    //     errorToast("Instructor not found.");
+                    //   }
+                    // } catch (e) {
+                    //   print(e.toString());
+                    //   errorToast("Instructor not found.");
+                    // }
                   },
                   child: Container(
                     color: Colors.transparent,

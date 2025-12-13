@@ -438,14 +438,18 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                               final lessonGradient =
                                                   getLessonGradient(lesson);
                                               return buildLessonItem(
-                                                context,
-                                                lesson.title!,
-                                                lesson.duration!,
-                                                lesson.userValidity!,
-                                                true,
-                                                lessonGradient,
-                                                screenWidth,
-                                                () {
+                                                context: context,
+                                                lessonId: lesson.id!,
+                                                lessonTitle: lesson.title!,
+                                                sectionName:
+                                                    sections.first.title!,
+                                                courseTitle: thisCourse.title!,
+                                                duration: lesson.duration!,
+                                                userValidity:
+                                                    lesson.userValidity!,
+                                                gradient: lessonGradient,
+                                                screenWidth: screenWidth,
+                                                onPlayPressed: () {
                                                   if (courseController.myCourses
                                                       .any(
                                                         (myCourse) =>
@@ -483,24 +487,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                     );
                                                   }
                                                 },
-                                                () {
-                                                  if (courseController.myCourses
-                                                      .any(
-                                                        (myCourse) =>
-                                                            myCourse.id ==
-                                                            thisCourse.id,
-                                                      )) {
-                                                    print("Download course");
-                                                  } else {
-                                                    openConfirmEnrollDialog(
-                                                      "Download",
-                                                      lesson,
-                                                    );
-                                                  }
-                                                },
-                                                () => print(
-                                                  "Lesson ${lesson.title} unlocked",
-                                                ),
+                                                downloadUrl: lesson.videoUrl!,
                                               );
                                             }).toList(),
                                       )
@@ -563,15 +550,27 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                               );
 
                                                           return buildLessonItem(
-                                                            context,
-                                                            lesson.title!,
-                                                            lesson.duration!,
-                                                            lesson
-                                                                .userValidity!,
-                                                            false,
-                                                            lessonGradient,
-                                                            screenWidth,
-                                                            () {
+                                                            context: context,
+                                                            lessonId:
+                                                                lesson.id!,
+                                                            lessonTitle:
+                                                                lesson.title!,
+                                                            sectionName:
+                                                                section.title!,
+                                                            courseTitle:
+                                                                thisCourse
+                                                                    .title!,
+                                                            duration:
+                                                                lesson
+                                                                    .duration!,
+                                                            userValidity:
+                                                                lesson
+                                                                    .userValidity!,
+                                                            gradient:
+                                                                lessonGradient,
+                                                            screenWidth:
+                                                                screenWidth,
+                                                            onPlayPressed: () {
                                                               if (courseController
                                                                   .myCourses
                                                                   .any(
@@ -622,31 +621,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                 );
                                                               }
                                                             },
-                                                            () {
-                                                              if (courseController
-                                                                  .myCourses
-                                                                  .any(
-                                                                    (
-                                                                      myCourse,
-                                                                    ) =>
-                                                                        myCourse
-                                                                            .id ==
-                                                                        thisCourse
-                                                                            .id,
-                                                                  )) {
-                                                                print(
-                                                                  "Download course",
-                                                                );
-                                                              } else {
-                                                                openConfirmEnrollDialog(
-                                                                  "Download",
-                                                                  lesson,
-                                                                );
-                                                              }
-                                                            },
-                                                            () => print(
-                                                              "Lesson ${lesson.title} unlocked",
-                                                            ),
+                                                            downloadUrl:
+                                                                lesson
+                                                                    .videoUrl!,
                                                           );
                                                         }).toList(),
                                                   ),

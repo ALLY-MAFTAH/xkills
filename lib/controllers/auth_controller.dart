@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:skillsbank/views/auth/signin_page.dart';
-import 'package:skillsbank/views/screens/tab_screen.dart';
+import '/views/auth/signin_page.dart';
+import '/views/screens/tab_screen.dart';
 import '/components/validations.dart';
 
 import '../components/toasts.dart';

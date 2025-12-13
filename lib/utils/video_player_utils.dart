@@ -2,8 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../components/from_network.dart';
-import '../components/from_vimeo_player.dart';
-import '../components/youtube_video_player.dart';
+import '../components/youtube_player_full.dart';
 import '../components/no_video_url.dart';
 
 /// Handles routing to the correct video player based on the video URL type.
@@ -26,7 +25,6 @@ Future<void> navigateToVideoPlayer({
   // --- URL Type Checks ---
   final isYouTube =
       videoUrl.contains("youtube.com") || videoUrl.contains("youtu.be");
-  final isVimeo = videoUrl.contains("vimeo.com");
   final isDrive = videoUrl.contains("drive.google.com");
   final isMp4 = RegExp(r"\.mp4(\?|$)").hasMatch(videoUrl);
   final isWebm = RegExp(r"\.webm(\?|$)").hasMatch(videoUrl);
@@ -37,7 +35,7 @@ Future<void> navigateToVideoPlayer({
   Widget nextPage;
 
   if (isYouTube) {
-    nextPage = YoutubeVideoPlayer(
+    nextPage = YoutubePlayerFull(
       courseId: courseId,
       lessonId: lessonId,
       videoUrl: videoUrl,
@@ -57,13 +55,6 @@ Future<void> navigateToVideoPlayer({
     } else {
       nextPage = NoVideoUrl();
     }
-  } else if (isVimeo) {
-    String vimeoVideoId = videoUrl.split('/').last;
-    nextPage = FromVimeoPlayer(
-      courseId: courseId,
-      vimeoVideoId: vimeoVideoId,
-      lessonId: lessonId,
-    );
   } else if (isMp4 || isOgg || isWebm || isMkv) {
     nextPage = PlayVideoFromNetwork(
       courseId: courseId,

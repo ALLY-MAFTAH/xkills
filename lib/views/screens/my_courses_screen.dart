@@ -2,17 +2,16 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controllers/instructor_controller.dart';
-import '../../includes/ratings.dart';
+import '/includes/ratings.dart';
 import '/models/course.dart';
 import '/views/screens/course_details_screen.dart';
 import '/views/screens/courses_screen.dart';
-import '../../models/my_course.dart';
+import '/models/my_course.dart';
 import '/components/shimmer_widgets/cart_items_shimmer.dart';
-import '../../components/custom_loader.dart';
-import '../../constants/app_brand.dart';
-import '../../controllers/course_controller.dart';
-import '../../theme/app_colors.dart';
+import '/components/custom_loader.dart';
+import '/constants/app_brand.dart';
+import '/controllers/course_controller.dart';
+import '/theme/app_colors.dart';
 
 class MyCoursesScreen extends StatefulWidget {
   const MyCoursesScreen({super.key});
@@ -23,7 +22,6 @@ class MyCoursesScreen extends StatefulWidget {
 
 class _MyCoursesScreenState extends State<MyCoursesScreen> {
   final courseController = Get.put(CourseController());
-  final instructorController = Get.put(InstructorController());
 
   @override
   void initState() {
@@ -418,7 +416,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,
-                                  vertical: 10
+                                  vertical: 10,
                                 ),
                                 child:
                                     isEmpty

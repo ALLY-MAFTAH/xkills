@@ -4,8 +4,8 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../theme/app_colors.dart';
 
-class InstructorGridShimmer extends StatelessWidget {
-  const InstructorGridShimmer({super.key});
+class ProductGridShimmer extends StatelessWidget {
+  const ProductGridShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {

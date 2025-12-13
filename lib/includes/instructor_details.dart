@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:skillsbank/models/instructor.dart';
+import '/models/instructor.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:skillsbank/components/toasts.dart';
+import '/components/toasts.dart';
 
 // NOTE: You should rename the private widget _ContactDetailRow to public ContactDetailRow
 // and move it to its own file (e.g., contact_detail_row.dart) so it can be used here.

@@ -7,148 +7,179 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:share_plus/share_plus.dart';
-import '/controllers/instructor_controller.dart';
-import '../components/toasts.dart';
-import '../models/instructor.dart';
-import '../views/screens/instructor_details_screen.dart';
+import 'package:skillsbank/components/toasts.dart';
+import '../controllers/section_controller.dart';
 import '/components/custom_loader.dart';
 import '/components/slide_animations.dart';
 import '../controllers/course_controller.dart';
 import '../models/course.dart';
 import '../theme/app_colors.dart';
 
-Widget buildLessonItem(
-  BuildContext context,
-  String title,
-  String duration,
-  bool userValidity,
-  bool hasAccess,
-  Gradient gradient,
-  double screenWidth,
+Widget buildLessonItem({
+  required BuildContext context,
+  required int lessonId,
+  required String lessonTitle,
+  required String sectionName,
+  required String courseTitle,
+  required String duration,
+  required bool userValidity,
+  required Gradient gradient,
+  required double screenWidth,
   void Function()? onPlayPressed,
-  void Function()? onDownloadPressed,
-  void Function()? onUnlockPressed,
-) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5),
-    child: Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: ListTile(
-        minTileHeight: 0,
-        contentPadding: EdgeInsets.zero,
-        minVerticalPadding: 3,
-        leading: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 1),
-          ),
-          child: IconButton(
-            style: IconButton.styleFrom(padding: EdgeInsets.zero),
-            icon: Icon(
-              Icons.play_arrow_rounded,
-              color:
-                  hasAccess
-                      ? Colors.white
-                      : userValidity
-                      ? Colors.white
-                      : Colors.grey,
-              size: 24,
-            ),
-            onPressed:
-                hasAccess
-                    ? onPlayPressed
-                    : userValidity
-                    ? onPlayPressed
-                    : null,
-          ),
-        ),
-        horizontalTitleGap: 10,
-        title: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              color: Colors.white.withOpacity(0.9),
-            ),
-          ),
-        ),
+  String? downloadUrl,
+}) {
+  final courseController = Get.put(CourseController());
+  final sectionController = Get.put(SectionController());
 
-        // ⭐️ FIX: Wrap the trailing Row in IntrinsicWidth
-        trailing: IntrinsicWidth(
-          child: Row(
-            mainAxisSize:
-                MainAxisSize.min, // Ensure Row takes minimum horizontal space
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                duration,
+  return GetBuilder<CourseController>(
+    builder: (_) {
+      final isDownloading = courseController.isDownloading[lessonId] ?? false;
+      final progress = courseController.downloadProgress[lessonId] ?? 0;
+      final isPaused = courseController.isPaused[lessonId] ?? false;
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            gradient: gradient,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: ListTile(
+            onTap: userValidity ? onPlayPressed : null,
+            minTileHeight: 0,
+            contentPadding: EdgeInsets.zero,
+            minVerticalPadding: 3,
+            leading: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 1),
+              ),
+              child: Padding(
+                padding: EdgeInsets.zero,
+                child: Icon(
+                  Icons.play_arrow_rounded,
+                  color: userValidity ? Colors.white : Colors.grey,
+                  size: 24,
+                ),
+              ),
+            ),
+            horizontalTitleGap: 10,
+            title: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                lessonTitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
                   color: Colors.white.withOpacity(0.9),
                 ),
               ),
-              const SizedBox(width: 5),
-              if (hasAccess)
-                SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: IconButton(
-                    style: IconButton.styleFrom(padding: EdgeInsets.zero),
-                    icon: const Icon(
-                      Icons.file_download_outlined,
-                      color: Colors.white,
-                      size: 24,
+            ),
+            trailing: IntrinsicWidth(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    duration,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white.withOpacity(0.9),
                     ),
-                    onPressed: onDownloadPressed,
                   ),
-                ),
-              if (!hasAccess)
-                if (userValidity)
-                  SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: IconButton(
+                  const SizedBox(width: 5),
+                  if (userValidity && downloadUrl != null)
+                    Container(
+                      width: 120,
+                      child:
+                          isDownloading
+                              ? Row(
+                                children: [
+                                  Expanded(
+                                    child: LinearProgressIndicator(
+                                      value: progress,
+                                      minHeight: 14,
+                                      backgroundColor: Colors.white.withOpacity(
+                                        0.3,
+                                      ),
+                                      color: AppColors.tertiaryColor,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      isPaused
+                                          ? Icons.play_arrow_rounded
+                                          : Icons.pause_rounded,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      if (isPaused) {
+                                        sectionController.resumeLesson(
+                                          lessonId,
+                                        );
+                                      } else {
+                                        sectionController.pauseLesson(lessonId);
+                                      }
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.close_rounded,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      sectionController.cancelLesson(lessonId);
+                                    },
+                                  ),
+                                ],
+                              )
+                              : IconButton(
+                                style: IconButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                ),
+                                icon: Icon(
+                                  Icons.file_download_outlined,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                                onPressed: () {
+                                  sectionController.downloadLessonVideo(
+                                    lessonId: lessonId,
+                                    courseTitle: courseTitle,
+                                    sectionName: sectionName,
+                                    lessonTitle: lessonTitle,
+                                    url: downloadUrl,
+                                  );
+                                },
+                              ),
+                    ),
+                  if (!userValidity)
+                    IconButton(
                       style: IconButton.styleFrom(padding: EdgeInsets.zero),
                       icon: const Icon(
-                        Icons.file_download_outlined,
-                        color: Colors.white,
+                        Icons.lock_outline_rounded,
+                        color: AppColors.tertiaryColor,
                         size: 24,
                       ),
-                      onPressed: onDownloadPressed,
+                      onPressed:
+                          () => infoToast("Please purchase to unlock.".tr),
                     ),
-                  ),
-              if (!userValidity)
-                SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: IconButton(
-                    style: IconButton.styleFrom(padding: EdgeInsets.zero),
-                    icon: const Icon(
-                      Icons.lock_outline_rounded,
-                      color: AppColors.tertiaryColor,
-                      size: 24,
-                    ),
-                    onPressed: onUnlockPressed,
-                  ),
-                ),
-            ],
+                ],
+              ),
+            ),
           ),
         ),
-        // ⭐️ END FIX
-      ),
-    ),
+      );
+    },
   );
 }
 
@@ -361,7 +392,6 @@ Widget buildBuyButton(
 
 List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
   final GlobalKey shareWidgetKey = GlobalKey();
-  final instructorController = Get.find<InstructorController>();
   return [
     Padding(
       padding: EdgeInsetsGeometry.symmetric(vertical: 10),
@@ -477,63 +507,63 @@ List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
           ),
         ),
         const SizedBox(width: 16),
-        Expanded(
-          child: InkWell(
-            onTap: () async {
-              try {
-                print("Instructor tapped");
+        // Expanded(
+        //   child: InkWell(
+        //     onTap: () async {
+        //       try {
+        //         print("Instructor tapped");
 
-                final String instructorIdsJson = thisCourse.instructorIds!;
-                final List<dynamic> idList = json.decode(instructorIdsJson);
-                print(idList);
-                if (idList != []) {
-                  final int instructorId = int.parse(idList.first.toString());
+        //         final String instructorIdsJson = thisCourse.instructorIds!;
+        //         final List<dynamic> idList = json.decode(instructorIdsJson);
+        //         print(idList);
+        //         if (idList != []) {
+        //           final int instructorId = int.parse(idList.first.toString());
 
-                  Instructor? thisInstructor = await instructorController
-                      .getInstructorById(instructorId);
-                  print(thisInstructor.name);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (_) => InstructorDetailsScreen(
-                            thisInstructor: thisInstructor,
-                            fromInstructorsScreen: true,
-                          ),
-                    ),
-                  );
-                                } else {
-                  errorToast("Instructor not found.");
-                }
-              } catch (e) {
-                print(e.toString());
-                errorToast("Instructor not found.");
-              }
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  thisCourse.instructorName ?? 'Unknown',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  thisCourse.instructorProfile ?? "",
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white.withOpacity(0.6),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        //           Instructor? thisInstructor = await instructorController
+        //               .getInstructorById(instructorId);
+        //           print(thisInstructor.name);
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //               builder:
+        //                   (_) => InstructorDetailsScreen(
+        //                     thisInstructor: thisInstructor,
+        //                     fromInstructorsScreen: true,
+        //                   ),
+        //             ),
+        //           );
+        //                         } else {
+        //           errorToast("Instructor not found.");
+        //         }
+        //       } catch (e) {
+        //         print(e.toString());
+        //         errorToast("Instructor not found.");
+        //       }
+        //     },
+        //     child: Column(
+        //       crossAxisAlignment: CrossAxisAlignment.start,
+        //       children: [
+        //         Text(
+        //           thisCourse.instructorName ?? 'Unknown',
+        //           style: TextStyle(
+        //             fontSize: 16,
+        //             fontWeight: FontWeight.w700,
+        //             color: Colors.white,
+        //           ),
+        //         ),
+        //         const SizedBox(height: 4),
+        //         Text(
+        //           thisCourse.instructorProfile ?? "",
+        //           style: TextStyle(
+        //             fontSize: 11,
+        //             fontWeight: FontWeight.bold,
+        //             color: Colors.white.withOpacity(0.6),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
         // Follow Button
         ElevatedButton(
           onPressed: () {

@@ -4,11 +4,11 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../constants/app_brand.dart';
 import '../theme/app_colors.dart';
 
-class YoutubeVideoPlayer extends StatefulWidget {
+class YoutubePlayerFull extends StatefulWidget {
   final int courseId;
   final int? lessonId;
   final String videoUrl;
-  const YoutubeVideoPlayer({
+  const YoutubePlayerFull({
     super.key,
     required this.courseId,
     this.lessonId,
@@ -16,10 +16,10 @@ class YoutubeVideoPlayer extends StatefulWidget {
   });
 
   @override
-  State<YoutubeVideoPlayer> createState() => _YoutubeVideoPlayerState();
+  State<YoutubePlayerFull> createState() => _YoutubePlayerFullState();
 }
 
-class _YoutubeVideoPlayerState extends State<YoutubeVideoPlayer> {
+class _YoutubePlayerFullState extends State<YoutubePlayerFull> {
   late YoutubePlayerController _controller;
   late TextEditingController _idController;
   late TextEditingController _seekToController;

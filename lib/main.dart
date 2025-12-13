@@ -28,54 +28,81 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: const ColorScheme.light(
-          primary: AppColors.primaryColor,
-          secondary: AppColors.secondaryColor,
-          tertiary: AppColors.tertiaryColor,
-        ),
+     theme: ThemeData(
+  useMaterial3: true,
+  colorScheme: const ColorScheme.light(
+    primary: AppColors.primaryColor,
+    secondary: AppColors.secondaryColor,
+    tertiary: AppColors.tertiaryColor,
+  ),
 
-        // Default app text uses MYRIAD (body text)
-        fontFamily: "Myriad",
-
-        textTheme: TextTheme(
-          // Headings use UNITEA
-          displayLarge: const TextStyle(
-            fontFamily: "Unitea",
-            fontWeight: FontWeight.w900,
-          ),
-          displayMedium: const TextStyle(
-            fontFamily: "Unitea",
-            fontWeight: FontWeight.w800,
-          ),
-          headlineLarge: const TextStyle(
-            fontFamily: "Unitea",
-            fontWeight: FontWeight.bold,
-          ),
-          headlineMedium: const TextStyle(
-            fontFamily: "Unitea",
-            fontWeight: FontWeight.w600,
-          ),
-          titleLarge: const TextStyle(
-            fontFamily: "Unitea",
-            fontWeight: FontWeight.w600,
-          ),
-
-          // Body text uses Myriad
-          bodyLarge: const TextStyle(fontFamily: "Myriad", fontSize: 18),
-          bodyMedium: const TextStyle(fontFamily: "Myriad", fontSize: 16),
-          bodySmall: const TextStyle(fontFamily: "Myriad", fontSize: 14),
-
-          labelLarge: const TextStyle(
-            fontFamily: "Myriad",
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ).apply(bodyColor: Colors.white, displayColor: Colors.white),
-
-        iconTheme: const IconThemeData(color: Colors.white),
+  // ✅ GLOBAL RISE EFFECT FOR ALL BUTTONS
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ButtonStyle(
+      elevation: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.pressed)) {
+          return 12; // ✅ rises when tapped
+        }
+        return 4; // default height
+      }),
+      animationDuration: const Duration(milliseconds: 180),
+      overlayColor: WidgetStateProperty.all(
+        Colors.white.withOpacity(0.1), // ripple highlight
       ),
+    ),
+  ),
+
+  textButtonTheme: TextButtonThemeData(
+    style: ButtonStyle(
+      overlayColor: WidgetStateProperty.all(
+        Colors.white.withOpacity(0.08),
+      ),
+    ),
+  ),
+
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: ButtonStyle(
+      overlayColor: WidgetStateProperty.all(
+        Colors.white.withOpacity(0.08),
+      ),
+    ),
+  ),
+
+  fontFamily: "Myriad",
+
+  textTheme: TextTheme(
+    displayLarge: const TextStyle(
+      fontFamily: "Unitea",
+      fontWeight: FontWeight.w900,
+    ),
+    displayMedium: const TextStyle(
+      fontFamily: "Unitea",
+      fontWeight: FontWeight.w800,
+    ),
+    headlineLarge: const TextStyle(
+      fontFamily: "Unitea",
+      fontWeight: FontWeight.bold,
+    ),
+    headlineMedium: const TextStyle(
+      fontFamily: "Unitea",
+      fontWeight: FontWeight.w600,
+    ),
+    titleLarge: const TextStyle(
+      fontFamily: "Unitea",
+      fontWeight: FontWeight.w600,
+    ),
+    bodyLarge: const TextStyle(fontFamily: "Myriad", fontSize: 18),
+    bodyMedium: const TextStyle(fontFamily: "Myriad", fontSize: 16),
+    bodySmall: const TextStyle(fontFamily: "Myriad", fontSize: 14),
+    labelLarge: const TextStyle(
+      fontFamily: "Myriad",
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+    ),
+  ).apply(bodyColor: Colors.white, displayColor: Colors.white),
+
+  iconTheme: const IconThemeData(color: Colors.white),
+),
 
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),

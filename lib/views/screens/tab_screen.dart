@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '/theme/app_colors.dart';
 import 'account_screen.dart';
 import 'home_screen.dart';
-import 'instructors_screen.dart';
+import 'shop_screen.dart';
 import 'my_courses_screen.dart';
 
 class TabsScreen extends StatefulWidget {
@@ -29,7 +29,7 @@ class _TabsScreenState extends State<TabsScreen> {
     return [
       HomeScreen(),
       MyCoursesScreen(),
-      InstructorsScreen(),
+      ShopScreen(),
       AccountScreen(),
     ];
   }
@@ -64,8 +64,8 @@ class _TabsScreenState extends State<TabsScreen> {
             backgroundColor: AppColors.secondaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people_outlined),
-            label: "Instructors",
+            icon: Icon(Icons.shopify_rounded),
+            label: "Shop",
             backgroundColor: AppColors.secondaryColor,
           ),
           BottomNavigationBarItem(

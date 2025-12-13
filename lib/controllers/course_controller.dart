@@ -93,6 +93,13 @@ class CourseController extends GetxController {
     return products;
   }
 
+  Future<List<Course>> getCoursesByCategory(categoryId) async {
+    await getCourses();
+    final coursesByCategory =
+        courses.where((course) => course.categoryId == categoryId).toList();
+    return coursesByCategory;
+  }
+
   Future<List<Course>> getCourses() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
@@ -143,10 +150,9 @@ class CourseController extends GetxController {
           if (courseModel.categoryId != 1) {
             temporaryCourses.add(courseModel);
             durationCalculations.add(courseModel.calculateTotalDuration());
-          }else{
+          } else {
             temporaryProducts.add(courseModel);
             durationCalculations.add(courseModel.calculateTotalDuration());
-
           }
         }
       }
@@ -438,18 +444,21 @@ class CourseController extends GetxController {
   }
 
   Future<String> getDownloadDirectory() async {
-    Directory? directory;
+    Directory directory;
 
     if (Platform.isAndroid) {
       directory = Directory('/storage/emulated/0/Download');
       if (!await directory.exists()) {
-        directory = await getExternalStorageDirectory();
+        directory =
+            await getExternalStorageDirectory() ??
+            await getApplicationDocumentsDirectory();
       }
     } else {
-      directory = await getDownloadsDirectory();
+      // iOS
+      directory = await getApplicationDocumentsDirectory();
     }
 
-    return directory!.path;
+    return directory.path;
   }
 
   Future<bool> requestStoragePermission() async {

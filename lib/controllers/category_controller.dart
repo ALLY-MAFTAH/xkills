@@ -7,10 +7,15 @@ import '../models/category.dart';
 import '../services/http_service.dart';
 
 class CategoryController extends GetxController {
-  var selectedCategory = 0.obs;
+  Category? selectedCategory;
 
-  void changeCategoryIndex(int index) {
-    selectedCategory.value = index;
+  void selectCategory(int id) {
+    if (id == 0) {
+      selectedCategory = null;
+    } else {
+      selectedCategory = categories.firstWhere((category) => category.id == id);
+    }
+    update();
   }
 
   Future<List<Category>>? categoriesFuture;

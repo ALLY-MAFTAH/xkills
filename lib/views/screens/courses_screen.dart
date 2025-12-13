@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../controllers/category_controller.dart';
 import '/components/grid_course_card.dart';
 import '/components/shimmer_widgets/course_grid_shimmer.dart';
 import '/constants/app_brand.dart';
@@ -17,7 +18,8 @@ class CoursesScreen extends StatefulWidget {
 
 class CoursesScreenState extends State<CoursesScreen> {
   final courseController = Get.put(CourseController());
-
+  final categoryController = Get.put(CategoryController());
+String categoryTitle = 'All ';
   @override
   void initState() {
     super.initState();
@@ -25,7 +27,14 @@ class CoursesScreenState extends State<CoursesScreen> {
   }
 
   void _loadInitialData() {
-    courseController.coursesFuture = courseController.getCourses();
+    if (categoryController.selectedCategory != null) {
+      categoryTitle = "${categoryController.selectedCategory!.title!} ";
+      courseController.coursesFuture = courseController.getCoursesByCategory(
+        categoryController.selectedCategory!.id!,
+      );
+    } else {
+      courseController.coursesFuture = courseController.getCourses();
+    }
   }
 
   Future<void> _refreshData() async {
@@ -77,7 +86,7 @@ class CoursesScreenState extends State<CoursesScreen> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "Courses",
+                            "${categoryTitle}Courses",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,

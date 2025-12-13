@@ -90,31 +90,58 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
         const SizedBox(height: 15),
         // User Name
-        Text(
-          thisUser?.name ?? "N/A",
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              thisUser?.name ?? "N/A",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            // Positioned(
+            //   top: 0,
+            //   // left: 0,
+            //   right: 0,
+            //   child: IconButton(
+            //     iconSize: 20,
+            //     icon: Icon(FontAwesomeIcons.edit),
+            //     onPressed: () {},
+            //   ),
+            // ),
+          ],
         ),
         const SizedBox(height: 4),
         // User Email
         // User Email
         Text(
           thisUser?.phone ?? "",
-          style: TextStyle(color: Colors.white.withOpacity(0.6),fontWeight: FontWeight.bold, fontSize: 14),
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           thisUser?.email ?? "",
-          style: TextStyle(color: Colors.white.withOpacity(0.6),fontWeight: FontWeight.bold, fontSize: 14),
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
         ),
         const SizedBox(height: 4),
         // User Email
         Text(
           thisUser?.address ?? "",
-          style: TextStyle(color: Colors.white.withOpacity(0.6),fontWeight: FontWeight.bold, fontSize: 14),
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.6),
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
         ),
         const SizedBox(height: 4),
         // User Email
@@ -278,15 +305,6 @@ class _AccountScreenState extends State<AccountScreen> {
                     left: 0,
                     right: 0,
                     child: appBrand(),
-                  ),
-                  Positioned(
-                    top: topPadding-5,
-                    // left: 0,
-                    right: 0,
-                    child: IconButton(iconSize: 20,
-                      icon: Icon(FontAwesomeIcons.edit),
-                      onPressed: (){},
-                    ),
                   ),
                 ],
               ),

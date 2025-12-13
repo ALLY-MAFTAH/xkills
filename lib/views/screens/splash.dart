@@ -58,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ),
-          Center(child: appBrand()),
+          Center(child: Image.asset('assets/images/horizontal_logo.png', height: 45)),
         ],
       ),
     );

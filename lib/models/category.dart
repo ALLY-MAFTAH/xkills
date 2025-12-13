@@ -39,10 +39,10 @@ class Category {
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
-    String? keywords = json['keywords'] as String?;
+    String? goldenTitle = json['title'] as String?;
     
     // 2. Logic to check for "Golden" in keywords (case-insensitive)
-    bool isGoldenCategory = keywords?.toLowerCase().contains('golden') ?? false;
+    bool isGoldenCategory = goldenTitle?.toLowerCase().contains('golden') ?? false;
 
     return Category(
       id: json['id'] as int?,
@@ -52,7 +52,7 @@ class Category {
       icon: json['icon'] as String?,
       sort: json['sort'] as int?,
       status: json['status'] as String?,
-      keywords: keywords,
+      keywords: json['keywords'] as String?,
       description: json['description'] as String?,
       thumbnail: json['thumbnail'] as String?,
       categoryLogo: json['category_logo'] as String?,

@@ -31,12 +31,6 @@ dependencies:
   collection: ^1.19.1
   google_fonts: ^6.2.1
   cached_network_image: ^3.4.1
-  pdf: ^3.11.3
-  excel: ^4.0.6
-  open_file: ^3.5.10
-  printing: ^5.14.2
-  pie_chart: ^5.4.0
-  syncfusion_flutter_charts: ^29.2.7
   in_app_update: ^4.2.3
   pinput: ^5.0.2
   sms_autofill: ^2.4.1
@@ -55,6 +49,10 @@ dependencies:
   flutterwave_standard: ^1.1.0
   font_awesome_flutter: ^10.12.0
   dio: ^5.9.0
+  carousel_slider: ^5.1.1
+  lottie: ^3.3.2
+
+
 
 dev_dependencies:
   flutter_test:

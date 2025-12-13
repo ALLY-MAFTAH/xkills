@@ -45,6 +45,7 @@ class _GridProductCardState extends State<GridProductCard> {
                 colors: [HexColor('#046181'), HexColor('#7BC792')],
               ),
             ),
+
             child: Container(
               width: double.infinity,
               padding: EdgeInsets.all(10),
@@ -85,16 +86,6 @@ class _GridProductCardState extends State<GridProductCard> {
                         bool hasEnrollered = courseController.myProducts.any(
                           (course) => course.id == widget.thisProduct.id,
                         );
-                        for (var element in courseController.myCourses) {
-                          print( widget.thisProduct.id);
-                          print( element.id);
-                          if (element.id == widget.thisProduct.id) {
-                            hasEnrollered = true;
-                            break;
-                          }
-                          
-                        }
-                        print(hasEnrollered);
                         if (hasEnrollered) {
                           final isDownloading =
                               courseController.isDownloading[widget

@@ -149,16 +149,16 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              Text(
-                                "By ${myCourse.instructorName!}",
-                                style: TextStyle(
-                                  color: AppColors.tertiaryColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              // Text(
+                              //   "By ${myCourse.instructorName!}",
+                              //   style: TextStyle(
+                              //     color: AppColors.tertiaryColor,
+                              //     fontSize: 12,
+                              //     fontWeight: FontWeight.bold,
+                              //   ),
+                              //   maxLines: 2,
+                              //   overflow: TextOverflow.ellipsis,
+                              // ),
                               const SizedBox(height: 4),
                               Text(
                                 '${myCourse.shortDescription}',

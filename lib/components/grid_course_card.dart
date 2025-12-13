@@ -102,38 +102,7 @@ class _GridCourseCardState extends State<GridCourseCard> {
                 bottom: footerHeight,
                 child: InkWell(
                   onTap: () async {
-                    // try {
-                    //   final String instructorIdsJson =
-                    //       widget.thisCourse.instructorIds!;
-                    //   final List<dynamic> idList = json.decode(
-                    //     instructorIdsJson,
-                    //   );
-                    //   print(idList);
-                    //   if (idList != []) {
-                    //     final int instructorId = int.parse(
-                    //       idList.first.toString(),
-                    //     );
-
-                    //     Instructor? thisInstructor = await instructorController
-                    //         .getInstructorById(instructorId);
-                    //     print(thisInstructor.name);
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder:
-                    //             (_) => InstructorDetailsScreen(
-                    //               thisInstructor: thisInstructor,
-                    //               fromInstructorsScreen: true,
-                    //             ),
-                    //       ),
-                    //     );
-                    //                         } else {
-                    //     errorToast("Instructor not found.");
-                    //   }
-                    // } catch (e) {
-                    //   print(e.toString());
-                    //   errorToast("Instructor not found.");
-                    // }
+                    
                   },
                   child: Container(
                     color: Colors.transparent,

@@ -161,7 +161,7 @@ class CoursesScreenState extends State<CoursesScreen> {
                                 final course = courses[index];
                                 return GridCourseCard(
                                   thisCourse: course,
-                                  fromInstructorsScreen: false,
+                                  fromInstructorsScreen: true,
                                 );
                               },
                             );

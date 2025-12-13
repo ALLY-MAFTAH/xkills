@@ -234,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               final course = courses[index];
                               return GridCourseCard(
                                 thisCourse: course,
-                                fromInstructorsScreen: false,
+                                fromInstructorsScreen: true,
                               );
                             },
                           );

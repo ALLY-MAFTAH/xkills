@@ -28,6 +28,8 @@ class CourseController extends GetxController {
   Future<List<MyCourse>>? myCoursesFuture;
   List<MyCourse> _myCourses = [];
   List<MyCourse> get myCourses => _myCourses;
+  List<MyCourse> _myProducts = [];
+  List<MyCourse> get myProducts => _myProducts;
 
   final List<DropdownMenuItem<String>> _courseList = [];
   List<DropdownMenuItem<String>> get coursesDropdown => _courseList;
@@ -133,6 +135,7 @@ class CourseController extends GetxController {
       final List myFetchedCourses = responseData;
       List<MyCourse> temporaryCourses = [];
       List<Future<void>> durationCalculations = [];
+      List<MyCourse> temporaryProducts = [];
 
       if (myFetchedCourses.isNotEmpty) {
         for (var myCourseJson in myFetchedCourses) {
@@ -140,11 +143,16 @@ class CourseController extends GetxController {
           if (courseModel.categoryId != 1) {
             temporaryCourses.add(courseModel);
             durationCalculations.add(courseModel.calculateTotalDuration());
+          }else{
+            temporaryProducts.add(courseModel);
+            durationCalculations.add(courseModel.calculateTotalDuration());
+
           }
         }
       }
       await Future.wait(durationCalculations);
       _myCourses = temporaryCourses;
+      _myProducts = temporaryProducts;
 
       print("Fetched ${myCourses.length} my courses");
       return _myCourses;

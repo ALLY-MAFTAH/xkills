@@ -134,82 +134,77 @@ class _HomeScreenState extends State<HomeScreen>
                   children: [
                     SizedBox(height: Platform.isAndroid ? 80 : 100),
                     CarouselSlider.builder(
-                          itemCount: slides.length,
-                          itemBuilder: (context, index, realIndex) {
-                            final s = slides[index];
-                        
-                            return AnimatedBuilder(
-                              animation: _particlesController,
-                              builder: (context, child) {
-                                final progress =
-                                    (_particlesController.value +
-                                        index / slides.length) %
-                                    1.0;
-                                return Transform.translate(
-                                  offset: Offset(
-                                    sin(progress * 2 * pi) * 6,
-                                    0,
-                                  ),
-                                  child: child,
-                                );
-                              },
-                              // Child must be a simple widget inside Expanded
-                              child: SlideCard(slide: s),
+                      itemCount: slides.length,
+                      itemBuilder: (context, index, realIndex) {
+                        final s = slides[index];
+
+                        return AnimatedBuilder(
+                          animation: _particlesController,
+                          builder: (context, child) {
+                            final progress =
+                                (_particlesController.value +
+                                    index / slides.length) %
+                                1.0;
+                            return Transform.translate(
+                              offset: Offset(sin(progress * 2 * pi) * 6, 0),
+                              child: child,
                             );
                           },
-                          options: CarouselOptions(
-                            padEnds: false,
-                            viewportFraction: 1,
-                            enlargeCenterPage: true,
-                            enableInfiniteScroll: true,
-                            autoPlay: true,
-                            autoPlayInterval: const Duration(seconds: 8),
-                            autoPlayAnimationDuration: Duration(seconds: 2),
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _currentIndex = index;
-                              });
-                            },
-                          ),
-                        ),
-                    
-                        const SizedBox(height: 5),
-                        SizedBox(
-                          height: 20,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children:
-                                slides.asMap().entries.map((entry) {
-                                  int idx = entry.key;
-                                  bool active = idx == _currentIndex;
-                                  return AnimatedContainer(
-                                    padding: EdgeInsets.all(0),
-                                    duration: const Duration(
-                                      milliseconds: 300,
-                                    ),
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                    ),
-                                    width: active ? 20 : 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          active
-                                              ? const Color.fromARGB(
-                                                255,
-                                                11,
-                                                236,
-                                                127,
-                                              )
-                                              : Colors.white.withOpacity(.3),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  );
-                                }).toList(),
-                          ),
-                        ),
-                     
-                    SizedBox(height: 20),
+                          // Child must be a simple widget inside Expanded
+                          child: SlideCard(slide: s),
+                        );
+                      },
+                      options: CarouselOptions(
+                        padEnds: false,
+                        viewportFraction: 1,
+                        enlargeCenterPage: true,
+                        enableInfiniteScroll: true,
+                        autoPlay: true,
+                        autoPlayInterval: const Duration(seconds: 8),
+                        autoPlayAnimationDuration: Duration(seconds: 2),
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _currentIndex = index;
+                          });
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 5),
+                    SizedBox(
+                      height: 20,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children:
+                            slides.asMap().entries.map((entry) {
+                              int idx = entry.key;
+                              bool active = idx == _currentIndex;
+                              return AnimatedContainer(
+                                padding: EdgeInsets.all(0),
+                                duration: const Duration(milliseconds: 300),
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
+                                width: active ? 20 : 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color:
+                                      active
+                                          ? const Color.fromARGB(
+                                            255,
+                                            11,
+                                            236,
+                                            127,
+                                          )
+                                          : Colors.white.withOpacity(.3),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    ),
+
+                    SizedBox(height: 5),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: AppPadding.horizontal,
@@ -220,20 +215,15 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
 
-                    // Category Section Header
+                    SizedBox(height: 5),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: AppPadding.horizontal,
+                        vertical: 5,
                       ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 1,
-                        ),
-
-                        title: const Text(
-                          'Choose Category',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
+                      child: Text(
+                        'Choose Category',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
 

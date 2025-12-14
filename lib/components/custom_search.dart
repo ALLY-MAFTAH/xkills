@@ -22,71 +22,36 @@ class _CustomSearchState extends State<CustomSearch> {
       borderRadius: BorderRadius.circular(10),
       child: Stack(
         children: [
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.primaryColor, AppColors.secondaryColor],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
+          Container(
+            height: 45,
+            padding: const EdgeInsets.symmetric(vertical: 0),
+            child: TextFormField(
+              controller: widget.searchController,
+              cursorColor: Colors.grey,
+              style: TextStyle(
+                color: Colors.white,
+                decoration: TextDecoration.none,
               ),
-            ),
-          ),
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.white.withOpacity(0.4), Colors.transparent],
-                  stops: [0.0, 0.20],
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white.withOpacity(.1),
+                hintText: 'Search here...'.tr,
+                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: IconButton.filled(
+                    onPressed: () {
+                      print(widget.searchController.text);
+                      widget.onSearch();
+                    },
+                    icon: Icon(Icons.search, color: Colors.white),
+                  ),
                 ),
+                contentPadding: EdgeInsets.all(15),
+                border: OutlineInputBorder(borderSide: BorderSide.none),
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
               ),
-            ),
-          ),
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.white.withOpacity(0.3),
-                    Colors.white.withOpacity(0.05),
-                    Colors.transparent,
-                  ],
-                  stops: [0.0, 0.12, 1.0],
-                ),
-              ),
-            ),
-          ),
-          TextFormField(
-            controller: widget.searchController,
-            cursorColor: Colors.grey,
-            style: TextStyle(
-              color: Colors.white,
-              decoration: TextDecoration.none,
-            ),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.transparent,
-              hintText: 'Search here...'.tr,
-              hintStyle: TextStyle(color: Colors.grey[400]),
-              suffixIcon: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: IconButton.filled(
-                  onPressed: () {
-                    print(widget.searchController.text);
-                    widget.onSearch();
-                  },
-                  icon: Icon(Icons.search, color: Colors.white),
-                ),
-              ),
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(borderSide: BorderSide.none),
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
             ),
           ),
         ],
@@ -94,3 +59,65 @@ class _CustomSearchState extends State<CustomSearch> {
     );
   }
 }
+
+// InputDecoration getDecoration(String hintext, VoidCallback onSearchPressed) {
+//   return InputDecoration(
+//     enabledBorder: OutlineInputBorder(
+//       borderRadius: const BorderRadius.all(Radius.circular(10)),
+//       borderSide: BorderSide.none,
+//     ),
+//     focusedBorder: OutlineInputBorder(
+//       borderRadius: const BorderRadius.all(Radius.circular(10)),
+//       borderSide: BorderSide.none,
+//     ),
+//     border: OutlineInputBorder(
+//       borderRadius: const BorderRadius.all(Radius.circular(10)),
+//       borderSide: BorderSide.none,
+//     ),
+//     focusedErrorBorder: const OutlineInputBorder(
+//       borderRadius: BorderRadius.all(Radius.circular(10)),
+//       borderSide: BorderSide.none,
+//     ),
+//     errorBorder: const OutlineInputBorder(
+//       borderRadius: BorderRadius.all(Radius.circular(10)),
+//       borderSide: BorderSide.none,
+//     ),
+//     filled: true,
+//     hintStyle: TextStyle(
+//       color: Colors.grey,
+//       fontWeight: FontWeight.bold,
+//       fontSize: 16,
+//     ),
+//     hintText: hintext,
+//     fillColor:
+//         authController.isSubmitting
+//             ? Colors.white.withOpacity(.05)
+//             : Colors.white.withOpacity(.1),
+//     contentPadding: const EdgeInsets.all(15),
+//     suffixIcon:
+//         hintext == "Password" || hintext == "Confirm Password"
+//             ? IconButton(
+//               onPressed:
+//                   authController.isSubmitting
+//                       ? null
+//                       : () {
+//                         onSearchPressed();
+//                       },
+//               disabledColor: Colors.grey[700],
+//               color: Colors.white,
+//               icon:
+//                   hintext == "Password"
+//                       ? Icon(
+//                         authController.passwordObscure
+//                             ? Icons.visibility_off_outlined
+//                             : Icons.visibility_outlined,
+//                       )
+//                       : Icon(
+//                         authController.confirmPasswordObscure
+//                             ? Icons.visibility_off_outlined
+//                             : Icons.visibility_outlined,
+//                       ),
+//             )
+//             : null,
+//   );
+// }

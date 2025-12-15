@@ -36,15 +36,15 @@ class _CustomSearchState extends State<CustomSearch> {
                 filled: true,
                 fillColor: Colors.white.withOpacity(.1),
                 hintText: 'Search here...'.tr,
-                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
                 suffixIcon: Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: IconButton.filled(
+                  child: IconButton(
                     onPressed: () {
                       print(widget.searchController.text);
                       widget.onSearch();
                     },
-                    icon: Icon(Icons.search, color: Colors.white),
+                    icon: Icon(Icons.search, size: 18, color: Colors.white),
                   ),
                 ),
                 contentPadding: EdgeInsets.all(15),

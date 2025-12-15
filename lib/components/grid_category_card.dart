@@ -97,7 +97,7 @@ class GridCategoryCard extends StatelessWidget {
                               title,
                               style: TextStyle(
                                 color: isGolden ? Colors.black : Colors.white,
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                               maxLines: 1,

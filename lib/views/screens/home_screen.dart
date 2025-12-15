@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen>
   final courseController = Get.put(CourseController());
   int _currentIndex = 0;
   late AnimationController _particlesController;
+  final ScrollController _categoryScrollController = ScrollController();
 
   @override
   void initState() {
@@ -65,29 +66,27 @@ class _HomeScreenState extends State<HomeScreen>
   final List<SlideData> slides = [
     SlideData(
       title: "Soft Paperless Bank",
-      subtitle: "Smart • Modern • Digital Banking",
-      asset: 'assets/images/slide_01.jpg',
+      asset: 'assets/images/banner_01.png',
       bgGradient: [Color(0xFF6DD3FF), AppColors.primaryColor],
     ),
     SlideData(
       title: "Your Security Matters",
-      subtitle:
-          "Bank-grade encryption protects your identity, documents and transactions.",
-      asset: 'assets/images/slide_02.png',
+      asset: 'assets/images/banner_02.png',
       bgGradient: [Color(0xFFFFB199), AppColors.secondaryColor],
     ),
     SlideData(
       title: "Paperless Onboarding",
-      subtitle:
-          "Open and verify your account digitally — fast, secure & no paperwork.",
-      asset: 'assets/images/slide_03.png',
+      asset: 'assets/images/banner_03.png',
       bgGradient: [Color(0xFF70E1F5), AppColors.tertiaryColor],
     ),
     SlideData(
       title: "Paperless Onboarding",
-      subtitle:
-          "Open and verify your account digitally — fast, secure & no paperwork.",
-      asset: 'assets/images/slide_04.jpg',
+      asset: 'assets/images/banner_04.png',
+      bgGradient: [Color(0xFF70E1F5), AppColors.primaryColor],
+    ),
+    SlideData(
+      title: "Paperless Onboarding",
+      asset: 'assets/images/banner_05.png',
       bgGradient: [Color(0xFF70E1F5), AppColors.primaryColor],
     ),
   ];
@@ -223,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       child: Text(
                         'Choose Category',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style: TextStyle(color: Colors.white, fontSize: 13),
                       ),
                     ),
 
@@ -251,43 +250,54 @@ class _HomeScreenState extends State<HomeScreen>
                             );
                           } else {
                             final List<Category> categories =
-                                asyncSnapshot.data!;
+                                asyncSnapshot.data!.reversed.toList();
 
-                            return GridView.builder(
-                              shrinkWrap: true,
-                              primary: false,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: const EdgeInsets.only(bottom: 20),
-                              itemCount: categories.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 7,
-                                    mainAxisSpacing: 7,
-                                    childAspectRatio: 2,
+                            return SizedBox(
+                              height: 200, // controls card height
+                              child: Stack(
+                                children: [
+                                  GridView.builder(
+                                    controller: _categoryScrollController,
+                                    scrollDirection: Axis.horizontal,
+                                    padding: const EdgeInsets.only(
+                                      right: 60,
+                                    ), // space for arrow
+                                    itemCount: categories.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          mainAxisSpacing: 10,
+                                          crossAxisSpacing: 10,
+                                          childAspectRatio: 0.47,
+                                        ),
+                                    itemBuilder: (context, index) {
+                                      final item = categories[index];
+                                      return GridCategoryCard(
+                                        subtitle: item.keywords ?? "",
+                                        title: item.title ?? "",
+                                        thumbnail: item.thumbnail!,
+                                        isGolden: item.isGolden!,
+                                        onTap: () {
+                                          categoryController.selectCategory(
+                                            item.id!,
+                                          );
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => CoursesScreen(),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
                                   ),
-                              itemBuilder: (context, index) {
-                                final item = categories[index];
-                                return GridCategoryCard(
-                                  subtitle: item.keywords ?? "",
-                                  title: item.title ?? "",
-                                  thumbnail: item.thumbnail!,
-                                  isGolden: item.isGolden!,
-                                  onTap:
-                                      () => {
-                                        categoryController.selectCategory(
-                                          item.id!,
-                                        ),
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) => CoursesScreen(),
-                                          ),
-                                        ),
-                                      },
-                                );
-                              },
+
+                                  // 👉 Animated Scroll Hint Button
+                                  _ScrollHintArrow(
+                                    controller: _categoryScrollController,
+                                  ),
+                                ],
+                              ),
                             );
                           }
                         },
@@ -314,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen>
                         },
                         title: const Text(
                           'Top Courses',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          style: TextStyle(color: Colors.white, fontSize: 13),
                         ),
                         trailing: const Icon(
                           Icons.arrow_forward_rounded,
@@ -408,6 +418,109 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ScrollHintArrow extends StatefulWidget {
+  final ScrollController controller;
+  const _ScrollHintArrow({required this.controller});
+
+  @override
+  State<_ScrollHintArrow> createState() => _ScrollHintArrowState();
+}
+
+class _ScrollHintArrowState extends State<_ScrollHintArrow>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat(reverse: true);
+
+    _slideAnimation = Tween<double>(begin: 0, end: 8).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _scrollRight() {
+    widget.controller.animateTo(
+      widget.controller.offset + 250,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOut,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      right: 8,
+      top: 0,
+      bottom: 0,
+      child: Center(
+        child: GestureDetector(
+          onTap: _scrollRight,
+          child: AnimatedBuilder(
+            animation: _slideAnimation,
+            builder: (_, __) {
+              return Transform.translate(
+                offset: Offset(_slideAnimation.value, 0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0x99046181), Color(0x997BC792)],
+                    ),
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: const [
+                      Text(
+                        "Scroll",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

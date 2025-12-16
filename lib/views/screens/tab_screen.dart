@@ -1,79 +1,171 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, use_super_parameters, library_private_types_in_public_api
-
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import '/theme/app_colors.dart';
-import 'account_screen.dart';
+
 import 'home_screen.dart';
-import 'shop_screen.dart';
 import 'my_courses_screen.dart';
+import 'shop_screen.dart';
+import 'account_screen.dart';
 
 class TabsScreen extends StatefulWidget {
   final int pageIndex;
-
-  const TabsScreen({Key? key, this.pageIndex = 0}) : super(key: key);
+  const TabsScreen({super.key, this.pageIndex = 0});
 
   @override
-  _TabsScreenState createState() => _TabsScreenState();
+  State<TabsScreen> createState() => _TabsScreenState();
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  int _selectedPageIndex = 0;
+  late int _index;
+
+  final pages = const [
+    HomeScreen(),
+    ShopScreen(),
+    MyCoursesScreen(),
+    AccountScreen(),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _selectedPageIndex = widget.pageIndex;
-  }
-
-  List<Widget> _pages() {
-    return [
-      HomeScreen(),
-      MyCoursesScreen(),
-      ShopScreen(),
-      AccountScreen(),
-    ];
+    _index = widget.pageIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _selectedPageIndex, children: _pages()),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (value) {
-          _selectedPageIndex = value;
-          setState(() {});
-        },
-        elevation: 8,
-        backgroundColor: AppColors.secondaryColor,
-        currentIndex: _selectedPageIndex,
-        selectedItemColor: const Color.fromARGB(255, 11, 236, 127),
-        unselectedItemColor: Colors.grey[500],
-        selectedFontSize: 13,
-        showUnselectedLabels: true,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: "Home",
-            backgroundColor: AppColors.secondaryColor,
+  extendBody: true, 
+  backgroundColor: AppColors.secondaryColor,
+
+  body: IndexedStack(
+    index: _index,
+    children: pages,
+  ),
+
+  bottomNavigationBar: SafeArea(
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: RepaintBoundary(
+              child: LiquidGlassLayer(
+                settings: const LiquidGlassSettings(
+                  blur: 0,
+                  thickness: 25,
+                  glassColor: Color.fromARGB(16, 255, 255, 255),
+                ),
+                child: LiquidGlass(
+                  shape: LiquidRoundedSuperellipse(borderRadius: 40),
+                  child: Container(
+                    height: 50,
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _NavItem(
+                          icon: Icons.home_rounded,
+                          label: "Home",
+                          selected: _index == 0,
+                          onTap: () => setState(() => _index = 0),
+                        ),
+                        _NavItem(
+                          icon: Icons.shopify_rounded,
+                          label: "Shop",
+                          selected: _index == 2,
+                          onTap: () => setState(() => _index = 2),
+                        ),
+                        _NavItem(
+                          icon: Icons.school_rounded,
+                          label: "My Courses",
+                          selected: _index == 1,
+                          onTap: () => setState(() => _index = 1),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school_rounded),
-            label: "My Courses",
-            backgroundColor: AppColors.secondaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopify_rounded),
-            label: "Shop",
-            backgroundColor: AppColors.secondaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Account",
-            backgroundColor: AppColors.secondaryColor,
+
+          const SizedBox(width: 12),
+
+          GestureDetector(
+            onTap: () => setState(() => _index = 3),
+            child: RepaintBoundary(
+              child: LiquidGlassLayer(
+                settings: const LiquidGlassSettings(
+                  blur: 0,
+                  thickness: 20,
+                  glassColor: Color.fromARGB(16, 255, 255, 255),
+                ),
+                child: LiquidGlass(
+                  shape: LiquidRoundedSuperellipse(borderRadius: 50),
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.account_circle_outlined,
+                      color: Colors.white,
+                      size: 26,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
+      ),
+    ),
+  ),
+);
+}
+}
+
+class _NavItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _NavItem({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 280),
+        curve: Curves.easeOut,
+        padding: EdgeInsets.symmetric(horizontal: selected ? 16 : 12,vertical: 5),
+        decoration: BoxDecoration(
+          color: selected ? const Color.fromARGB(255, 115, 219, 151) : Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: selected ?22:30, color: selected ? Colors.black : Colors.white),
+            if (selected) ...[
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

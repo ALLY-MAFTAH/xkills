@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+import 'package:skillsbank/theme/app_colors.dart';
 import 'custom_loader.dart';
 
 class GridCategoryCard extends StatelessWidget {
@@ -28,10 +29,10 @@ class GridCategoryCard extends StatelessWidget {
       child: LiquidGlassLayer(
         settings: const LiquidGlassSettings(
           thickness: 20,
-          blur: 10,
+          blur: 0,
           glassColor: Colors.grey,
-          lightAngle: 0.5 * pi,
-          chromaticAberration: 1,
+          // lightAngle: 0.5 * pi,
+          // chromaticAberration: 1,
         ),
         child: LiquidGlass(
           shape: LiquidRoundedSuperellipse(borderRadius: 10),
@@ -49,7 +50,7 @@ class GridCategoryCard extends StatelessWidget {
                           child: CachedNetworkImage(
                             imageUrl: thumbnail,
                             fit: BoxFit.cover, // 👈 fills entire area
-                            placeholder: (context, url) => customLoader(),
+                            placeholder: (context, url) => customLoader(color: AppColors.tertiaryColor),
                             errorWidget:
                                 (context, url, error) =>
                                     const Icon(Icons.error),

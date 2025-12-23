@@ -33,7 +33,7 @@ class _PlayVideoFromAssetState extends State<PlayVideoFromNetwork> {
     if (widget.lessonId != null) {
       final videoFile = getVideoWithExtension(widget.videoUrl);
       fullUrl =
-          Endpoints.baseUrl + "/public/uploads/lesson_file/videos/$videoFile";
+          "${Endpoints.baseUrl}/public/uploads/lesson_file/videos/$videoFile";
       print("LESSON ID: ${widget.lessonId}");
     } else {
       fullUrl = widget.videoUrl;
@@ -107,72 +107,43 @@ class _PlayVideoFromAssetState extends State<PlayVideoFromNetwork> {
     super.dispose();
   }
 
- @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: Colors.transparent,
-    extendBodyBehindAppBar: true,
-    body: Stack(
-      children: [
-        // Background gradient (same as YouTube screen)
-        Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.secondaryColor,
-                AppColors.primaryColor,
-              ],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-          ),
-        ),
-
-        // Back button
-        Positioned(
-          top: MediaQuery.of(context).padding.top + 10,
-          left: 10,
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              icon: const Icon(Icons.arrow_back, size: 26, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ),
-        ),
-
-        // Centered appBrand (same UI look as YouTube screen)
-        Positioned(
-          top: MediaQuery.of(context).padding.top + 10,
-          left: 0,
-          right: 0,
-          child: appBrand(),
-        ),
-
-        // Video Player (center)
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: PodVideoPlayer(
-              controller: controller,
-              podProgressBarConfig: const PodProgressBarConfig(
-                playingBarColor: Colors.white,
-                circleHandlerColor: Colors.white,
-                backgroundColor: Colors.white30,
-                padding: EdgeInsets.only(bottom: 20),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        children: [
+          // Background gradient (same as YouTube screen)
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.secondaryColor, AppColors.primaryColor],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
 
+          appBrand(context: context, hasBackButton: true),
+
+          // Video Player (center)
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: PodVideoPlayer(
+                controller: controller,
+                podProgressBarConfig: const PodProgressBarConfig(
+                  playingBarColor: Colors.white,
+                  circleHandlerColor: Colors.white,
+                  backgroundColor: Colors.white30,
+                  padding: EdgeInsets.only(bottom: 20),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

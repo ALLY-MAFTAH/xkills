@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../theme/app_metrices.dart';
 import '/includes/ratings.dart';
 import '/models/course.dart';
 import '/views/screens/course_details_screen.dart';
@@ -331,11 +332,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine status bar height for correct positioning
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
-    final double topPadding =
-        Platform.isAndroid ? statusBarHeight + 15 : statusBarHeight;
-
+   
     return GetBuilder<CourseController>(
       builder: (courseController) {
         return RefreshIndicator(
@@ -346,56 +343,63 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
             backgroundColor: Colors.transparent,
             extendBodyBehindAppBar: true,
 
-            body: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.secondaryColor, AppColors.primaryColor],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
+            body: Stack(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primaryColor,
+                        AppColors.secondaryColor,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
                 ),
-              ),
-              child: Stack(
-                children: [
-                  CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        expandedHeight: 80.0,
-                        collapsedHeight: 0.0,
-                        toolbarHeight: 0.0,
-                        floating: true,
-                        pinned: false,
-                        backgroundColor: Colors.transparent,
-                        automaticallyImplyLeading: false,
-                        flexibleSpace:
-                            Container(), // Empty container to satisfy the requirement
-                      ),
-
-                      FutureBuilder<List<MyCourse>>(
-                        future: courseController.myCoursesFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return SliverList(
-                              delegate: SliverChildListDelegate([
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      CartItemShimmer(),
-                                      CartItemShimmer(),
-                                      CartItemShimmer(),
-                                    ],
-                                  ),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppMetrices.horizontalPadding,
+                      vertical: AppMetrices.verticalPadding,
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(height: Platform.isAndroid ? 90 : 100),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "My Courses".tr,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        FutureBuilder<List<MyCourse>>(
+                          future: courseController.myCoursesFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0,
                                 ),
-                              ]),
-                            );
-                          }
+                                child: Column(
+                                  children: [
+                                    CartItemShimmer(),
+                                    CartItemShimmer(),
+                                    CartItemShimmer(),
+                                  ],
+                                ),
+                              );
+                            }
 
-                          if (snapshot.hasError) {
-                            return SliverToBoxAdapter(
-                              child: SizedBox(
+                            if (snapshot.hasError) {
+                              return SizedBox(
                                 height: 300,
                                 child: Center(
                                   child: Text(
@@ -405,65 +409,30 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }
+                              );
+                            }
 
-                          final List<MyCourse> myCourses = snapshot.data ?? [];
-                          final bool isEmpty = myCourses.isEmpty;
-                          return SliverList(
-                            delegate: SliverChildListDelegate([
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 10,
-                                ),
-                                child:
-                                    isEmpty
-                                        ? _buildEmptyMyCoursesContent(context)
-                                        : Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ...myCourses.map(
-                                              _buildMyCourseItem,
-                                            ),
-                                            const SizedBox(height: 20),
-                                            Divider(
-                                              color: Colors.white30,
-                                              thickness: 1,
-                                            ),
-                                          ],
-                                        ),
-                              ),
-                            ]),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-
-                  // App Brand
-                  Positioned(
-                    top: topPadding,
-                    left: 0,
-                    right: 0,
-                    child: appBrand(),
-                  ),
-                  Positioned(
-                    top: Platform.isAndroid ? topPadding + 45 : topPadding + 30,
-                    left: 10,
-                    child: Text(
-                      "My Courses",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                            final List<MyCourse> myCourses =
+                                snapshot.data ?? [];
+                            final bool isEmpty = myCourses.isEmpty;
+                            return isEmpty
+                                ? _buildEmptyMyCoursesContent(context)
+                                : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ...myCourses.map(_buildMyCourseItem),
+                                    const SizedBox(height: 20),
+                                  ],
+                                );
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+
+                appBrand(context: context),
+              ],
             ),
           ),
         );

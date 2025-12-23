@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:skillsbank/components/toasts.dart';
+import '/components/toasts.dart';
 import '../controllers/section_controller.dart';
 import '/components/custom_loader.dart';
 import '/components/slide_animations.dart';
@@ -96,7 +93,7 @@ Widget buildLessonItem({
                   ),
                   const SizedBox(width: 5),
                   if (userValidity && downloadUrl != null)
-                    Container(
+                    SizedBox(
                       width: 120,
                       child:
                           isDownloading

@@ -1,18 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
-import 'package:skillsbank/constants/auth_user.dart';
-import 'package:skillsbank/theme/app_padding.dart';
+import '/constants/auth_user.dart';
+import '/theme/app_metrices.dart';
 import '../../components/custom_loader.dart';
-import '../../components/slide_card.dart';
 import '../../constants/endpoints.dart';
 import '/components/grid_course_card.dart';
 import '/theme/app_colors.dart';
@@ -232,16 +227,6 @@ class _HomeScreenState extends State<HomeScreen>
                                   ),
                                 ),
                                 Positioned(
-                                  top:
-                                      Platform.isAndroid
-                                          ? MediaQuery.of(context).padding.top +
-                                              15
-                                          : MediaQuery.of(context).padding.top,
-                                  left: 10,
-                                  right: 10,
-                                  child: appBrand(),
-                                ),
-                                Positioned(
                                   // bottom: 0,
                                   left: 0,
                                   right: 0,
@@ -391,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen>
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: AppPadding.horizontal,
+                                horizontal: AppMetrices.horizontalPadding,
                                 vertical: 5,
                               ),
                               child: Text(
@@ -406,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen>
 
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: AppPadding.horizontal,
+                                horizontal: AppMetrices.horizontalPadding,
                                 vertical: 10,
                               ),
                               child: FutureBuilder(
@@ -489,6 +474,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                         "${Endpoints.baseUrl}/public/${item.categoryLogo}",
                                                     isGolden: item.isGolden!,
                                                     onTap: () {
+                                            
                                                       categoryController
                                                           .selectCategory(
                                                             item.id!,
@@ -523,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen>
 
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: AppPadding.horizontal,
+                                horizontal: AppMetrices.horizontalPadding,
                               ),
                               child: ListTile(
                                 contentPadding: const EdgeInsets.symmetric(
@@ -558,7 +544,7 @@ class _HomeScreenState extends State<HomeScreen>
                             // --- COURSES FUTUREBUILDER (UPDATED) ---
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: AppPadding.horizontal,
+                                horizontal: AppMetrices.horizontalPadding,
                               ),
                               child: FutureBuilder(
                                 future: courseController.coursesFuture,
@@ -580,7 +566,7 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'No course yet'.tr,
+                                            'No Course'.tr,
                                             style: TextStyle(
                                               color: Colors.white,
                                             ),
@@ -640,7 +626,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 },
                               ),
                             ),
-                            SizedBox(height: Platform.isAndroid ? 55 : 5),
+                            SizedBox(height: Platform.isAndroid ? 55 : 85),
                           ],
                         ),
                       ],
@@ -648,6 +634,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ],
               ),
+              appBrand(context: context),
             ],
           ),
         ),
@@ -715,6 +702,8 @@ class _ScrollHintArrowState extends State<_ScrollHintArrow>
                   settings: LiquidGlassSettings(
                     thickness: 10,
                     blur: 1,
+                    lightAngle: 0.8 * 3.14,
+
                     glassColor: const Color.fromARGB(99, 9, 72, 73),
                   ),
                   child: LiquidGlass(

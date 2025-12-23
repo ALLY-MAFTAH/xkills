@@ -96,7 +96,7 @@ class _CartScreenState extends State<CartScreen> {
                       thisCourse.title!,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                       maxLines: 2,
@@ -108,7 +108,6 @@ class _CartScreenState extends State<CartScreen> {
                       style: const TextStyle(
                         color: Color.fromARGB(255, 241, 239, 234),
                         fontSize: 10,
-                        fontWeight: FontWeight.w800,
                       ),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
@@ -147,7 +146,7 @@ class _CartScreenState extends State<CartScreen> {
                   SizedBox(height: thisCourse.discountFlag! ? 8 : 25),
                   if (thisCourse.isPaid! && thisCourse.discountFlag!)
                     Text(
-                      '${thisCourse.price}', 
+                      '${thisCourse.price}',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -169,7 +168,7 @@ class _CartScreenState extends State<CartScreen> {
 
                     style: const TextStyle(
                       color: Color(0xFFE6C068),
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -330,15 +329,17 @@ class _CartScreenState extends State<CartScreen> {
                                                   'Total:',
                                                   style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 20,
+                                                    fontSize: 16,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
                                                 Text(
-                                                  '${_totalPrice.toStringAsFixed(2)}',
+                                                  _totalPrice.toStringAsFixed(
+                                                    2,
+                                                  ),
                                                   style: const TextStyle(
                                                     color: Color(0xFFE6C068),
-                                                    fontSize: 22,
+                                                    fontSize: 18,
                                                     fontWeight: FontWeight.w900,
                                                   ),
                                                 ),
@@ -354,35 +355,13 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ],
                 ),
-                Positioned(
-                  top: topPadding,
-                  left: 10,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        size: 28,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
+
+                appBrand(
+                  context: context,
+                  hasBackButton: true,
+                  showCartButton: false,
                 ),
 
-                // App Brand
-                Positioned(
-                  top: topPadding,
-                  left: 0,
-                  right: 0,
-                  child: appBrand(),
-                ),
                 Visibility(
                   visible: false,
                   child: Positioned(

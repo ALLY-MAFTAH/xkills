@@ -324,8 +324,9 @@ class CourseController extends GetxController {
       for (var section in sections) {
         final sectionName = section.title!.replaceAll("/", "_");
         final sectionFolder = Directory("${appFolder.path}/$sectionName");
-        if (!sectionFolder.existsSync())
+        if (!sectionFolder.existsSync()) {
           sectionFolder.createSync(recursive: true);
+        }
 
         for (var lesson in section.lessons!) {
           final url = lesson.attachmentUrl;
@@ -387,7 +388,7 @@ class CourseController extends GetxController {
         cancelToken: cancelTokens[courseId],
       );
 
-      final total = response.data!.contentLength ?? 0;
+      final total = response.data!.contentLength;
       int received = 0;
 
       final stream = response.data!.stream;

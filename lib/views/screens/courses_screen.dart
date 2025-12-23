@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/category_controller.dart';
@@ -17,9 +16,10 @@ class CoursesScreen extends StatefulWidget {
 }
 
 class CoursesScreenState extends State<CoursesScreen> {
-  final courseController = Get.put(CourseController());
-  final categoryController = Get.put(CategoryController());
-String categoryTitle = 'All ';
+  final courseController = Get.find<CourseController>();
+  final categoryController = Get.find<CategoryController>();
+  String categoryTitle = 'All ';
+
   @override
   void initState() {
     super.initState();
@@ -45,169 +45,122 @@ String categoryTitle = 'All ';
 
   @override
   Widget build(BuildContext context) {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
-    final double topPadding =
-        Platform.isAndroid ? statusBarHeight + 15 : statusBarHeight;
+    final bool isGolden =
+        categoryController.selectedCategory?.isGolden ?? false;
 
-    return RefreshIndicator(
-      onRefresh: _refreshData,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBodyBehindAppBar: true,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        children: [
+          // 🌟 THE INSTANT BACKGROUND
+          Positioned.fill(
+            child:
+                isGolden
+                    ? Image.asset(
+                      "assets/images/golden_background.jpg",
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.low,
 
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.secondaryColor, AppColors.primaryColor],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
+                      gaplessPlayback: true,
+                    )
+                    : Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.secondaryColor,
+                            AppColors.primaryColor,
+                          ],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                      ),
+                    ),
           ),
-          child: Stack(
-            children: [
-              CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    expandedHeight: 70.0,
-                    collapsedHeight: 0.0,
-                    toolbarHeight: 0.0,
-                    floating: true,
-                    pinned: false,
-                    backgroundColor: Colors.transparent,
-                    automaticallyImplyLeading: false,
-                    flexibleSpace:
-                        Container(), // Empty container to satisfy the requirement
-                  ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                            "${categoryTitle}Courses",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
+
+          // 🌟 CONTENT
+          RefreshIndicator(
+            onRefresh: _refreshData,
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                const SliverAppBar(
+                  expandedHeight: 70,
+                  collapsedHeight: 0,
+                  toolbarHeight: 0,
+                  floating: true,
+                  pinned: false,
+                  backgroundColor: Colors.transparent,
+                  automaticallyImplyLeading: false,
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "$categoryTitle Courses",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
                           ),
-                          SizedBox(height: 10),
-
-                          const SizedBox(height: 5),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: FutureBuilder(
-                        future: courseController.coursesFuture,
-                        builder: (context, asyncSnapshot) {
-                          if (asyncSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CourseShimmerGrid();
-                          } else if (asyncSnapshot.hasError) {
-                            return Center(
-                              child: Text('Error: ${asyncSnapshot.error}'),
-                            );
-                          } else if (asyncSnapshot.data == null ||
-                              asyncSnapshot.data!.isEmpty) {
-                            return Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'No course yet'.tr,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  SizedBox(height: Get.height / 10),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 8,
-                                      backgroundColor: Colors.white.withOpacity(
-                                        .1,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      _refreshData();
-                                    },
-                                    child: Text(
-                                      "Reload",
-                                      style: TextStyle(
-                                        color: const Color(0xFFE6C068),
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 20),
-                                ],
-                              ),
-                            );
-                          } else {
-                            final List<Course> courses = asyncSnapshot.data!;
-
-                            return GridView.builder(
-                              shrinkWrap: true,
-                              primary: false,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: const EdgeInsets.only(
-                                top: 10,
-                                bottom: 20,
-                              ),
-                              itemCount: courses.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 10,
-                                    mainAxisSpacing: 10,
-                                    childAspectRatio: .66,
-                                  ),
-                              itemBuilder: (context, index) {
-                                final course = courses[index];
-                                return GridCourseCard(
-                                  thisCourse: course,
-                                  fromInstructorsScreen: true,
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                top: topPadding,
-                left: 10,
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      size: 28,
-                      color: Colors.white,
-                    ),
-                    onPressed: () => Navigator.pop(context),
                   ),
                 ),
-              ),
-
-              // App Brand
-              Positioned(top: topPadding, left: 0, right: 0, child: appBrand()),
-            ],
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: FutureBuilder<List<Course>>(
+                      future: courseController.coursesFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CourseShimmerGrid();
+                        }
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Padding(
+                            padding: EdgeInsets.only(top: Get.height / 4),
+                            child: Center(
+                              child: Text(
+                                "No Course".tr,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          );
+                        }
+                        final courses = snapshot.data!;
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.only(bottom: 20),
+                          itemCount: courses.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                childAspectRatio: .66,
+                              ),
+                          itemBuilder:
+                              (context, index) => GridCourseCard(
+                                thisCourse: courses[index],
+                                fromInstructorsScreen: true,
+                              ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+          appBrand(context: context, hasBackButton: true),
+        ],
       ),
     );
   }

@@ -5,7 +5,7 @@
 // import 'package:carousel_slider/carousel_slider.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
-// import 'package:skillsbank/theme/app_padding.dart';
+// import '/theme/app_padding.dart';
 // import '../../components/slide_card.dart';
 // import '/components/grid_course_card.dart';
 // import '/theme/app_colors.dart';

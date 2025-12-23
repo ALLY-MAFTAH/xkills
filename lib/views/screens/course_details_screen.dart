@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
+import '/constants/app_brand.dart';
 import '../../models/lesson.dart';
 import '/components/toasts.dart';
 import '../../components/no_video_url.dart';
@@ -134,33 +135,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                           ),
                         ),
 
-                        // Back Button
-                        Positioned(
-                          top:
-                              Platform.isAndroid
-                                  ? MediaQuery.of(context).padding.top + 15
-                                  : MediaQuery.of(context).padding.top,
-                          left: 10,
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              icon: const Icon(
-                                Icons.arrow_back,
-                                size: 28,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ),
-                        ),
+                        appBrand(hasBackButton: true, context: context, showCartButton: false),
                         if (!thisCourse.isPaid!)
                           Positioned(
                             top:

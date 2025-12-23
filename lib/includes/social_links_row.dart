@@ -141,7 +141,7 @@ class _SocialLinksRowState extends State<SocialLinksRow> {
                 icon: FaIcon(link.icon, color: link.color, size: 18),
                 onPressed: onPressed,
               );
-            }).toList(),
+            }),
           ],
         ),
       ),

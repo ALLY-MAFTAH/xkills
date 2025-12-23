@@ -73,30 +73,9 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                 ),
               ],
             ),
-            Positioned(
-              top: topPadding,
-              left: 10,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    size: 28,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ),
-            ),
+            
 
-            // App Brand
-            Positioned(top: topPadding, left: 0, right: 0, child: appBrand()),
+            appBrand(context: context,hasBackButton: true),
             Positioned.fill(
               top: topPadding + 55,
               child: SingleChildScrollView(

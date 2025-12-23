@@ -51,7 +51,7 @@ class _GridProductCardState extends State<GridProductCard> {
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(11),
-                color: HexColor('#056060'), // ✅ Your original background color
+                color: HexColor('#056060'),
               ),
               child: SingleChildScrollView(
                 child: Column(
@@ -66,7 +66,7 @@ class _GridProductCardState extends State<GridProductCard> {
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 14,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -77,7 +77,7 @@ class _GridProductCardState extends State<GridProductCard> {
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w900,
-                        fontSize: 25,
+                        fontSize: 20,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -210,17 +210,20 @@ class _GridProductCardState extends State<GridProductCard> {
                                       : Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.download_rounded,
                                             color: Colors.white,
+                                            size: 16,
                                           ),
                                           SizedBox(width: 10),
                                           Text(
                                             "Download",
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w800,
                                             ),
                                           ),
@@ -272,7 +275,7 @@ class _GridProductCardState extends State<GridProductCard> {
           right: 20,
           top: 0,
           child: Container(
-            height: Get.height / 5.5,
+            height: Get.height / 6.2,
             width: Get.width / 3.6,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(color: Colors.transparent),
@@ -300,7 +303,7 @@ class _GridProductCardState extends State<GridProductCard> {
         Positioned(
           left: 0,
           right: 0,
-          top: 40,
+          top: 25,
           bottom: 0,
           child: Align(
             alignment: Alignment.center,

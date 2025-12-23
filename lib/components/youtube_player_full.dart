@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../constants/app_brand.dart';
@@ -137,42 +136,8 @@ class _YoutubePlayerFullState extends State<YoutubePlayerFull> {
                     ),
                   ),
                 ),
-                Positioned(
-                  top:
-                      Platform.isAndroid
-                          ? MediaQuery.of(context).padding.top + 15
-                          : MediaQuery.of(context).padding.top,
-                  left: 10,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        size: 28,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top:
-                      Platform.isAndroid
-                          ? MediaQuery.of(context).padding.top + 15
-                          : MediaQuery.of(context).padding.top,
-                  left: 0,
-                  right: 0,
+                appBrand(context: context, hasBackButton: true),
 
-                  child: appBrand(),
-                ),
                 Center(child: player),
 
                 Visibility(

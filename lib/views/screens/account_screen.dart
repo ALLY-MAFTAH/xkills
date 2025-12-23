@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '/constants/auth_user.dart';
@@ -193,9 +191,6 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
-    final double topPadding =
-        Platform.isAndroid ? statusBarHeight + 15 : statusBarHeight;
 
     return GetBuilder<CourseController>(
       builder: (courseController) {
@@ -300,12 +295,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
 
                   // App Brand (Fixed Header)
-                  Positioned(
-                    top: topPadding,
-                    left: 0,
-                    right: 0,
-                    child: appBrand(),
-                  ),
+                  appBrand(context: context),
                 ],
               ),
             ),

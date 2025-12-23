@@ -5,7 +5,6 @@ import 'package:get_storage/get_storage.dart';
 import '/components/toasts.dart';
 import '/views/screens/tab_screen.dart';
 import '/theme/app_colors.dart';
-import '../../constants/app_brand.dart';
 import 'swipe.dart';
 
 class SplashScreen extends StatefulWidget {

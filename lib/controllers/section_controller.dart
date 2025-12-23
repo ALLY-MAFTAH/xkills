@@ -123,8 +123,9 @@ class SectionController extends GetxController {
         "${appFolder.path}/$sanitizedCourseTitle/$sanitizedSection",
       );
 
-      if (!sectionFolder.existsSync())
+      if (!sectionFolder.existsSync()) {
         sectionFolder.createSync(recursive: true);
+      }
 
       // -----------------------------------
       // 2. FIX FILENAME + EXTENSION

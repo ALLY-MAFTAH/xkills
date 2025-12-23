@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
-import '/theme/app_colors.dart';
 
 class CustomSearch extends StatefulWidget {
   final TextEditingController searchController;
@@ -30,7 +29,8 @@ class _CustomSearchState extends State<CustomSearch> {
               child: LiquidGlassLayer(
                 settings: const LiquidGlassSettings(
                   thickness: 10,
-                  blur: 1,
+                  blur: 1,                                lightAngle: 0.8 * 3.14,
+
                   glassColor: Color.fromARGB(16, 255, 255, 255),
                 ),
                 child: LiquidGlass(

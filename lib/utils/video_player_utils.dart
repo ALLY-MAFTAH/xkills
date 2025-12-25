@@ -1,8 +1,8 @@
 // video_player_utils.dart
 
 import 'package:flutter/material.dart';
-import '../components/from_network.dart';
-import '../components/youtube_player_full.dart';
+import '../components/players/network_player_full.dart';
+import '../components/players/youtube_player_full.dart';
 import '../components/no_video_url.dart';
 
 /// Handles routing to the correct video player based on the video URL type.
@@ -35,7 +35,7 @@ Future<void> navigateToVideoPlayer({
   Widget nextPage;
 
   if (isYouTube) {
-    nextPage = YoutubePlayerFull(
+    nextPage = YoutubeVideoPlayerFull(
       courseId: courseId,
       lessonId: lessonId,
       videoUrl: videoUrl,
@@ -47,7 +47,7 @@ Future<void> navigateToVideoPlayer({
     if (match != null) {
       String driveUrl =
           'https://drive.google.com/uc?export=download&id=${match.group(0)}';
-      nextPage = PlayVideoFromNetwork(
+      nextPage = NetworkVideoPlayerFull(
         courseId: courseId,
         lessonId: lessonId,
         videoUrl: driveUrl,
@@ -56,7 +56,7 @@ Future<void> navigateToVideoPlayer({
       nextPage = NoVideoUrl();
     }
   } else if (isMp4 || isOgg || isWebm || isMkv) {
-    nextPage = PlayVideoFromNetwork(
+    nextPage = NetworkVideoPlayerFull(
       courseId: courseId,
       lessonId: lessonId,
       videoUrl: videoUrl,

@@ -359,10 +359,12 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                 ),
                 SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppMetrices.horizontalPadding,
-                      vertical: AppMetrices.verticalPadding,
-                    ),
+                    padding: const EdgeInsets.only(
+                  left: AppMetrices.horizontalPadding,
+                  right: AppMetrices.horizontalPadding,
+                  bottom: AppMetrices.verticalPadding + 25,
+                  top: AppMetrices.verticalPadding,
+                ),
                     child: Column(
                       children: [
                         SizedBox(height: Platform.isAndroid ? 90 : 100),

@@ -2,7 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skillsbank/components/custom_search.dart';
+import 'package:skillsbank/components/slide_animations.dart';
+import 'package:skillsbank/models/sub_category.dart';
 import '../../components/toasts.dart';
+import '../../controllers/category_controller.dart';
 import '../../theme/app_metrices.dart';
 import '/controllers/course_controller.dart';
 import '/models/course.dart';
@@ -22,8 +26,9 @@ class ShopScreen extends StatefulWidget {
 
 class _ShopScreenState extends State<ShopScreen> {
   final TextEditingController searchController = TextEditingController();
+  final categoryController = Get.put(CategoryController());
   final courseController = Get.put(CourseController());
-
+  int selectedSubCategoryId = 0;
   @override
   void initState() {
     super.initState();
@@ -31,6 +36,8 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   void _loadInitialData() {
+    categoryController.subCategoriesFuture =
+        categoryController.getSubCategories();
     courseController.productsFuture = courseController.getProducts();
   }
 
@@ -70,11 +77,13 @@ class _ShopScreenState extends State<ShopScreen> {
             ),
             // 2. Main Content
             SingleChildScrollView(
-              // physics: const NeverScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppMetrices.horizontalPadding,
-                  vertical: AppMetrices.verticalPadding,
+                padding: const EdgeInsets.only(
+                  left: AppMetrices.horizontalPadding,
+                  right: AppMetrices.horizontalPadding,
+                  bottom: AppMetrices.verticalPadding + 25,
+                  top: AppMetrices.verticalPadding,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,15 +92,136 @@ class _ShopScreenState extends State<ShopScreen> {
                     SizedBox(height: Platform.isAndroid ? 90 : 100),
 
                     Text(
-                      'Products'.tr,
+                      'Xkills Packs'.tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),
                     ),
+                    SizedBox(height: 10),
+                    CustomSearch(
+                      searchController: searchController,
+                      onSearch: () {},
+                    ),
+                    SizedBox(height: 20),
+                    FutureBuilder(
+                      future: categoryController.subCategoriesFuture,
+                      builder: (context, asyncSnapshot) {
+                        if (asyncSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container();
+                        } else if (asyncSnapshot.hasError) {
+                          // *** FIX 2: Ensure error message takes up space ***
+                          return SizedBox(
+                            height: minContentHeight * 0.5,
+                            child: Center(
+                              child: Text(
+                                'Error: ${asyncSnapshot.error}',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          );
+                        } else if (asyncSnapshot.data == null ||
+                            asyncSnapshot.data!.isEmpty) {
+                          return Container();
+                        } else {
+                          final List<SubCategory> subCategories =
+                              asyncSnapshot.data!;
 
-                    // --- INSTRUCTOR LIST/EMPTY STATE ---
+                          return Wrap(
+                            runSpacing: 10,
+                            spacing: 10,
+                            children: [
+                              Container(
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  gradient:
+                                      selectedSubCategoryId == 0
+                                          ? LinearGradient(
+                                            colors: [
+                                              AppColors.brainColor,
+                                              AppColors.primaryColor,
+                                            ],
+                                          )
+                                          : null,
+                                ),
+                                child: OutlinedButton(
+                                  onPressed: () {
+                                    selectedSubCategoryId = 0;
+                                    setState(() {});
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                    ),
+                                    side: BorderSide(
+                                      color: Colors.grey,
+                                      width: 0.5,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "All".tr,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              ...subCategories.map((subCategory) {
+                                return Container(
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    gradient:
+                                        selectedSubCategoryId == subCategory.id
+                                            ? LinearGradient(
+                                              colors: [
+                                                AppColors.brainColor,
+                                                AppColors.primaryColor,
+                                              ],
+                                            )
+                                            : null,
+                                  ),
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      selectedSubCategoryId = subCategory.id!;
+                                      setState(() {});
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                      ),
+                                      side: BorderSide(
+                                        color: Colors.grey,
+                                        width: 0.5,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "${subCategory.title}".tr,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ],
+                          );
+                        }
+                      },
+                    ),
+                    SizedBox(height: 10),
                     FutureBuilder(
                       future: courseController.productsFuture,
                       builder: (context, asyncSnapshot) {
@@ -104,32 +234,53 @@ class _ShopScreenState extends State<ShopScreen> {
                             height: minContentHeight * 0.5,
                             child: Center(
                               child: Text(
-                                'Error loading data: ${asyncSnapshot.error}',
+                                'Error: ${asyncSnapshot.error}',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
                           );
                         } else if (asyncSnapshot.data == null ||
                             asyncSnapshot.data!.isEmpty) {
-                          // *** FIX 3: Ensure 'No product' message takes up space ***
-                          // This forces the SingleChildScrollView to become scrollable
                           return SizedBox(
                             height:
                                 minContentHeight *
                                 0.7, // Take up a large part of the screen
-                            child: const Center(
+                            child: Center(
                               child: Text(
-                                'No products found.',
+                                'No Packs'.tr,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
                           );
                         } else {
-                          final List<Course> products = asyncSnapshot.data!;
+                          final List<Course> allProducts = asyncSnapshot.data!;
+
+                          final List<Course> filteredProducts =
+                              selectedSubCategoryId == 0
+                                  ? allProducts
+                                  : allProducts
+                                      .where(
+                                        (product) =>
+                                            product.categoryId ==
+                                            selectedSubCategoryId,
+                                      )
+                                      .toList();
+
+                          if (filteredProducts.isEmpty) {
+                            return SizedBox(
+                              height: minContentHeight * 0.6,
+                              child: Center(
+                                child: Text(
+                                  'No Packs in this category'.tr,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            );
+                          }
 
                           return Column(
                             children: [
-                              ...products.map((product) {
+                              ...filteredProducts.map((product) {
                                 final amount =
                                     double.tryParse(
                                       product.price!.replaceAll(
@@ -139,46 +290,45 @@ class _ShopScreenState extends State<ShopScreen> {
                                     ) ??
                                     0.0;
 
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: GridProductCard(
-                                    thisProduct: product,
-                                    onBuyPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (_) => PaymentOptionsScreen(
-                                                courseIds: [product.id!],
-                                                totalAmount: amount,
-                                              ),
-                                        ),
-                                      );
-                                    },
-                                    onAddToCartPressed: () {
-                                      if (!courseController.isLoading) {
-                                        courseController
-                                            .addOrRemoveCart(product.id!)
-                                            .then((status) {
-                                              if (status == "added") {
-                                                successToast(
-                                                  "Product added to cart".tr,
-                                                );
-                                              } else if (status == "removed") {
-                                                successToast(
-                                                  "Product removed from cart"
-                                                      .tr,
-                                                );
-                                              }
-                                            });
-                                      }
-                                    },
-                                    onDownloadPressed: () {
-                                      // Handle download
-                                    },
+                                return BottomTopSlide(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 1),
+                                    child: GridProductCard(
+                                      thisPack: product,
+                                      onBuyPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (_) => PaymentOptionsScreen(
+                                                  courseIds: [product.id!],
+                                                  totalAmount: amount,
+                                                ),
+                                          ),
+                                        );
+                                      },
+                                      onAddToCartPressed: () {
+                                        if (!courseController.isLoading) {
+                                          courseController
+                                              .addOrRemoveCart(product.id!)
+                                              .then((status) {
+                                                if (status == "added") {
+                                                  successToast(
+                                                    "Pack added to cart".tr,
+                                                  );
+                                                } else if (status ==
+                                                    "removed") {
+                                                  successToast(
+                                                    "Pack removed from cart".tr,
+                                                  );
+                                                }
+                                              });
+                                        }
+                                      },
+                                    ),
                                   ),
                                 );
-                              }).toList(),
+                              }),
                             ],
                           );
                         }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:skillsbank/controllers/category_controller.dart';
 import '/controllers/section_controller.dart';
 import '../components/toasts.dart';
 import '../constants/app_brand.dart';
@@ -73,13 +74,23 @@ class CourseController extends GetxController {
       if (responseData == null) return products;
 
       final List fetchedProducts = responseData;
-      print("PRODUCTS ZIPOOOOO");
-      print(fetchedProducts.length);
+      final CategoryController categoryController =
+          Get.find<CategoryController>();
+
+      final Set<int> productCategoryIds =
+          categoryController.subCategories
+              .map((subCategory) => subCategory.id as int)
+              .toSet();
+
       if (fetchedProducts.isNotEmpty) {
         _products = [];
         for (var product in fetchedProducts) {
           final calledDataSet = Course.fromJson(product);
-          if (calledDataSet.categoryId == 1) {
+          final bool isProduct = productCategoryIds.contains(
+            calledDataSet.categoryId,
+          );
+
+          if (isProduct) {
             _products.add(calledDataSet);
           }
         }
@@ -111,11 +122,23 @@ class CourseController extends GetxController {
       if (responseData == null) return courses;
 
       final List fetchedCourses = responseData;
+      final CategoryController categoryController =
+          Get.find<CategoryController>();
+
+      final Set<int> productCategoryIds =
+          categoryController.subCategories
+              .map((subCategory) => subCategory.id as int)
+              .toSet();
+
       if (fetchedCourses.isNotEmpty) {
         _courses = [];
         for (var course in fetchedCourses) {
           final calledDataSet = Course.fromJson(course);
-          if (calledDataSet.categoryId != 1) {
+          final bool isProduct = productCategoryIds.contains(
+            calledDataSet.categoryId,
+          );
+
+          if (!isProduct) {
             _courses.add(calledDataSet);
           }
         }
@@ -143,19 +166,33 @@ class CourseController extends GetxController {
       List<MyCourse> temporaryCourses = [];
       List<Future<void>> durationCalculations = [];
       List<MyCourse> temporaryProducts = [];
+      final CategoryController categoryController =
+          Get.find<CategoryController>();
+
+      final Set<int> productCategoryIds =
+          categoryController.subCategories
+              .map((subCategory) => subCategory.id as int)
+              .toSet();
 
       if (myFetchedCourses.isNotEmpty) {
         for (var myCourseJson in myFetchedCourses) {
           final MyCourse courseModel = MyCourse.fromJson(myCourseJson);
-          if (courseModel.categoryId != 1) {
-            temporaryCourses.add(courseModel);
-            durationCalculations.add(courseModel.calculateTotalDuration());
-          } else {
+
+          /// ✅ Check if course belongs to a product category
+          final bool isProduct = productCategoryIds.contains(
+            courseModel.categoryId,
+          );
+
+          if (isProduct) {
             temporaryProducts.add(courseModel);
-            durationCalculations.add(courseModel.calculateTotalDuration());
+          } else {
+            temporaryCourses.add(courseModel);
           }
+
+          durationCalculations.add(courseModel.calculateTotalDuration());
         }
       }
+
       await Future.wait(durationCalculations);
       _myCourses = temporaryCourses;
       _myProducts = temporaryProducts;

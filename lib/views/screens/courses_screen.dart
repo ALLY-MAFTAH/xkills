@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../components/custom_search.dart';
 import '../../controllers/category_controller.dart';
+import '../../theme/app_metrices.dart';
 import '/components/grid_course_card.dart';
 import '/components/shimmer_widgets/course_grid_shimmer.dart';
 import '/constants/app_brand.dart';
@@ -16,9 +20,13 @@ class CoursesScreen extends StatefulWidget {
 }
 
 class CoursesScreenState extends State<CoursesScreen> {
+  final TextEditingController searchController = TextEditingController();
+
   final courseController = Get.find<CourseController>();
   final categoryController = Get.find<CategoryController>();
+
   String categoryTitle = 'All ';
+  String selectedCourseLevel = 'All'.tr;
 
   @override
   void initState() {
@@ -45,122 +53,216 @@ class CoursesScreenState extends State<CoursesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isGolden =
-        categoryController.selectedCategory?.isGolden ?? false;
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      color: AppColors.secondaryColor,
+      backgroundColor: Colors.white,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: true,
+        extendBody: true,
+        body: Stack(
+          children: [
+            // 🌈 Background
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColors.secondaryColor, AppColors.primaryColor],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+              ),
+            ),
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
-      body: Stack(
-        children: [
-          // 🌟 THE INSTANT BACKGROUND
-          Positioned.fill(
-            child:
-                isGolden
-                    ? Image.asset(
-                      "assets/images/golden_background.jpg",
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.low,
+            // 🌈 Content
+            SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: AppMetrices.horizontalPadding,
+                  right: AppMetrices.horizontalPadding,
+                  bottom: AppMetrices.verticalPadding + 25,
+                  top: AppMetrices.verticalPadding,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: Platform.isAndroid ? 90 : 100),
 
-                      gaplessPlayback: true,
-                    )
-                    : Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppColors.secondaryColor,
-                            AppColors.primaryColor,
-                          ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
+                    Text(
+                      "$categoryTitle Courses".tr,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
                       ),
                     ),
-          ),
 
-          // 🌟 CONTENT
-          RefreshIndicator(
-            onRefresh: _refreshData,
-            child: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              slivers: [
-                const SliverAppBar(
-                  expandedHeight: 70,
-                  collapsedHeight: 0,
-                  toolbarHeight: 0,
-                  floating: true,
-                  pinned: false,
-                  backgroundColor: Colors.transparent,
-                  automaticallyImplyLeading: false,
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "$categoryTitle Courses",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                      ],
+                    const SizedBox(height: 10),
+
+                    CustomSearch(
+                      searchController: searchController,
+                      onSearch: () {},
                     ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: FutureBuilder<List<Course>>(
+
+                    const SizedBox(height: 20),
+
+                    /// 🔽 COURSES + LEVEL FILTER
+                    FutureBuilder<List<Course>>(
                       future: courseController.coursesFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const CourseShimmerGrid();
                         }
+
                         if (!snapshot.hasData || snapshot.data!.isEmpty) {
                           return Padding(
                             padding: EdgeInsets.only(top: Get.height / 4),
-                            child: Center(
+                            child: const Center(
                               child: Text(
-                                "No Course".tr,
-                                style: const TextStyle(color: Colors.white),
+                                "No Course",
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           );
                         }
-                        final courses = snapshot.data!;
-                        return GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.only(bottom: 20),
-                          itemCount: courses.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
-                                childAspectRatio: .66,
-                              ),
-                          itemBuilder:
-                              (context, index) => GridCourseCard(
-                                thisCourse: courses[index],
-                                fromInstructorsScreen: true,
-                              ),
+
+                        final allCourses = snapshot.data!;
+
+                        /// 🔹 Extract unique levels
+                        final List<String> orderedLevels = [
+                          "beginner",
+                          "intermediate",
+                          "advanced",
+                        ];
+
+                        final Set<String> availableLevels =
+                            allCourses
+                                .map((c) => c.level)
+                                .whereType<String>()
+                                .toSet();
+
+                        final List<String> levels =
+                            orderedLevels
+                                .where(
+                                  (level) =>
+                                      level == "All".tr ||
+                                      availableLevels.contains(level),
+                                )
+                                .toList();
+
+                        /// 🔹 Filter courses by selected level
+                        final List<Course> filteredCourses =
+                            selectedCourseLevel == 'All'.tr
+                                ? allCourses
+                                : allCourses
+                                    .where(
+                                      (course) =>
+                                          course.level == selectedCourseLevel,
+                                    )
+                                    .toList();
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /// 🟡 LEVEL FILTER CHIPS
+                            Wrap(
+                              alignment: WrapAlignment.spaceBetween,
+                              runAlignment: WrapAlignment.spaceBetween,
+                              runSpacing: 10,
+                              spacing: 10,
+                              children: [
+                                _levelChip(
+                                  label: 'All'.tr,
+                                  selected: selectedCourseLevel == 'All'.tr,
+                                  onTap: () {
+                                    setState(() {
+                                      selectedCourseLevel = 'All'.tr;
+                                    });
+                                  },
+                                ),
+
+                                ...levels.map(
+                                  (level) => _levelChip(
+                                    label: level.tr,
+                                    selected: selectedCourseLevel == level,
+                                    onTap: () {
+                                      setState(() {
+                                        selectedCourseLevel = level;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            /// 📦 COURSES GRID
+                            GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: filteredCourses.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: .66,
+                                  ),
+                              itemBuilder: (context, index) {
+                                return GridCourseCard(
+                                  thisCourse: filteredCourses[index],
+                                  fromInstructorsScreen: true,
+                                );
+                              },
+                            ),
+                          ],
                         );
                       },
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
+
+            appBrand(context: context, hasBackButton: true),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 🟡 Reusable level chip
+  Widget _levelChip({
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      height: 30,
+      // width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        gradient:
+            selected
+                ? LinearGradient(
+                  colors: [AppColors.brainColor, AppColors.primaryColor],
+                )
+                : null,
+      ),
+      child: OutlinedButton(
+        onPressed: onTap,
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          side: const BorderSide(color: Colors.grey, width: 0.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
           ),
-          appBrand(context: context, hasBackButton: true),
-        ],
+        ),
+        child: Text(
+          GetUtils.capitalize(label)!,
+          style: const TextStyle(color: Colors.white, fontSize: 10),
+        ),
       ),
     );
   }

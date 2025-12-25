@@ -84,7 +84,7 @@ String getFormattedDate(DateTime date) {
 
 String getMoneyFormat(double amount) {
   final formatter = NumberFormat('#,##0', 'en_US');
-  return 'Tsh ${formatter.format(amount)}';
+  return '${formatter.format(amount)}TZS';
 }
 
 String getMoneyFormatShort(double amount) {
@@ -94,10 +94,10 @@ String getMoneyFormatShort(double amount) {
         shortAmount % 1 == 0
             ? shortAmount.toStringAsFixed(0)
             : shortAmount.toStringAsFixed(1);
-    return 'Tsh ${formatted}M';
+    return '${formatted}M TZS';
   } else {
     final formatter = NumberFormat('#,##0', 'en_US');
-    return 'Tsh ${formatter.format(amount)}';
+    return '${formatter.format(amount)}TZS';
   }
 }
 

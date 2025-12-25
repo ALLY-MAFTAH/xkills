@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class YoutubePlayerDialog extends StatefulWidget {
+class YoutubeVideoPlayerDialog extends StatefulWidget {
   final int courseId;
   final int? lessonId;
   final String videoUrl;
-  const YoutubePlayerDialog({
+  const YoutubeVideoPlayerDialog({
     super.key,
     required this.courseId,
     this.lessonId,
@@ -13,10 +13,10 @@ class YoutubePlayerDialog extends StatefulWidget {
   });
 
   @override
-  State<YoutubePlayerDialog> createState() => _YoutubePlayerDialogState();
+  State<YoutubeVideoPlayerDialog> createState() => _YoutubeVideoPlayerDialogState();
 }
 
-class _YoutubePlayerDialogState extends State<YoutubePlayerDialog> {
+class _YoutubeVideoPlayerDialogState extends State<YoutubeVideoPlayerDialog> {
   late YoutubePlayerController _controller;
   late TextEditingController _idController;
   late TextEditingController _seekToController;

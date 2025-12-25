@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'package:pod_player/pod_player.dart';
 import 'package:flutter/material.dart';
-import '../constants/app_brand.dart';
+import '../../constants/app_brand.dart';
 import '/constants/endpoints.dart';
-import '../theme/app_colors.dart';
-import '../utils/get_video_id.dart';
+import '../../theme/app_colors.dart';
+import '../../utils/get_video_id.dart';
 
-class PlayVideoFromNetwork extends StatefulWidget {
+class NetworkVideoPlayerFull extends StatefulWidget {
   static const routeName = '/fromNetwork';
   final int courseId;
   final int? lessonId;
   final String videoUrl;
-  const PlayVideoFromNetwork({
+  const NetworkVideoPlayerFull({
     super.key,
     required this.courseId,
     this.lessonId,
@@ -19,10 +19,10 @@ class PlayVideoFromNetwork extends StatefulWidget {
   });
 
   @override
-  State<PlayVideoFromNetwork> createState() => _PlayVideoFromAssetState();
+  State<NetworkVideoPlayerFull> createState() => _PlayVideoFromAssetState();
 }
 
-class _PlayVideoFromAssetState extends State<PlayVideoFromNetwork> {
+class _PlayVideoFromAssetState extends State<NetworkVideoPlayerFull> {
   late final PodPlayerController controller;
 
   Timer? timer;

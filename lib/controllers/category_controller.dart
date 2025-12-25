@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../components/toasts.dart';
 import '../constants/endpoints.dart';
 import '../enums/enums.dart';
 import '../models/category.dart';
+import '../models/sub_category.dart';
 import '../services/http_service.dart';
 
 class CategoryController extends GetxController {
@@ -21,8 +21,11 @@ class CategoryController extends GetxController {
   Future<List<Category>>? categoriesFuture;
   List<Category> _categories = [];
   List<Category> get categories => _categories;
-  final List<DropdownMenuItem<String>> _categoryList = [];
-  List<DropdownMenuItem<String>> get categoriesDropdown => _categoryList;
+
+  // SUB
+  Future<List<SubCategory>>? subCategoriesFuture;
+  List<SubCategory> _subCategories = [];
+  List<SubCategory> get subCategories => _subCategories;
 
   Future<List<Category>> getCategories() async {
     try {
@@ -35,8 +38,10 @@ class CategoryController extends GetxController {
       if (responseData == null) return categories;
 
       final List fetchedCategories = responseData;
+
       if (fetchedCategories.isNotEmpty) {
         _categories = [];
+        _subCategories = [];
         for (var category in fetchedCategories) {
           final calledDataSet = Category.fromJson(category);
           if (calledDataSet.id != 1) {
@@ -44,59 +49,44 @@ class CategoryController extends GetxController {
           }
         }
       }
-      await updateCategoryDropdownList();
 
-      print(categories);
       return categories;
     } catch (e) {
       print(e.toString());
       errorToast(e.toString());
     }
-    await updateCategoryDropdownList();
     return categories;
   }
 
-  Future<void> updateCategoryDropdownList() async {
-    if (categories.isNotEmpty) {
-      _categoryList.clear();
-      _categoryList.add(
-        DropdownMenuItem(
-          value: "0",
-          enabled: false,
-          child: Text(
-            "select_category".tr,
-            style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey),
-            softWrap: true,
-          ),
-        ),
+  Future<List<SubCategory>> getSubCategories() async {
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.GET,
+        Endpoints.getCategories,
+        {},
+        false,
       );
-      for (var category in categories) {
-        _categoryList.add(
-          DropdownMenuItem(
-            value: category.id.toString(),
-            child: Text(
-              category.title.toString(),
-              softWrap: true,
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        );
+      if (responseData == null) return subCategories;
+
+      final List fetchedSubCategories = responseData;
+
+      if (fetchedSubCategories.isNotEmpty) {
+        _subCategories = [];
+        for (var subCategory in fetchedSubCategories) {
+          final calledDataSet = Category.fromJson(subCategory);
+          if (calledDataSet.id == 1 &&
+              calledDataSet.subCategories!.isNotEmpty) {
+            for (var subCategory in calledDataSet.subCategories!) {
+              _subCategories.add(subCategory);
+            }
+          }
+        }
       }
-    } else {
-      _categoryList.clear();
-      _categoryList.add(
-        DropdownMenuItem(
-          value: 0.toString(),
-          child: Text(
-            "no_category".tr,
-            softWrap: true,
-            style: TextStyle(fontWeight: FontWeight.normal),
-          ),
-        ),
-      );
+      return subCategories;
+    } catch (e) {
+      print(e.toString());
+      errorToast(e.toString());
     }
+    return subCategories;
   }
 }

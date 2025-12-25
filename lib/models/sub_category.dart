@@ -1,6 +1,4 @@
-import 'sub_category.dart';
-
-class Category {
+class SubCategory {
   int? id;
   int? parentId;
   String? title;
@@ -16,14 +14,9 @@ class Category {
   String? updatedAt;
   int? numberOfCourses;
   int? numberOfSubCategories;
-
-  /// ✅ Child categories
-  List<SubCategory>? subCategories;
-
-  /// ✅ Golden category flag
   bool? isGolden;
 
-  Category({
+  SubCategory({
     this.id,
     this.parentId,
     this.title,
@@ -39,18 +32,17 @@ class Category {
     this.updatedAt,
     this.numberOfCourses,
     this.numberOfSubCategories,
-    this.subCategories,
     this.isGolden,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) {
+  factory SubCategory.fromJson(Map<String, dynamic> json) {
     final title = json['title'] as String?;
 
     /// Golden detection (case-insensitive)
-    final bool isGoldenCategory =
+    final bool isGoldenSubCategory =
         title?.toLowerCase().contains('golden') ?? false;
 
-    return Category(
+    return SubCategory(
       id: json['id'] as int?,
       parentId: json['parent_id'] as int?,
       title: title,
@@ -66,14 +58,7 @@ class Category {
       updatedAt: json['updated_at'] as String?,
       numberOfCourses: json['number_of_courses'] as int?,
       numberOfSubCategories: json['number_of_sub_categories'] as int?,
-
-      /// ✅ Parse child categories
-      subCategories:
-          (json['childs'] as List?)
-              ?.map((e) => SubCategory.fromJson(e))
-              .toList(),
-
-      isGolden: isGoldenCategory,
+      isGolden: isGoldenSubCategory,
     );
   }
 
@@ -94,10 +79,6 @@ class Category {
       'updated_at': updatedAt,
       'number_of_courses': numberOfCourses,
       'number_of_sub_categories': numberOfSubCategories,
-
-      /// ✅ Serialize subCategories back
-      'childs': subCategories?.map((e) => e.toJson()).toList(),
-
       'isGolden': isGolden,
     };
   }

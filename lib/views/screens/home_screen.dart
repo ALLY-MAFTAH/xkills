@@ -165,7 +165,6 @@ class _HomeScreenState extends State<HomeScreen>
                                   .where((cat) => cat.thumbnail != null)
                                   .map((cat) => cat.thumbnail!)
                                   .toList();
-                          print(slides);
 
                           _startAutoPlay();
                           return GestureDetector(

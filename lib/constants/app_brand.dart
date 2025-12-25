@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+import 'package:skillsbank/theme/app_colors.dart';
 import 'package:skillsbank/views/screens/cart_screen.dart';
 
 Widget appBrand({
@@ -66,13 +67,13 @@ Widget appBrand({
             ),
             child: LiquidGlass(
               shape: LiquidRoundedSuperellipse(borderRadius: 50),
-              child: const SizedBox(
+              child:  SizedBox(
                 height: 40,
                 width: 40,
                 child: Center(
                   child: Icon(
                     Icons.shopping_cart_checkout_rounded,
-                    color: Color.fromARGB(255, 66, 200, 135),
+                    color: AppColors.brainColor,
                     size: 22,
                   ),
                 ),

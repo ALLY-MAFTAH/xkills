@@ -52,7 +52,8 @@ class _TabsScreenState extends State<TabsScreen> {
                     child: LiquidGlassLayer(
                       settings: const LiquidGlassSettings(
                         blur: 0,
-                        thickness: 25,                                lightAngle: 0.8 * 3.14,
+                        thickness: 25,
+                        lightAngle: 0.8 * 3.14,
 
                         glassColor: Color.fromARGB(16, 255, 255, 255),
                       ),
@@ -106,7 +107,8 @@ class _TabsScreenState extends State<TabsScreen> {
                   child: LiquidGlassLayer(
                     settings: const LiquidGlassSettings(
                       blur: 0,
-                      thickness: 20,                                lightAngle: 0.8 * 3.14,
+                      thickness: 20,
+                      lightAngle: 0.8 * 3.14,
 
                       glassColor: Color.fromARGB(16, 255, 255, 255),
                     ),
@@ -120,7 +122,7 @@ class _TabsScreenState extends State<TabsScreen> {
                           Icons.account_circle_outlined,
                           color:
                               _index == 3
-                                  ? const Color.fromARGB(255, 115, 219, 151)
+                                  ? AppColors.brainColor 
                                   : Colors.white,
                           size: 26,
                         ),
@@ -160,7 +162,7 @@ class _NavItem extends StatelessWidget {
       decoration: BoxDecoration(
         color:
             selected
-                ? const Color.fromARGB(255, 115, 219, 151)
+                ? AppColors.brainColor
                 : Colors.transparent,
         borderRadius: BorderRadius.circular(30),
       ),

@@ -6,20 +6,19 @@ import '../controllers/course_controller.dart';
 import '/models/course.dart';
 import '../theme/app_colors.dart';
 import 'custom_loader.dart';
-import 'from_network.dart';
-import 'youtube_player_dialog.dart';
+import 'players/network_player_dialog.dart';
+import 'pack_info_footer.dart';
+import 'players/youtube_player_dialog.dart';
 
 class GridProductCard extends StatefulWidget {
-  final Course thisProduct;
+  final Course thisPack;
   final VoidCallback onBuyPressed;
   final VoidCallback onAddToCartPressed;
-  final VoidCallback onDownloadPressed;
   const GridProductCard({
     super.key,
-    required this.thisProduct,
+    required this.thisPack,
     required this.onBuyPressed,
     required this.onAddToCartPressed,
-    required this.onDownloadPressed,
   });
 
   @override
@@ -34,73 +33,49 @@ class _GridProductCardState extends State<GridProductCard> {
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 40),
+          padding: EdgeInsets.only(top: 40),
           child: Container(
-            padding: EdgeInsets.all(1.5), // Border thickness
+            width: double.infinity,
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [HexColor('#046181'), HexColor('#7BC792')],
+              borderRadius: BorderRadius.circular(11),
+              color: const Color.fromARGB(255, 16, 16, 16),
+              border: Border.all(
+                color: Colors.white.withOpacity(.8),
+                width: .3,
               ),
             ),
-
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(11),
-                color: HexColor('#056060'),
-              ),
+            child: Padding(
+              padding: EdgeInsets.only(left: (Get.width / 4) + 20),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.thisProduct.title!,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
+                    PackInfoFooter(
+                      thisPack: widget.thisPack,
+                      onBookmarkPressed: () {},
                     ),
                     SizedBox(height: 10),
-                    Text(
-                      widget.thisProduct.price!,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(height: 20),
                     GetBuilder<CourseController>(
                       builder: (courseController) {
                         bool hasEnrollered = courseController.myProducts.any(
-                          (course) => course.id == widget.thisProduct.id,
+                          (course) => course.id == widget.thisPack.id,
                         );
                         if (hasEnrollered) {
                           final isDownloading =
                               courseController.isDownloading[widget
-                                  .thisProduct
+                                  .thisPack
                                   .id] ??
                               false;
                           final progress =
                               courseController.downloadProgress[widget
-                                  .thisProduct
+                                  .thisPack
                                   .id] ??
                               0;
                           final isPaused =
-                              courseController.isPaused[widget
-                                  .thisProduct
-                                  .id] ??
+                              courseController.isPaused[widget.thisPack.id] ??
                               false;
 
                           return gradientButtonWrapper(
@@ -109,7 +84,7 @@ class _GridProductCardState extends State<GridProductCard> {
                               onPressed: () {
                                 if (!isDownloading) {
                                   courseController.downloadCourse(
-                                    widget.thisProduct.id!,
+                                    widget.thisPack.id!,
                                   );
                                 }
                               },
@@ -123,6 +98,8 @@ class _GridProductCardState extends State<GridProductCard> {
                               child:
                                   isDownloading
                                       ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Expanded(
                                             child: Stack(
@@ -149,7 +126,7 @@ class _GridProductCardState extends State<GridProductCard> {
                                                           ),
                                                       child: LinearProgressIndicator(
                                                         value: value,
-                                                        minHeight: 14,
+                                                        minHeight: 10,
                                                         backgroundColor: Colors
                                                             .white
                                                             .withOpacity(0.3),
@@ -165,6 +142,7 @@ class _GridProductCardState extends State<GridProductCard> {
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.bold,
+                                                    fontSize: 10,
                                                   ),
                                                 ),
                                               ],
@@ -178,11 +156,11 @@ class _GridProductCardState extends State<GridProductCard> {
                                               isPaused
                                                   ? courseController
                                                       .resumeDownload(
-                                                        widget.thisProduct.id!,
+                                                        widget.thisPack.id!,
                                                       )
                                                   : courseController
                                                       .pauseDownload(
-                                                        widget.thisProduct.id!,
+                                                        widget.thisPack.id!,
                                                       );
                                             },
                                             icon: Icon(
@@ -197,7 +175,7 @@ class _GridProductCardState extends State<GridProductCard> {
                                           IconButton(
                                             onPressed: () {
                                               courseController.cancelDownload(
-                                                widget.thisProduct.id!,
+                                                widget.thisPack.id!,
                                               );
                                             },
                                             icon: Icon(
@@ -215,15 +193,15 @@ class _GridProductCardState extends State<GridProductCard> {
                                         children: [
                                           Icon(
                                             Icons.download_rounded,
-                                            color: Colors.white,
+                                            color: Colors.black,
                                             size: 16,
                                           ),
                                           SizedBox(width: 10),
                                           Text(
-                                            "Download",
+                                            "Download".tr,
                                             style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
+                                              color: Colors.black,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.w800,
                                             ),
                                           ),
@@ -234,7 +212,7 @@ class _GridProductCardState extends State<GridProductCard> {
                         } else {
                           return LayoutBuilder(
                             builder: (context, constraints) {
-                              final isSmall = constraints.maxWidth < 320;
+                              final isSmall = constraints.maxWidth < 120;
 
                               return isSmall
                                   ? Column(
@@ -251,11 +229,11 @@ class _GridProductCardState extends State<GridProductCard> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(
-                                        width: 150,
+                                        width: 100,
                                         child: _buildBuyButton(),
                                       ),
                                       SizedBox(
-                                        width: 150,
+                                        width: 100,
                                         child: _buildCartButton(),
                                       ),
                                     ],
@@ -272,25 +250,21 @@ class _GridProductCardState extends State<GridProductCard> {
           ),
         ),
         Positioned(
-          right: 20,
+          left: 10,
           top: 0,
+          bottom: 0,
           child: Container(
-            height: Get.height / 6.2,
-            width: Get.width / 3.6,
-            clipBehavior: Clip.hardEdge,
+            height: Get.height / 4,
+            width: Get.width / 4,
+            // clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(color: Colors.transparent),
             child:
-                widget.thisProduct.thumbnail!.isNotEmpty
+                widget.thisPack.thumbnail!.isNotEmpty
                     ? ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25),
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
-                      ),
+                      borderRadius: BorderRadius.circular(10),
                       child: CachedNetworkImage(
                         // imageUrl:  "https://i.ebayimg.com/images/g/xRQAAOSwotJmRTJl/s-l1600.webp",
-                        imageUrl: "${widget.thisProduct.thumbnail}",
+                        imageUrl: "${widget.thisPack.thumbnail}",
                         fit: BoxFit.cover,
                         placeholder: (context, url) => customLoader(),
                         errorWidget:
@@ -301,16 +275,26 @@ class _GridProductCardState extends State<GridProductCard> {
           ),
         ),
         Positioned(
-          left: 0,
+          left: 35,
           right: 0,
           top: 25,
           bottom: 0,
           child: Align(
-            alignment: Alignment.center,
+            alignment: Alignment.centerLeft,
             child: IconButton.filledTonal(
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.white.withOpacity(0.1),
+                shape: CircleBorder(),
+              ),
+              tooltip: "Preview",
+              icon: Icon(
+                size: 50,
+                Icons.play_arrow_rounded,
+                color: Colors.white,
+              ),
               onPressed: () {
-                String videoUrl = widget.thisProduct.preview ?? "";
-                final courseId = widget.thisProduct.id!;
+                String videoUrl = widget.thisPack.preview ?? "";
+                final courseId = widget.thisPack.id!;
 
                 // --- URL Type Checks ---
                 final isYouTube =
@@ -325,12 +309,12 @@ class _GridProductCardState extends State<GridProductCard> {
                 Widget nextPage;
 
                 if (isYouTube) {
-                  nextPage = YoutubePlayerDialog(
+                  nextPage = YoutubeVideoPlayerDialog(
                     courseId: courseId,
                     videoUrl: videoUrl,
                   );
                 } else if (isMp4 || isOgg || isWebm || isMkv) {
-                  nextPage = PlayVideoFromNetwork(
+                  nextPage = NetworkVideoPlayerDialog(
                     courseId: courseId,
                     videoUrl: videoUrl,
                   );
@@ -369,7 +353,7 @@ class _GridProductCardState extends State<GridProductCard> {
                   context: context,
                   barrierColor: const Color.fromARGB(189, 0, 0, 0),
                   builder: (BuildContext context) {
-                    return widget.thisProduct.preview != null
+                    return widget.thisPack.preview != null
                         ? AlertDialog(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -412,16 +396,6 @@ class _GridProductCardState extends State<GridProductCard> {
                   },
                 );
               },
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.1),
-                shape: CircleBorder(),
-              ),
-              tooltip: "Preview",
-              icon: Icon(
-                size: 35,
-                Icons.play_arrow_rounded,
-                color: AppColors.tertiaryColor,
-              ),
             ),
           ),
         ),
@@ -435,11 +409,7 @@ class _GridProductCardState extends State<GridProductCard> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [HexColor('#046181'), HexColor('#7BC792')],
-        ),
+        color: AppColors.brainColor,
         borderRadius: BorderRadius.circular(radius),
       ),
       height: 35,
@@ -449,11 +419,11 @@ class _GridProductCardState extends State<GridProductCard> {
 
   Widget _buildCartButton() {
     final isInCart = courseController.cartList.any(
-      (item) => item.id == widget.thisProduct.id,
+      (item) => item.id == widget.thisPack.id,
     );
 
     final isLoading = courseController.loadingCartIds.contains(
-      widget.thisProduct.id,
+      widget.thisPack.id,
     );
 
     return gradientButtonWrapper(
@@ -466,6 +436,7 @@ class _GridProductCardState extends State<GridProductCard> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
+                  padding: EdgeInsets.zero,
                 ),
 
                 child: Row(
@@ -475,14 +446,14 @@ class _GridProductCardState extends State<GridProductCard> {
                       isInCart
                           ? Icons.remove_shopping_cart_outlined
                           : Icons.add_shopping_cart_rounded,
-                      color: Colors.white,
+                      color: isInCart ? Colors.red : Colors.black,
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(width: 5),
                     Text(
-                      isInCart ? 'Remove' : "Add",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                      !isInCart ? 'Remove' : "Add",
+                      style: TextStyle(
+                        color: isInCart ? Colors.red : Colors.black,
+                        fontSize: 12,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -507,8 +478,8 @@ class _GridProductCardState extends State<GridProductCard> {
         child: const Text(
           'Buy Now',
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
+            color: Colors.black,
+            fontSize: 12,
             fontWeight: FontWeight.w800,
           ),
         ),

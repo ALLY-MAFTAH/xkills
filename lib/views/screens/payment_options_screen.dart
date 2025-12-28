@@ -90,7 +90,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                             "Choose Payment Method",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

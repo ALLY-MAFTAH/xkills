@@ -108,8 +108,8 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          width: 110,
-                          height: 110,
+                          width: 90,
+                          height: 90,
                           decoration: BoxDecoration(
                             color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(10),
@@ -144,7 +144,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                                 myCourse.title!,
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 maxLines: 2,
@@ -165,7 +165,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                                 '${myCourse.shortDescription}',
                                 style: const TextStyle(
                                   color: Color.fromARGB(255, 224, 232, 236),
-                                  fontSize: 12,
+                                  fontSize: 10,
                                   fontWeight: FontWeight.w800,
                                 ),
                                 maxLines: 3,
@@ -244,7 +244,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                         ),
                         buildRatingStars(
                           myCourse.averageRating ?? 0.0,
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                       ],
                     ),
@@ -278,10 +278,10 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            !myCourse.isPaid! ? "Purchased" : "Free",
+                            !myCourse.isPaid! ? "Purchased".tr : "Free".tr,
                             style: const TextStyle(
                               color: Color(0xFFE6C068),
-                              fontSize: 13,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -307,8 +307,8 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
           children: [
             const Icon(Icons.school_rounded, size: 80, color: Colors.white54),
             const SizedBox(height: 15),
-            const Text(
-              "You haven't enrolled to any course yet.",
+             Text(
+              "You haven't enrolled to any course yet.".tr,
               style: TextStyle(color: Colors.white70, fontSize: 18),
             ),
             const SizedBox(height: 20),
@@ -320,7 +320,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                 );
               },
               child: Text(
-                "Browse Courses",
+                "Browse Courses".tr,
                 style: TextStyle(color: const Color(0xFFE6C068), fontSize: 16),
               ),
             ),
@@ -349,8 +349,8 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        AppColors.primaryColor,
                         AppColors.secondaryColor,
+                        AppColors.primaryColor,
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -405,7 +405,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                                 height: 300,
                                 child: Center(
                                   child: Text(
-                                    'Error loading my courses: ${snapshot.error}',
+                                    'Error loading your courses: ${snapshot.error}',
                                     style: const TextStyle(
                                       color: Colors.redAccent,
                                     ),

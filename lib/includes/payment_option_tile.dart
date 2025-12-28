@@ -31,9 +31,9 @@ Widget paymentOptionTile({
             Text(
               title,
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.grey[200],
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: 14,
               ),
             ),
             Radio(

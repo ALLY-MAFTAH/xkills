@@ -49,7 +49,7 @@ class MainApp extends StatelessWidget {
         typography: Typography.material2021(),
 
         // 🎨 COLOR SCHEME
-        colorScheme: const ColorScheme.light(
+        colorScheme:  ColorScheme.light(
           primary: AppColors.primaryColor,
           secondary: AppColors.secondaryColor,
           tertiary: AppColors.tertiaryColor,

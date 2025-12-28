@@ -25,15 +25,11 @@ Widget buildLessonItem({
   void Function()? onPlayPressed,
   String? downloadUrl,
 }) {
-  final courseController = Get.put(CourseController());
   final sectionController = Get.put(SectionController());
 
   return GetBuilder<CourseController>(
     builder: (_) {
-      final isDownloading = courseController.isDownloading[lessonId] ?? false;
-      final progress = courseController.downloadProgress[lessonId] ?? 0;
-      final isPaused = courseController.isPaused[lessonId] ?? false;
-
+    
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Container(
@@ -73,7 +69,7 @@ Widget buildLessonItem({
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                  fontSize: 12,
                   color: Colors.white.withOpacity(0.9),
                 ),
               ),
@@ -86,83 +82,34 @@ Widget buildLessonItem({
                   Text(
                     duration,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: Colors.white.withOpacity(0.9),
                     ),
                   ),
                   const SizedBox(width: 5),
                   if (userValidity && downloadUrl != null)
-                    SizedBox(
-                      width: 120,
-                      child:
-                          isDownloading
-                              ? Row(
-                                children: [
-                                  Expanded(
-                                    child: LinearProgressIndicator(
-                                      value: progress,
-                                      minHeight: 14,
-                                      backgroundColor: Colors.white.withOpacity(
-                                        0.3,
-                                      ),
-                                      color: AppColors.tertiaryColor,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      isPaused
-                                          ? Icons.play_arrow_rounded
-                                          : Icons.pause_rounded,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    onPressed: () {
-                                      if (isPaused) {
-                                        sectionController.resumeLesson(
-                                          lessonId,
-                                        );
-                                      } else {
-                                        sectionController.pauseLesson(lessonId);
-                                      }
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.close_rounded,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    onPressed: () {
-                                      sectionController.cancelLesson(lessonId);
-                                    },
-                                  ),
-                                ],
-                              )
-                              : IconButton(
-                                style: IconButton.styleFrom(
-                                  padding: EdgeInsets.zero,
-                                ),
-                                icon: Icon(
-                                  Icons.file_download_outlined,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
-                                onPressed: () {
-                                  sectionController.downloadLessonVideo(
-                                    lessonId: lessonId,
-                                    courseTitle: courseTitle,
-                                    sectionName: sectionName,
-                                    lessonTitle: lessonTitle,
-                                    url: downloadUrl,
-                                  );
-                                },
-                              ),
+                    IconButton(
+                      style: IconButton.styleFrom(padding: EdgeInsets.zero),
+                      icon: Icon(
+                        Icons.file_download_outlined,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                      onPressed: () {
+                        sectionController.downloadLessonVideo(
+                          lessonId: lessonId,
+                          courseTitle: courseTitle,
+                          sectionName: sectionName,
+                          lessonTitle: lessonTitle,
+                          url: downloadUrl,
+                        );
+                      },
                     ),
                   if (!userValidity)
                     IconButton(
                       style: IconButton.styleFrom(padding: EdgeInsets.zero),
-                      icon: const Icon(
+                      icon:  Icon(
                         Icons.lock_outline_rounded,
                         color: AppColors.tertiaryColor,
                         size: 24,
@@ -186,7 +133,7 @@ Widget buildSectionHeader(String title) {
     child: Text(
       title,
       style: const TextStyle(
-        fontSize: 16,
+        fontSize: 12,
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
@@ -251,6 +198,9 @@ Widget buildBuyButton(
 
         child: GetBuilder<CourseController>(
           builder: (courseController) {
+            final isLoading = courseController.loadingCartIds.contains(
+              thisCourse.id,
+            );
             return Row(
               spacing: 10,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -264,16 +214,17 @@ Widget buildBuyButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
+                      padding: EdgeInsets.all(2),
                     ),
                     child: Center(
                       child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Buy ',
                             style: const TextStyle(
                               color: Color(0xFF071B1A),
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
@@ -287,14 +238,14 @@ Widget buildBuyButton(
                                 : "Free",
                             style: const TextStyle(
                               color: Color(0xFF071B1A),
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
                           const SizedBox(width: 10),
                           if (thisCourse.discountFlag!)
                             Text(
-                              '${thisCourse.price}', // Assuming originalPrice exists
+                              '${thisCourse.price}',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -361,18 +312,18 @@ Widget buildBuyButton(
                         ),
                       ),
                       icon:
-                          courseController.isLoading
+                          isLoading
                               ? null
                               : Icon(Icons.add_shopping_cart_rounded),
                       label: Center(
                         child:
-                            courseController.isLoading
+                            isLoading
                                 ? customLoader(color: AppColors.secondaryColor)
                                 : Text(
                                   'Add to Cart',
                                   style: const TextStyle(
                                     color: Color(0xFF071B1A),
-                                    fontSize: 18,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
@@ -396,7 +347,7 @@ List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
         thisCourse.title ?? 'Unknown',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 18,
+          fontSize: 16,
           color: Colors.white,
         ),
       ),
@@ -409,7 +360,7 @@ List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
       style: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 12,
-        color: Colors.white,
+        color: Colors.grey,
         letterSpacing: 0.24,
       ),
     ),
@@ -419,7 +370,7 @@ List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
       style: {
         "body": Style(
           color: Colors.white.withOpacity(.7),
-          fontSize: FontSize(11),
+          fontSize: FontSize(10),
           fontWeight: FontWeight.bold,
           margin: Margins.all(0),
         ),
@@ -442,7 +393,7 @@ List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
             label: Text(
               'Save',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -473,7 +424,7 @@ List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
             label: Text(
               'Share',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),

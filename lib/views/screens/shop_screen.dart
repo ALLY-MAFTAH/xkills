@@ -324,11 +324,14 @@ class _ShopScreenState extends State<ShopScreen> {
                                                 }
                                               });
                                         }
+                                        setState(() {
+                                          
+                                        });
                                       },
                                     ),
                                   ),
                                 );
-                              }),
+                              }),SizedBox(height: 30,)
                             ],
                           );
                         }

@@ -59,7 +59,7 @@ class CourseInfoFooter extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.grey[300], // Gray color
                           fontWeight: FontWeight.normal,
-                          fontSize: 12,
+                          fontSize: 10,
                         ),
                       ),
                     ],

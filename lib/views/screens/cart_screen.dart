@@ -42,6 +42,9 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildCartItem(Course thisCourse) {
+     final isLoading = courseController.loadingCartIds.contains(
+              thisCourse.id,
+            );
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: InkWell(
@@ -120,7 +123,7 @@ class _CartScreenState extends State<CartScreen> {
                 children: [
                   InkWell(
                     onTap:
-                        courseController.isLoading
+                        isLoading
                             ? null
                             : () {
                               courseController
@@ -135,7 +138,7 @@ class _CartScreenState extends State<CartScreen> {
                                   });
                             },
                     child:
-                        courseController.isLoading
+                        isLoading
                             ? customLoader()
                             : Icon(
                               size: 28,
@@ -168,7 +171,7 @@ class _CartScreenState extends State<CartScreen> {
 
                     style: const TextStyle(
                       color: Color(0xFFE6C068),
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -325,11 +328,11 @@ class _CartScreenState extends State<CartScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                const Text(
-                                                  'Total:',
+                                                 Text(
+                                                  'Total:'.tr,
                                                   style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 16,
+                                                    fontSize: 14,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
@@ -339,7 +342,7 @@ class _CartScreenState extends State<CartScreen> {
                                                   ),
                                                   style: const TextStyle(
                                                     color: Color(0xFFE6C068),
-                                                    fontSize: 18,
+                                                    fontSize: 16,
                                                     fontWeight: FontWeight.w900,
                                                   ),
                                                 ),
@@ -435,7 +438,7 @@ class _CartScreenState extends State<CartScreen> {
                                           'Proceed to Checkout',
                                           style: const TextStyle(
                                             color: Color(0xFF071B1A),
-                                            fontSize: 18,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),

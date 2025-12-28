@@ -473,7 +473,6 @@ class _HomeScreenState extends State<HomeScreen>
                                                         "${Endpoints.baseUrl}/public/${item.categoryLogo}",
                                                     isGolden: item.isGolden!,
                                                     onTap: () {
-                                            
                                                       categoryController
                                                           .selectCategory(
                                                             item.id!,
@@ -611,13 +610,13 @@ class _HomeScreenState extends State<HomeScreen>
                                             crossAxisCount: 2,
                                             crossAxisSpacing: 10,
                                             mainAxisSpacing: 10,
-                                            childAspectRatio: .66,
+                                            childAspectRatio: .85,
                                           ),
                                       itemBuilder: (context, index) {
                                         final course = courses[index];
                                         return GridCourseCard(
                                           thisCourse: course,
-                                          fromInstructorsScreen: true,
+                                          isGolden: false,
                                         );
                                       },
                                     );

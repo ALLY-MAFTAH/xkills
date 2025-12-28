@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,12 +10,12 @@ import 'custom_loader.dart';
 
 class GridCourseCard extends StatefulWidget {
   final Course thisCourse;
-  final bool fromInstructorsScreen;
+  final bool isGolden;
 
   const GridCourseCard({
     super.key,
     required this.thisCourse,
-    required this.fromInstructorsScreen,
+    required this.isGolden,
   });
 
   @override
@@ -42,130 +41,83 @@ class _GridCourseCardState extends State<GridCourseCard> {
           ),
         );
       },
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.primaryColor,
-                      const Color.fromARGB(255, 8, 65, 66),
-                    ],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom:
-                  widget.fromInstructorsScreen
-                      ? footerHeight
-                      : footerHeight + 45,
-              child:
-                  widget.thisCourse.thumbnail!.isNotEmpty
-                      ? CachedNetworkImage(
-                        imageUrl: widget.thisCourse.thumbnail!,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => customLoader(),
-                        errorWidget:
-                            (context, url, error) => const Icon(Icons.error),
-                      )
-                      : const Icon(Icons.image, size: 100, color: Colors.grey),
-            ),
-            if (widget.thisCourse.isBest!)
-              Positioned(
-                top: 5,
-                right: 5,
-                child: CircleAvatar(
-                  backgroundColor: AppColors.primaryColor,
-                  radius: 12,
-                  child: Icon(
-                    Icons.star,
-                    size: 18,
+      child: Container(
+        decoration:
+            widget.isGolden
+                ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: BoxBorder.all(
                     color: AppColors.tertiaryColor,
+                    width: 1,
+                  ),
+                )
+                : null,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primaryColor,
+                        const Color.fromARGB(255, 8, 65, 66),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-
-            Visibility(
-              visible: !widget.fromInstructorsScreen,
-              child: Positioned(
-                left: 5,
-                right: 5,
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
                 bottom: footerHeight,
-                child: InkWell(
-                  onTap: () async {
-                    
-                  },
-                  child: Container(
-                    color: Colors.transparent,
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 0),
-                      minTileHeight: 50,
-                      leading: CircleAvatar(
-                        radius: 16,
-                        backgroundColor: Colors.grey.shade200,
-                        child: ClipOval(
-                          child:
-                              widget.thisCourse.instructorImage!.isNotEmpty
-                                  ? CachedNetworkImage(
-                                    imageUrl:
-                                        widget.thisCourse.instructorImage!,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                    placeholder:
-                                        (context, url) => customLoader(),
-                                    errorWidget:
-                                        (context, url, error) =>
-                                            const Icon(Icons.error),
-                                  )
-                                  : const Icon(
-                                    Icons.person,
-                                    size: 30,
-                                    color: Colors.grey,
-                                  ),
-                        ),
-                      ),
-                      horizontalTitleGap: 5,
-                      title: Text(
-                        widget.thisCourse.instructorName!,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-                      subtitle: Text(
-                        widget.thisCourse.instructorProfile??'',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                child:
+                    widget.thisCourse.thumbnail!.isNotEmpty
+                        ? CachedNetworkImage(
+                          imageUrl: widget.thisCourse.thumbnail!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => customLoader(),
+                          errorWidget:
+                              (context, url, error) => const Icon(Icons.error),
+                        )
+                        : const Icon(
+                          Icons.image,
+                          size: 100,
                           color: Colors.grey,
-                          fontSize: 10,
                         ),
-                      ),
+              ),
+              if (widget.thisCourse.isBest!)
+                Positioned(
+                  top: 5,
+                  right: 5,
+                  child: CircleAvatar(
+                    backgroundColor: AppColors.primaryColor,
+                    radius: 12,
+                    child: Icon(
+                      Icons.star,
+                      size: 18,
+                      color: AppColors.tertiaryColor,
                     ),
                   ),
                 ),
+
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: CourseInfoFooter(
+                  thisCourse: widget.thisCourse,
+                  onBookmarkPressed: () {},
+                ),
               ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: CourseInfoFooter(
-                thisCourse: widget.thisCourse,
-                onBookmarkPressed: () {},
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -40,10 +40,7 @@ class _GridProductCardState extends State<GridProductCard> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(11),
               color: const Color.fromARGB(255, 16, 16, 16),
-              border: Border.all(
-                color: Colors.white.withOpacity(.8),
-                width: .3,
-              ),
+              border: Border.all(color: Colors.grey, width: .5),
             ),
             child: Padding(
               padding: EdgeInsets.only(left: (Get.width / 4) + 20),
@@ -305,7 +302,6 @@ class _GridProductCardState extends State<GridProductCard> {
                 final isOgg = RegExp(r"\.ogg(\?|$)").hasMatch(videoUrl);
                 final isMkv = RegExp(r"\.mkv(\?|$)").hasMatch(videoUrl);
                 // -----------------------
-
                 Widget nextPage;
 
                 if (isYouTube) {
@@ -432,7 +428,7 @@ class _GridProductCardState extends State<GridProductCard> {
           isLoading
               ? customLoader(color: Colors.white)
               : ElevatedButton(
-                onPressed: () => widget.onAddToCartPressed,
+                onPressed: () => widget.onAddToCartPressed(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
@@ -450,7 +446,7 @@ class _GridProductCardState extends State<GridProductCard> {
                     ),
                     SizedBox(width: 5),
                     Text(
-                      !isInCart ? 'Remove' : "Add",
+                      isInCart ? 'Remove'.tr : "Add".tr,
                       style: TextStyle(
                         color: isInCart ? Colors.red : Colors.black,
                         fontSize: 12,

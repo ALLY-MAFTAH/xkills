@@ -164,12 +164,9 @@ class CoursesScreenState extends State<CoursesScreen> {
                                     .toList();
 
                         return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            /// 🟡 LEVEL FILTER CHIPS
                             Wrap(
-                              alignment: WrapAlignment.spaceBetween,
-                              runAlignment: WrapAlignment.spaceBetween,
                               runSpacing: 10,
                               spacing: 10,
                               children: [
@@ -196,9 +193,9 @@ class CoursesScreenState extends State<CoursesScreen> {
                                 ),
                               ],
                             ),
-
-                            /// 📦 COURSES GRID
+                            SizedBox(height: 20),
                             GridView.builder(
+                              padding: EdgeInsets.zero,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: filteredCourses.length,
@@ -207,12 +204,12 @@ class CoursesScreenState extends State<CoursesScreen> {
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10,
-                                    childAspectRatio: .66,
+                                    childAspectRatio: .85,
                                   ),
                               itemBuilder: (context, index) {
                                 return GridCourseCard(
                                   thisCourse: filteredCourses[index],
-                                  fromInstructorsScreen: true,
+                                  isGolden:categoryController.selectedCategory!=null? categoryController.selectedCategory!.isGolden!:false,
                                 );
                               },
                             ),

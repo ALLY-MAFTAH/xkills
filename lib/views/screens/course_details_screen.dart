@@ -6,6 +6,9 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skillsbank/components/slide_animations.dart';
+import '../../components/players/network_player_dialog.dart';
+import '../../components/players/youtube_player_dialog.dart';
 import '/constants/app_brand.dart';
 import '../../models/lesson.dart';
 import '/components/toasts.dart';
@@ -35,12 +38,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   final sectionController = Get.put(SectionController());
 
   Course thisCourse = Course();
-  bool _isNavigatingPreview = false;
+  final bool _isNavigatingPreview = false;
   AsyncSnapshot<List<Section>> snapshot = AsyncSnapshot.withData(
     ConnectionState.none,
     [],
   );
   bool hasEnrolled = false;
+  bool showVideoPlayer = false;
+  Widget? nextPage;
 
   @override
   void initState() {
@@ -96,21 +101,32 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                     background: Stack(
                       fit: StackFit.expand,
                       children: [
-                        thisCourse.thumbnail!.isNotEmpty
-                            ? CachedNetworkImage(
-                              imageUrl: thisCourse.thumbnail!,
-                              height: screenHeight / 4,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => customLoader(),
-                              errorWidget:
-                                  (context, url, error) =>
-                                      const Icon(Icons.error),
-                            )
-                            : Icon(
-                              Icons.image,
-                              size: Get.width,
-                              color: Colors.grey,
+                        if (!showVideoPlayer)
+                          thisCourse.thumbnail!.isNotEmpty
+                              ? BottomTopSlide(
+                                child: CachedNetworkImage(
+                                  imageUrl: thisCourse.thumbnail!,
+                                  height: screenHeight / 4,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => customLoader(),
+                                  errorWidget:
+                                      (context, url, error) =>
+                                          const Icon(Icons.error),
+                                ),
+                              )
+                              : Icon(
+                                Icons.image,
+                                size: Get.width,
+                                color: Colors.grey,
+                              )
+                        else
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: ClipRRect(
+                              child: nextPage,
                             ),
+                          ),
+                          // if (!showVideoPlayer)
                         Positioned(
                           bottom: 0,
                           left: 0,
@@ -135,7 +151,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                           ),
                         ),
 
-                        appBrand(hasBackButton: true, context: context, showCartButton: false),
+                        appBrand(
+                          hasBackButton: true,
+                          context: context,
+                          showCartButton: false,
+                        ),
                         if (!thisCourse.isPaid!)
                           Positioned(
                             top:
@@ -166,45 +186,93 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                           left: 10,
                           right: 10,
                           child: SizedBox(
-                            height: 52,
+                            height: 45,
                             width: Get.width,
                             child: ElevatedButton(
                               onPressed:
                                   _isNavigatingPreview
                                       ? null
                                       : () async {
-                                        // Set loading state immediately
-                                        setState(() {
-                                          _isNavigatingPreview = true;
-                                        });
+                                        if (showVideoPlayer) {
+                                          showVideoPlayer = false;
+                                          setState(() {});
+                                          return;
+                                        }
+                                        showVideoPlayer = true;
+                                        setState(() {});
+                                        String videoUrl =
+                                            thisCourse.preview ?? "";
+                                        final courseId = thisCourse.id!;
 
-                                        try {
-                                          if (thisCourse.preview != null &&
-                                              thisCourse.id != null) {
-                                            // Make the navigation call asynchronous
-                                            await navigateToVideoPlayer(
-                                              context: context,
-                                              videoUrl: thisCourse.preview!,
-                                              courseId: thisCourse.id!,
-                                              lessonId: null,
-                                            );
-                                          } else {
-                                            await Navigator.push(
-                                              // Await all navigation for consistent loading
-                                              context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (context) => NoVideoUrl(),
+                                        // --- URL Type Checks ---
+                                        final isYouTube =
+                                            videoUrl.contains("youtube.com") ||
+                                            videoUrl.contains("youtu.be");
+                                        final isMp4 = RegExp(
+                                          r"\.mp4(\?|$)",
+                                        ).hasMatch(videoUrl);
+                                        final isWebm = RegExp(
+                                          r"\.webm(\?|$)",
+                                        ).hasMatch(videoUrl);
+                                        final isOgg = RegExp(
+                                          r"\.ogg(\?|$)",
+                                        ).hasMatch(videoUrl);
+                                        final isMkv = RegExp(
+                                          r"\.mkv(\?|$)",
+                                        ).hasMatch(videoUrl);
+                                        // -----------------------
+
+                                        if (isYouTube) {
+                                          nextPage = YoutubeVideoPlayerDialog(
+                                            courseId: courseId,
+                                            videoUrl: videoUrl,
+                                          );
+                                        } else if (isMp4 ||
+                                            isOgg ||
+                                            isWebm ||
+                                            isMkv) {
+                                          nextPage = NetworkVideoPlayerDialog(
+                                            courseId: courseId,
+                                            videoUrl: videoUrl,
+                                          );
+                                        } else {
+                                          nextPage = Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                            ),
+                                            child: SizedBox(
+                                              height:
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.height *
+                                                  0.7,
+                                              child: Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    const Icon(
+                                                      Icons
+                                                          .videocam_off_rounded,
+                                                      size: 80,
+                                                      color: Colors.white54,
+                                                    ),
+                                                    const SizedBox(height: 15),
+                                                    const Text(
+                                                      "Video URL is not available.",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        color: Colors.white70,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 20),
+                                                  ],
+                                                ),
                                               ),
-                                            );
-                                            print("Preview URL is null");
-                                          }
-                                        } finally {
-                                          if (mounted) {
-                                            setState(() {
-                                              _isNavigatingPreview = false;
-                                            });
-                                          }
+                                            ),
+                                          );
                                         }
                                       },
                               style: ElevatedButton.styleFrom(
@@ -215,7 +283,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                               ),
                               child: Container(
                                 width: Get.width,
-                                height: 52,
+                                height: 45,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     begin: Alignment.bottomLeft,
@@ -241,20 +309,20 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                       SizedBox(
                                         width: 26,
                                         height: 26,
-                                        child: const Icon(
-                                          Icons.play_arrow_rounded,
+                                        child:  Icon(
+                                         showVideoPlayer?Icons.stop_rounded:  Icons.play_arrow_rounded,
                                           size: 30,
                                           color: Colors.white,
                                         ),
                                       ),
                                     const SizedBox(width: 10),
                                     Text(
-                                      _isNavigatingPreview
+                                    showVideoPlayer?"Stop".tr:  _isNavigatingPreview
                                           ? 'Loading...'
-                                          : 'Watch Course Preview', // ⭐️ Update text
+                                          : 'Watch Course Preview',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 16,
+                                        fontSize: 12,
                                         color: Colors.white,
                                         letterSpacing: 0.32,
                                       ),
@@ -296,7 +364,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                         const Text(
                                           'Lessons in This Course',
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
@@ -386,7 +454,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                         const Text(
                                           'Lessons in This Course',
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
@@ -394,7 +462,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                         Text(
                                           '$totalLessons Lessons ($displayDurationString)',
                                           style: TextStyle(
-                                            fontSize: 11,
+                                            fontSize: 10,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white.withOpacity(1),
                                           ),

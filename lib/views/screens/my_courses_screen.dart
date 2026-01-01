@@ -85,10 +85,9 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
       padding: const EdgeInsets.only(bottom: 10),
       child: InkWell(
         onTap: () {
-          courseController.selectedCourse = course;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => CourseDetailsScreen()),
+            MaterialPageRoute(builder: (_) => CourseDetailsScreen(thisCourse: course,)),
           );
         },
         child: Stack(
@@ -307,7 +306,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
           children: [
             const Icon(Icons.school_rounded, size: 80, color: Colors.white54),
             const SizedBox(height: 15),
-             Text(
+            Text(
               "You haven't enrolled to any course yet.".tr,
               style: TextStyle(color: Colors.white70, fontSize: 18),
             ),
@@ -332,7 +331,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
 
   @override
   Widget build(BuildContext context) {
-   
     return GetBuilder<CourseController>(
       builder: (courseController) {
         return RefreshIndicator(
@@ -358,13 +356,14 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                   ),
                 ),
                 SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
                   child: Padding(
                     padding: const EdgeInsets.only(
-                  left: AppMetrices.horizontalPadding,
-                  right: AppMetrices.horizontalPadding,
-                  bottom: AppMetrices.verticalPadding + 25,
-                  top: AppMetrices.verticalPadding,
-                ),
+                      left: AppMetrices.horizontalPadding,
+                      right: AppMetrices.horizontalPadding,
+                      bottom: AppMetrices.verticalPadding + 25,
+                      top: AppMetrices.verticalPadding,
+                    ),
                     child: Column(
                       children: [
                         SizedBox(height: Platform.isAndroid ? 90 : 100),

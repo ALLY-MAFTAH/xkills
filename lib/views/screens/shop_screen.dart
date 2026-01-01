@@ -5,13 +5,13 @@ import 'package:get/get.dart';
 import 'package:skillsbank/components/custom_search.dart';
 import 'package:skillsbank/components/slide_animations.dart';
 import 'package:skillsbank/models/sub_category.dart';
+import '../../components/grid_pack_card.dart';
 import '../../components/toasts.dart';
 import '../../controllers/category_controller.dart';
 import '../../theme/app_metrices.dart';
 import '/controllers/course_controller.dart';
 import '/models/course.dart';
-import '/components/grid_product_card.dart';
-import '/components/shimmer_widgets/instructor_grid_shimmer.dart';
+import '../../components/shimmer_widgets/pack_grid_shimmer.dart';
 import '/theme/app_colors.dart';
 import '/constants/app_brand.dart';
 import 'dart:io';
@@ -38,13 +38,13 @@ class _ShopScreenState extends State<ShopScreen> {
   void _loadInitialData() {
     categoryController.subCategoriesFuture =
         categoryController.getSubCategories();
-    courseController.productsFuture = courseController.getProducts();
+    courseController.allPacksFuture = courseController.getAllPacks();
   }
 
   Future<void> _refreshData() async {
     _loadInitialData();
     // Wait for the new data fetch to complete
-    await Future.wait([courseController.productsFuture!]);
+    await Future.wait([courseController.allPacksFuture!]);
     setState(() {});
   }
 
@@ -223,11 +223,11 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
                     SizedBox(height: 10),
                     FutureBuilder(
-                      future: courseController.productsFuture,
+                      future: courseController.allPacksFuture,
                       builder: (context, asyncSnapshot) {
                         if (asyncSnapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const ProductGridShimmer();
+                          return const PackGridShimmer();
                         } else if (asyncSnapshot.hasError) {
                           // *** FIX 2: Ensure error message takes up space ***
                           return SizedBox(
@@ -253,20 +253,20 @@ class _ShopScreenState extends State<ShopScreen> {
                             ),
                           );
                         } else {
-                          final List<Course> allProducts = asyncSnapshot.data!;
+                          final List<Course> allPacks = asyncSnapshot.data!;
 
-                          final List<Course> filteredProducts =
+                          final List<Course> filteredPacks =
                               selectedSubCategoryId == 0
-                                  ? allProducts
-                                  : allProducts
+                                  ? allPacks
+                                  : allPacks
                                       .where(
-                                        (product) =>
-                                            product.categoryId ==
+                                        (pack) =>
+                                            pack.categoryId ==
                                             selectedSubCategoryId,
                                       )
                                       .toList();
 
-                          if (filteredProducts.isEmpty) {
+                          if (filteredPacks.isEmpty) {
                             return SizedBox(
                               height: minContentHeight * 0.6,
                               child: Center(
@@ -280,10 +280,10 @@ class _ShopScreenState extends State<ShopScreen> {
 
                           return Column(
                             children: [
-                              ...filteredProducts.map((product) {
+                              ...filteredPacks.map((pack) {
                                 final amount =
                                     double.tryParse(
-                                      product.price!.replaceAll(
+                                      pack.price!.replaceAll(
                                         RegExp(r'[^0-9.]'),
                                         '',
                                       ),
@@ -293,15 +293,15 @@ class _ShopScreenState extends State<ShopScreen> {
                                 return BottomTopSlide(
                                   child: Padding(
                                     padding: const EdgeInsets.only(bottom: 1),
-                                    child: GridProductCard(
-                                      thisPack: product,
+                                    child: GridPackCard(
+                                      thisPack: pack,
                                       onBuyPressed: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder:
                                                 (_) => PaymentOptionsScreen(
-                                                  courseIds: [product.id!],
+                                                  courseIds: [pack.id!],
                                                   totalAmount: amount,
                                                 ),
                                           ),
@@ -310,7 +310,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       onAddToCartPressed: () {
                                         if (!courseController.isLoading) {
                                           courseController
-                                              .addOrRemoveCart(product.id!)
+                                              .addOrRemoveCart(pack.id!)
                                               .then((status) {
                                                 if (status == "added") {
                                                   successToast(
@@ -331,7 +331,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     ),
                                   ),
                                 );
-                              }),SizedBox(height: 30,)
+                              }),SizedBox(height:Platform.isAndroid? 30:60,)
                             ],
                           );
                         }

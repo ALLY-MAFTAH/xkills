@@ -27,7 +27,8 @@ import 'cart_screen.dart';
 import 'payment_options_screen.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
-  const CourseDetailsScreen({super.key});
+  final Course thisCourse ;
+  const CourseDetailsScreen({super.key, required this.thisCourse});
 
   @override
   State<CourseDetailsScreen> createState() => _CourseDetailsScreenState();
@@ -37,7 +38,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   final courseController = Get.put(CourseController());
   final sectionController = Get.put(SectionController());
 
-  Course thisCourse = Course();
   final bool _isNavigatingPreview = false;
   AsyncSnapshot<List<Section>> snapshot = AsyncSnapshot.withData(
     ConnectionState.none,
@@ -49,9 +49,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
 
   @override
   void initState() {
-    thisCourse = courseController.selectedCourse;
+    // thisCourse = courseController.selectedCourse;
     sectionController.sectionsFuture = sectionController.getSections(
-      thisCourse.id!,
+      widget.thisCourse.id!,
     );
     courseController.cartListFuture = courseController.getCartList();
     super.initState();
@@ -102,10 +102,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                       fit: StackFit.expand,
                       children: [
                         if (!showVideoPlayer)
-                          thisCourse.thumbnail!.isNotEmpty
+                          widget.thisCourse.thumbnail!.isNotEmpty
                               ? BottomTopSlide(
                                 child: CachedNetworkImage(
-                                  imageUrl: thisCourse.thumbnail!,
+                                  imageUrl: widget.thisCourse.thumbnail!,
                                   height: screenHeight / 4,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) => customLoader(),
@@ -122,11 +122,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         else
                           Align(
                             alignment: Alignment.topCenter,
-                            child: ClipRRect(
-                              child: nextPage,
-                            ),
+                            child: ClipRRect(child: nextPage),
                           ),
-                          // if (!showVideoPlayer)
+                        // if (!showVideoPlayer)
                         Positioned(
                           bottom: 0,
                           left: 0,
@@ -156,7 +154,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                           context: context,
                           showCartButton: false,
                         ),
-                        if (!thisCourse.isPaid!)
+                        if (!widget.thisCourse.isPaid!)
                           Positioned(
                             top:
                                 Platform.isAndroid
@@ -201,8 +199,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                         showVideoPlayer = true;
                                         setState(() {});
                                         String videoUrl =
-                                            thisCourse.preview ?? "";
-                                        final courseId = thisCourse.id!;
+                                            widget.thisCourse.preview ?? "";
+                                        final courseId = widget.thisCourse.id!;
 
                                         // --- URL Type Checks ---
                                         final isYouTube =
@@ -309,15 +307,19 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                       SizedBox(
                                         width: 26,
                                         height: 26,
-                                        child:  Icon(
-                                         showVideoPlayer?Icons.stop_rounded:  Icons.play_arrow_rounded,
+                                        child: Icon(
+                                          showVideoPlayer
+                                              ? Icons.stop_rounded
+                                              : Icons.play_arrow_rounded,
                                           size: 30,
                                           color: Colors.white,
                                         ),
                                       ),
                                     const SizedBox(width: 10),
                                     Text(
-                                    showVideoPlayer?"Stop".tr:  _isNavigatingPreview
+                                      showVideoPlayer
+                                          ? "Stop".tr
+                                          : _isNavigatingPreview
                                           ? 'Loading...'
                                           : 'Watch Course Preview',
                                       style: const TextStyle(
@@ -346,7 +348,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ...buildCourseSection(context, thisCourse),
+                          ...buildCourseSection(context, widget.thisCourse),
                           FutureBuilder(
                             future: sectionController.sectionsFuture,
                             builder: (context, asyncSnapshot) {
@@ -409,8 +411,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                   ),
                                 );
                               } else {
-                                final List<Section> sections =
-                                    asyncSnapshot.data!;
+                                 List<Section> sections = [];
+                                sections = asyncSnapshot.data!;
                                 int totalLessons = sections.fold(
                                   0,
                                   (sum, section) =>
@@ -486,7 +488,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                 lessonTitle: lesson.title!,
                                                 sectionName:
                                                     sections.first.title!,
-                                                courseTitle: thisCourse.title!,
+                                                courseTitle: widget.thisCourse.title!,
                                                 duration: lesson.duration!,
                                                 userValidity:
                                                     lesson.userValidity!,
@@ -497,7 +499,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                       .any(
                                                         (myCourse) =>
                                                             myCourse.id ==
-                                                            thisCourse.id,
+                                                            widget.thisCourse.id,
                                                       )) {
                                                     if (lesson.videoUrl !=
                                                             null &&
@@ -507,7 +509,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                         videoUrl:
                                                             lesson.videoUrl!,
                                                         courseId:
-                                                            thisCourse.id!,
+                                                            widget.thisCourse.id!,
                                                         lessonId: lesson.id!,
                                                       );
                                                     } else {
@@ -601,7 +603,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                             sectionName:
                                                                 section.title!,
                                                             courseTitle:
-                                                                thisCourse
+                                                                widget.thisCourse
                                                                     .title!,
                                                             duration:
                                                                 lesson
@@ -622,7 +624,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                     ) =>
                                                                         myCourse
                                                                             .id ==
-                                                                        thisCourse
+                                                                        widget.thisCourse
                                                                             .id,
                                                                   )) {
                                                                 if (lesson.videoUrl !=
@@ -636,7 +638,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                         lesson
                                                                             .videoUrl!,
                                                                     courseId:
-                                                                        thisCourse
+                                                                        widget.thisCourse
                                                                             .id!,
                                                                     lessonId:
                                                                         lesson
@@ -679,7 +681,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                               }
                             },
                           ),
-                          SizedBox(height: thisCourse.isPaid! ? 85 : 20),
+                          SizedBox(height: widget.thisCourse.isPaid! ? 85 : 20),
                         ],
                       ),
                     ),
@@ -692,21 +694,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               builder: (context, cartSnapshot) {
                 if (cartSnapshot.connectionState == ConnectionState.waiting) {
                   return Container();
-                } else if (!thisCourse.isPaid!) {
+                } else if (!widget.thisCourse.isPaid!) {
                   return Container();
                 } else {
                   return GetBuilder<CourseController>(
                     builder: (courseController) {
                       return buildBuyButton(
-                        thisCourse,
+                        widget.thisCourse,
                         () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
                                 (_) => PaymentOptionsScreen(
-                                  courseIds: [thisCourse.id!],
+                                  courseIds: [widget.thisCourse.id!],
                                   totalAmount: double.parse(
-                                    thisCourse.discountedPrice.toString(),
+                                    widget.thisCourse.discountedPrice.toString(),
                                   ),
                                 ),
                           ),
@@ -714,7 +716,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         () {
                           if (!courseController.isLoading) {
                             courseController
-                                .addOrRemoveCart(thisCourse.id!)
+                                .addOrRemoveCart(widget.thisCourse.id!)
                                 .then((status) {
                                   if (status == "added") {
                                     successToast("Course added to cart".tr);
@@ -797,13 +799,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         courseController.isLoading
                             ? null
                             : () async {
-                              if (thisCourse.isPaid!) {
+                              if (widget.thisCourse.isPaid!) {
                                 // CALL PAID ENROLL
                                 hasEnrolled = await courseController
-                                    .freeCourseEnroll(thisCourse.id!);
+                                    .freeCourseEnroll(widget.thisCourse.id!);
                               } else {
                                 hasEnrolled = await courseController
-                                    .freeCourseEnroll(thisCourse.id!);
+                                    .freeCourseEnroll(widget.thisCourse.id!);
                               }
                               Navigator.pop(dialogContext, true);
                             },
@@ -832,7 +834,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             navigateToVideoPlayer(
               context: context,
               videoUrl: lesson.videoUrl!,
-              courseId: thisCourse.id!,
+              courseId: widget.thisCourse.id!,
               lessonId: lesson.id!,
             );
           } else {

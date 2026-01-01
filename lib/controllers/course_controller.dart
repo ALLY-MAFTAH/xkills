@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:skillsbank/controllers/category_controller.dart';
 import '/controllers/section_controller.dart';
 import '../components/toasts.dart';
 import '../constants/app_brand.dart';
@@ -16,10 +15,14 @@ import '../models/my_course.dart';
 import '../services/http_service.dart';
 
 class CourseController extends GetxController {
-  Course selectedCourse = Course();
-  Future<List<Course>>? coursesFuture;
-  List<Course> _courses = [];
-  List<Course> get courses => _courses;
+  // Course selectedCourse = Course();
+  Future<List<Course>>? allCoursesFuture;
+  List<Course> _allCourses = [];
+  List<Course> get allCourses => _allCourses;
+
+  Future<List<Course>>? topCoursesFuture;
+  List<Course> _topCourses = [];
+  List<Course> get topCourses => _topCourses;
 
   Future<List<Course>>? instructorCoursesFuture;
   List<Course> _instructorCourses = [];
@@ -29,8 +32,6 @@ class CourseController extends GetxController {
   Future<List<MyCourse>>? myCoursesFuture;
   List<MyCourse> _myCourses = [];
   List<MyCourse> get myCourses => _myCourses;
-  List<MyCourse> _myProducts = [];
-  List<MyCourse> get myProducts => _myProducts;
 
   final List<DropdownMenuItem<String>> _courseList = [];
   List<DropdownMenuItem<String>> get coursesDropdown => _courseList;
@@ -42,11 +43,13 @@ class CourseController extends GetxController {
   bool isLoading = false;
   Set<int> loadingCartIds = {};
 
-  Future<List<Course>>? productsFuture;
-  List<Course> _products = [];
-  List<Course> get products => _products;
-  final List<DropdownMenuItem<String>> _productList = [];
-  List<DropdownMenuItem<String>> get productsDropdown => _productList;
+  Future<List<MyCourse>>? myPacksFuture;
+  List<MyCourse> _myPacks = [];
+  List<MyCourse> get myPacks => _myPacks;
+
+  Future<List<Course>>? allPacksFuture;
+  List<Course> _allPacks = [];
+  List<Course> get allPacks => _allPacks;
 
   Map<int, double> downloadProgress = {}; // courseId : progress 0–1
   Map<int, bool> isDownloading = {}; // courseId : downloading or not
@@ -56,100 +59,130 @@ class CourseController extends GetxController {
   //
   //
 
-  Future<Course> getProductById(int id) async {
-    return products.firstWhere(
-      (product) => product.id == id,
-      orElse: () => throw Exception('Product not found.'),
+  Future<Course> getPackById(int id) async {
+    return allPacks.firstWhere(
+      (pack) => pack.id == id,
+      orElse: () => throw Exception('Pack not found.'),
     );
   }
 
-  Future<List<Course>> getProducts() async {
+  Future<List<Course>> getAllPacks() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
         RequestType.GET,
-        Endpoints.getProducts,
+        Endpoints.getAllPacks,
         {},
         false,
       );
-      if (responseData == null) return products;
+      if (responseData == null) return allPacks;
 
-      final List fetchedProducts = responseData;
-      final CategoryController categoryController =
-          Get.find<CategoryController>();
+      final List fetchedPacks = responseData;
 
-      final Set<int> productCategoryIds =
-          categoryController.subCategories
-              .map((subCategory) => subCategory.id as int)
-              .toSet();
+      if (fetchedPacks.isNotEmpty) {
+        _allPacks = [];
+        for (var pack in fetchedPacks) {
+          final calledDataSet = Course.fromJson(pack);
 
-      if (fetchedProducts.isNotEmpty) {
-        _products = [];
-        for (var product in fetchedProducts) {
-          final calledDataSet = Course.fromJson(product);
-          final bool isProduct = productCategoryIds.contains(
-            calledDataSet.categoryId,
-          );
-
-          if (isProduct) {
-            _products.add(calledDataSet);
-          }
+          _allPacks.add(calledDataSet);
         }
       }
-      print(products);
-      return products;
+      return allPacks;
     } catch (e) {
       print(e.toString());
       errorToast(e.toString());
     }
-    return products;
+    return allPacks;
+  }
+
+  Future<List<MyCourse>> getMyPacks() async {
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.GET,
+        Endpoints.getMyPacks,
+        {},
+        false,
+      );
+      if (responseData == null) return myPacks;
+
+      final List fetchedPacks = responseData;
+
+      if (fetchedPacks.isNotEmpty) {
+        _myPacks = [];
+        for (var pack in fetchedPacks) {
+          final calledDataSet = MyCourse.fromJson(pack);
+
+          _myPacks.add(calledDataSet);
+        }
+      }
+      return myPacks;
+    } catch (e) {
+      print(e.toString());
+      errorToast(e.toString());
+    }
+    return myPacks;
   }
 
   Future<List<Course>> getCoursesByCategory(categoryId) async {
-    await getCourses();
+    await getAllCourses();
     final coursesByCategory =
-        courses.where((course) => course.categoryId == categoryId).toList();
+        allCourses.where((course) => course.categoryId == categoryId).toList();
     return coursesByCategory;
   }
 
-  Future<List<Course>> getCourses() async {
+  Future<List<Course>> getAllCourses() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
         RequestType.GET,
-        Endpoints.getCourses,
+        Endpoints.getOtherCourses,
         {},
         false,
       );
-      if (responseData == null) return courses;
+      if (responseData == null) return allCourses;
 
       final List fetchedCourses = responseData;
-      final CategoryController categoryController =
-          Get.find<CategoryController>();
-
-      final Set<int> productCategoryIds =
-          categoryController.subCategories
-              .map((subCategory) => subCategory.id as int)
-              .toSet();
 
       if (fetchedCourses.isNotEmpty) {
-        _courses = [];
+        _allCourses = [];
         for (var course in fetchedCourses) {
           final calledDataSet = Course.fromJson(course);
-          final bool isProduct = productCategoryIds.contains(
-            calledDataSet.categoryId,
-          );
-
-          if (!isProduct) {
-            _courses.add(calledDataSet);
-          }
+          _allCourses.add(calledDataSet);
         }
       }
-      print(courses);
-      return courses;
+      print(allCourses);
+      return allCourses;
     } catch (e) {
       print(e.toString());
       errorToast(e.toString());
     }
-    return courses;
+    return allCourses;
+  }
+
+  Future<List<Course>> getTopCourses() async {
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.GET,
+        Endpoints.getTopCourses,
+        {},
+        false,
+      );
+      if (responseData == null) return topCourses;
+
+      final List fetchedCourses = responseData;
+
+      if (fetchedCourses.isNotEmpty) {
+        _topCourses = [];
+        for (var course in fetchedCourses) {
+          final calledDataSet = Course.fromJson(course);
+          _topCourses.add(calledDataSet);
+        }
+      }
+      print(topCourses);
+      return topCourses;
+    } catch (e) {
+      print(e.toString());
+      errorToast(e.toString());
+    }
+    return topCourses;
   }
 
   Future<List<MyCourse>> getMyCourses() async {
@@ -165,29 +198,12 @@ class CourseController extends GetxController {
       final List myFetchedCourses = responseData;
       List<MyCourse> temporaryCourses = [];
       List<Future<void>> durationCalculations = [];
-      List<MyCourse> temporaryProducts = [];
-      final CategoryController categoryController =
-          Get.find<CategoryController>();
-
-      final Set<int> productCategoryIds =
-          categoryController.subCategories
-              .map((subCategory) => subCategory.id as int)
-              .toSet();
 
       if (myFetchedCourses.isNotEmpty) {
         for (var myCourseJson in myFetchedCourses) {
           final MyCourse courseModel = MyCourse.fromJson(myCourseJson);
 
-          /// ✅ Check if course belongs to a product category
-          final bool isProduct = productCategoryIds.contains(
-            courseModel.categoryId,
-          );
-
-          if (isProduct) {
-            temporaryProducts.add(courseModel);
-          } else {
-            temporaryCourses.add(courseModel);
-          }
+          temporaryCourses.add(courseModel);
 
           durationCalculations.add(courseModel.calculateTotalDuration());
         }
@@ -195,9 +211,6 @@ class CourseController extends GetxController {
 
       await Future.wait(durationCalculations);
       _myCourses = temporaryCourses;
-      _myProducts = temporaryProducts;
-
-      print("Fetched ${myCourses.length} my courses");
       return _myCourses;
     } catch (e) {
       print(e.toString());
@@ -253,7 +266,6 @@ class CourseController extends GetxController {
           _cartList.add(calledDataSet);
         }
       }
-      print(cartList);
       update();
       return cartList;
     } catch (e) {

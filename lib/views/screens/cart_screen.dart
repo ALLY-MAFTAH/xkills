@@ -42,17 +42,16 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildCartItem(Course thisCourse) {
-     final isLoading = courseController.loadingCartIds.contains(
-              thisCourse.id,
-            );
+    final isLoading = courseController.loadingCartIds.contains(thisCourse.id);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: InkWell(
         onTap: () {
-          courseController.selectedCourse = thisCourse;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => CourseDetailsScreen()),
+            MaterialPageRoute(
+              builder: (_) => CourseDetailsScreen(thisCourse: thisCourse),
+            ),
           );
         },
         child: Container(
@@ -328,7 +327,7 @@ class _CartScreenState extends State<CartScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                 Text(
+                                                Text(
                                                   'Total:'.tr,
                                                   style: TextStyle(
                                                     color: Colors.white,

@@ -37,17 +37,17 @@ class CoursesScreenState extends State<CoursesScreen> {
   void _loadInitialData() {
     if (categoryController.selectedCategory != null) {
       categoryTitle = "${categoryController.selectedCategory!.title!} ";
-      courseController.coursesFuture = courseController.getCoursesByCategory(
+      courseController.allCoursesFuture = courseController.getCoursesByCategory(
         categoryController.selectedCategory!.id!,
       );
     } else {
-      courseController.coursesFuture = courseController.getCourses();
+      courseController.allCoursesFuture = courseController.getAllCourses();
     }
   }
 
   Future<void> _refreshData() async {
     _loadInitialData();
-    await Future.wait([courseController.coursesFuture!]);
+    await Future.wait([courseController.allCoursesFuture!]);
     setState(() {});
   }
 
@@ -109,7 +109,7 @@ class CoursesScreenState extends State<CoursesScreen> {
 
                     /// 🔽 COURSES + LEVEL FILTER
                     FutureBuilder<List<Course>>(
-                      future: courseController.coursesFuture,
+                      future: courseController.allCoursesFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -209,7 +209,13 @@ class CoursesScreenState extends State<CoursesScreen> {
                               itemBuilder: (context, index) {
                                 return GridCourseCard(
                                   thisCourse: filteredCourses[index],
-                                  isGolden:categoryController.selectedCategory!=null? categoryController.selectedCategory!.isGolden!:false,
+                                  isGolden:
+                                      categoryController.selectedCategory !=
+                                              null
+                                          ? categoryController
+                                              .selectedCategory!
+                                              .isGolden!
+                                          : false,
                                 );
                               },
                             ),

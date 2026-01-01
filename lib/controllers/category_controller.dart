@@ -44,9 +44,7 @@ class CategoryController extends GetxController {
         _subCategories = [];
         for (var category in fetchedCategories) {
           final calledDataSet = Category.fromJson(category);
-          if (calledDataSet.id != 1) {
-            _categories.add(calledDataSet);
-          }
+          _categories.add(calledDataSet);
         }
       }
 
@@ -62,7 +60,7 @@ class CategoryController extends GetxController {
     try {
       final responseData = await HttpService.sendHttpRequest(
         RequestType.GET,
-        Endpoints.getCategories,
+        Endpoints.getSubCategories,
         {},
         false,
       );
@@ -73,13 +71,8 @@ class CategoryController extends GetxController {
       if (fetchedSubCategories.isNotEmpty) {
         _subCategories = [];
         for (var subCategory in fetchedSubCategories) {
-          final calledDataSet = Category.fromJson(subCategory);
-          if (calledDataSet.id == 1 &&
-              calledDataSet.subCategories!.isNotEmpty) {
-            for (var subCategory in calledDataSet.subCategories!) {
-              _subCategories.add(subCategory);
-            }
-          }
+          final calledDataSet = SubCategory.fromJson(subCategory);
+          _subCategories.add(calledDataSet);
         }
       }
       return subCategories;

@@ -10,11 +10,11 @@ import 'players/network_player_dialog.dart';
 import 'pack_info_footer.dart';
 import 'players/youtube_player_dialog.dart';
 
-class GridProductCard extends StatefulWidget {
+class GridPackCard extends StatefulWidget {
   final Course thisPack;
   final VoidCallback onBuyPressed;
   final VoidCallback onAddToCartPressed;
-  const GridProductCard({
+  const GridPackCard({
     super.key,
     required this.thisPack,
     required this.onBuyPressed,
@@ -22,10 +22,10 @@ class GridProductCard extends StatefulWidget {
   });
 
   @override
-  State<GridProductCard> createState() => _GridProductCardState();
+  State<GridPackCard> createState() => _GridPackCardState();
 }
 
-class _GridProductCardState extends State<GridProductCard> {
+class _GridPackCardState extends State<GridPackCard> {
   final courseController = Get.put(CourseController());
 
   @override
@@ -57,7 +57,7 @@ class _GridProductCardState extends State<GridProductCard> {
                     SizedBox(height: 10),
                     GetBuilder<CourseController>(
                       builder: (courseController) {
-                        bool hasEnrollered = courseController.myProducts.any(
+                        bool hasEnrollered = courseController.myPacks.any(
                           (course) => course.id == widget.thisPack.id,
                         );
                         if (hasEnrollered) {

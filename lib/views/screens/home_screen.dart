@@ -68,16 +68,14 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _loadInitialData() {
     categoryController.categoriesFuture = categoryController.getCategories();
-    courseController.coursesFuture = courseController.getCourses();
-    courseController.myCoursesFuture = courseController.getMyCourses();
+    courseController.topCoursesFuture = courseController.getTopCourses();
   }
 
   Future<void> _refreshData() async {
     _loadInitialData();
     await Future.wait([
       categoryController.categoriesFuture!,
-      courseController.coursesFuture!,
-      courseController.myCoursesFuture!,
+      courseController.topCoursesFuture!,
     ]);
     setState(() {});
   }
@@ -141,6 +139,40 @@ class _HomeScreenState extends State<HomeScreen>
                                   fit: BoxFit.cover,
                                 ),
                                 Positioned(
+                                  // bottom: 0,
+                                  left: 0,
+                                  right: 0,
+                                  top: 150,
+                                  height: screenHeight / 2.8,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      // color: Colors.red,
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.transparent,
+                                          AppColors.primaryColor.withOpacity(
+                                            0.1,
+                                          ),
+                                          AppColors.primaryColor.withOpacity(
+                                            0.3,
+                                          ),
+                                          AppColors.primaryColor.withOpacity(
+                                            0.6,
+                                          ),
+                                          AppColors.primaryColor.withOpacity(
+                                            0.8,
+                                          ),
+                                          AppColors.primaryColor,
+                                          AppColors.primaryColor,
+                                        ],
+                                        // stops: const [0.1, 1,1,1],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
                                   top: 0,
                                   left: 0,
                                   right: 0,
@@ -155,9 +187,47 @@ class _HomeScreenState extends State<HomeScreen>
                             );
                           } else if (asyncSnapshot.data == null ||
                               asyncSnapshot.data!.isEmpty) {
-                            return Image.asset(
-                              'assets/images/logo.png',
-                              fit: BoxFit.cover,
+                            return Stack(
+                              children: [
+                                Image.asset(
+                                  'assets/images/logo.png',
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  // bottom: 0,
+                                  left: 0,
+                                  right: 0,
+                                  top: 150,
+                                  height: screenHeight / 2.8,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      // color: Colors.red,
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.transparent,
+                                          AppColors.primaryColor.withOpacity(
+                                            0.1,
+                                          ),
+                                          AppColors.primaryColor.withOpacity(
+                                            0.3,
+                                          ),
+                                          AppColors.primaryColor.withOpacity(
+                                            0.6,
+                                          ),
+                                          AppColors.primaryColor.withOpacity(
+                                            0.8,
+                                          ),
+                                          AppColors.primaryColor,
+                                          AppColors.primaryColor,
+                                        ],
+                                        // stops: const [0.1, 1,1,1],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             );
                           }
                           slides =
@@ -505,37 +575,92 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                             ),
 
-                            Padding(
+                            Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: AppMetrices.horizontalPadding,
                               ),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 1,
-                                ),
-                                onTap: () {
-                                  categoryController.selectCategory(0);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => const CoursesScreen(),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Top Courses',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  );
-                                },
-                                title: const Text(
-                                  'Top Courses',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
                                   ),
-                                ),
-                                trailing: const Icon(
-                                  Icons.arrow_forward_rounded,
-                                  color: Colors.white,
-                                ),
-                                minTileHeight: 30,
+
+                                  InkWell(
+                                    onTap: () {
+                                      categoryController.selectCategory(0);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  const CoursesScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: LiquidGlassLayer(
+                                      settings: LiquidGlassSettings(
+                                        thickness: 10,
+                                        blur: 1,
+                                        lightAngle: 0.8 * 3.14,
+
+                                        glassColor: const Color.fromARGB(
+                                          99,
+                                          9,
+                                          72,
+                                          73,
+                                        ),
+                                      ),
+                                      child: LiquidGlass(
+                                        shape: LiquidRoundedSuperellipse(
+                                          borderRadius: 50,
+                                        ),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: AppColors.tertiaryColor
+                                                    .withOpacity(0.25),
+                                                blurRadius: 8,
+                                                offset: const Offset(0, 4),
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 6,
+                                          ),
+                                          child: Row(
+                                            children: const [
+                                              Text(
+                                                "All Courses",
+                                                style: TextStyle(
+                                                  color:
+                                                      AppColors.tertiaryColor,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(width: 4),
+                                              Icon(
+                                                Icons.open_in_new_rounded,
+                                                size: 12,
+                                                color: AppColors.tertiaryColor,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
 
@@ -545,7 +670,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 horizontal: AppMetrices.horizontalPadding,
                               ),
                               child: FutureBuilder(
-                                future: courseController.coursesFuture,
+                                future: courseController.topCoursesFuture,
                                 builder: (context, asyncSnapshot) {
                                   if (asyncSnapshot.connectionState ==
                                       ConnectionState.waiting) {

@@ -31,12 +31,11 @@ class _GridCourseCardState extends State<GridCourseCard> {
 
     return InkWell(
       onTap: () {
-        courseController.selectedCourse = widget.thisCourse;
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
-              return CourseDetailsScreen();
+              return CourseDetailsScreen(thisCourse: widget.thisCourse,);
             },
           ),
         );

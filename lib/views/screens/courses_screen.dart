@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skillsbank/components/slide_animations.dart';
 import '../../components/custom_search.dart';
 import '../../controllers/category_controller.dart';
 import '../../theme/app_metrices.dart';
@@ -63,18 +65,31 @@ class CoursesScreenState extends State<CoursesScreen> {
         extendBody: true,
         body: Stack(
           children: [
-            // 🌈 Background
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.secondaryColor, AppColors.primaryColor],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
+            categoryController.selectedCategory!.isGolden!
+                ? Transform.rotate(
+                  angle: pi, // 90 degrees in radians
+                  child: Image.asset(
+                    'assets/images/golden_background.jpg',
+                    fit: BoxFit.fill,
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                )
+                : Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.secondaryColor,
+                        AppColors.primaryColor,
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                  ),
                 ),
-              ),
-            ),
 
             // 🌈 Content
+            // if("a"=="v")
             SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
@@ -241,30 +256,44 @@ class CoursesScreenState extends State<CoursesScreen> {
     required bool selected,
     required VoidCallback onTap,
   }) {
-    return Container(
-      height: 30,
-      // width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        gradient:
-            selected
-                ? LinearGradient(
-                  colors: [AppColors.brainColor, AppColors.primaryColor],
-                )
-                : null,
-      ),
-      child: OutlinedButton(
-        onPressed: onTap,
-        style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          side: const BorderSide(color: Colors.grey, width: 0.5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
+    return LeftRightSlide(
+      child: Container(
+        height: 30,
+        // width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          gradient:
+              selected
+                  ? LinearGradient(
+                    colors:
+                        categoryController.selectedCategory!.isGolden!
+                            ? [
+                              AppColors.goldenColor,
+                              AppColors.goldenColor.withOpacity(.2),
+                            ]
+                            : [AppColors.brainColor, AppColors.primaryColor],
+                  )
+                  : null,
         ),
-        child: Text(
-          GetUtils.capitalize(label)!,
-          style: const TextStyle(color: Colors.white, fontSize: 10),
+        child: OutlinedButton(
+          onPressed: onTap,
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            side: BorderSide(
+              color:
+                  categoryController.selectedCategory!.isGolden!
+                      ? AppColors.goldenColor
+                      : Colors.grey,
+              width: 0.5,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+          child: Text(
+            GetUtils.capitalize(label)!,
+            style: const TextStyle(color: Colors.white, fontSize: 10),
+          ),
         ),
       ),
     );

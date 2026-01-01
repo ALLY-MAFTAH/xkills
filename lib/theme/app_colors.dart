@@ -6,7 +6,8 @@ class AppColors {
   static const Color secondaryColor = Color.fromARGB(255, 3, 57, 58); // #094849
   // static const Color primaryColor = Color(0xFF071C1C); // #071C1C
   // static const Color secondaryColor = Color(0xFF094849); // #094849
-  static const Color tertiaryColor = Color(0xFFEFC974); // #EFC974
-  static final Color goldenColor = HexColor('#FFD700'); // Gold color
-  static final Color brainColor = HexColor('#7AC791'); // Gold color
+static const Color tertiaryColor = Color(0xFFEFC974); // #EFC974
+static const Color goldenColor = Color(0xFFFFD700);   // Gold color
+
+static const Color brainColor = Color(0xFF7AC791); // Hex #7AC791
 }

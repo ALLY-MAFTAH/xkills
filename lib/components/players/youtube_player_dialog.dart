@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class YoutubeVideoPlayerDialog extends StatefulWidget {
+  final bool showControls;
   final int courseId;
   final int? lessonId;
   final String videoUrl;
   const YoutubeVideoPlayerDialog({
     super.key,
+    required this.showControls,
     required this.courseId,
     this.lessonId,
     required this.videoUrl,
   });
 
   @override
-  State<YoutubeVideoPlayerDialog> createState() => _YoutubeVideoPlayerDialogState();
+  State<YoutubeVideoPlayerDialog> createState() =>
+      _YoutubeVideoPlayerDialogState();
 }
 
 class _YoutubeVideoPlayerDialogState extends State<YoutubeVideoPlayerDialog> {
@@ -29,7 +32,8 @@ class _YoutubeVideoPlayerDialogState extends State<YoutubeVideoPlayerDialog> {
     final videoId = YoutubePlayer.convertUrlToId(widget.videoUrl);
     _controller = YoutubePlayerController(
       initialVideoId: videoId!,
-      flags: const YoutubePlayerFlags(
+      flags: YoutubePlayerFlags(
+        hideControls: !widget.showControls,
         mute: false,
         autoPlay: true,
         disableDragSeek: false,

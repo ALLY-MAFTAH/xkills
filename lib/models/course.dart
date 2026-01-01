@@ -13,6 +13,7 @@ class Course {
   bool? isBest; // Converted from 1/0
   String? price; // String: "$ 3"
   num? discountedPrice; // Can be int or double
+  double? priceForPayment; 
   bool? discountFlag; // Converted from 1/0
   bool? enableDripContent; // Converted from 1/0
   String? dripContentSettings;
@@ -53,6 +54,7 @@ class Course {
     this.isPaid,
     this.isBest,
     this.price,
+    this.priceForPayment,
     this.discountedPrice,
     this.discountFlag,
     this.enableDripContent,
@@ -97,6 +99,7 @@ class Course {
       isPaid: (json['is_paid'] as int?) == 1,
       isBest: (json['is_best'] as int?) == 1,
       price: json['price'] as String?,
+      priceForPayment: (json['price_for_payment'] as num?)?.toDouble(),
       discountedPrice: json['discounted_price'] as num?,
       discountFlag: (json['discount_flag'] as int?) == 1,
       enableDripContent: (json['enable_drip_content'] as int?) == 1,
@@ -145,6 +148,7 @@ class Course {
       'is_paid': isPaid == true ? 1 : 0,
       'is_best': isBest == true ? 1 : 0,
       'price': price,
+      'price_for_payment': priceForPayment,
       'discounted_price': discountedPrice,
       'discount_flag': discountFlag == true ? 1 : 0,
       'enable_drip_content': enableDripContent == true ? 1 : 0,

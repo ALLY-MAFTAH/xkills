@@ -5,11 +5,13 @@ import '/constants/endpoints.dart';
 import '../../utils/get_video_id.dart';
 
 class NetworkVideoPlayerDialog extends StatefulWidget {
+  final bool showControls;
   final int courseId;
   final int? lessonId;
   final String videoUrl;
   const NetworkVideoPlayerDialog({
     super.key,
+    required this.showControls,
     required this.courseId,
     this.lessonId,
     required this.videoUrl,
@@ -43,6 +45,7 @@ class _PlayVideoFromAssetState extends State<NetworkVideoPlayerDialog> {
           VideoQalityUrls(quality: 360, url: fullUrl),
           VideoQalityUrls(quality: 720, url: fullUrl),
         ],
+        videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: false),
       ),
     )..initialise();
     super.initState();
@@ -63,6 +66,7 @@ class _PlayVideoFromAssetState extends State<NetworkVideoPlayerDialog> {
       aspectRatio: 16 / 9,
       child: PodVideoPlayer(
         controller: controller,
+        alwaysShowProgressBar: widget.showControls,
         podProgressBarConfig: const PodProgressBarConfig(
           playingBarColor: Colors.white,
           circleHandlerColor: Colors.white,

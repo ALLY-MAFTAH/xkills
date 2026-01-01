@@ -281,14 +281,7 @@ class _ShopScreenState extends State<ShopScreen> {
                           return Column(
                             children: [
                               ...filteredPacks.map((pack) {
-                                final amount =
-                                    double.tryParse(
-                                      pack.price!.replaceAll(
-                                        RegExp(r'[^0-9.]'),
-                                        '',
-                                      ),
-                                    ) ??
-                                    0.0;
+                                final amount = pack.priceForPayment ?? 0.0;
 
                                 return BottomTopSlide(
                                   child: Padding(
@@ -324,14 +317,13 @@ class _ShopScreenState extends State<ShopScreen> {
                                                 }
                                               });
                                         }
-                                        setState(() {
-                                          
-                                        });
+                                        setState(() {});
                                       },
                                     ),
                                   ),
                                 );
-                              }),SizedBox(height:Platform.isAndroid? 30:60,)
+                              }),
+                              SizedBox(height: Platform.isAndroid ? 30 : 60),
                             ],
                           );
                         }

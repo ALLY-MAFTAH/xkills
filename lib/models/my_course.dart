@@ -17,6 +17,7 @@ class MyCourse {
   bool? isPaid; // Converted from 1/0
   bool? isBest; // Converted from 1/0
   String? price; // String: "$ 3"
+  double? priceForPayment; // Can be int or double
   num? discountedPrice; // Can be int or double
   bool? discountFlag; // Converted from 1/0
   bool? enableDripContent; // Converted from 1/0
@@ -63,6 +64,7 @@ class MyCourse {
     this.isPaid,
     this.isBest,
     this.price,
+    this.priceForPayment,
     this.discountedPrice,
     this.discountFlag,
     this.enableDripContent,
@@ -111,6 +113,7 @@ class MyCourse {
       isPaid: (json['is_paid'] as int?) == 1,
       isBest: (json['is_best'] as int?) == 1,
       price: json['price'] as String?,
+      priceForPayment: (json['price_for_payment'] as num?)?.toDouble(),
       discountedPrice: json['discounted_price'] as num?,
       discountFlag: (json['discount_flag'] as int?) == 1,
       enableDripContent: (json['enable_drip_content'] as int?) == 1,
@@ -167,6 +170,7 @@ class MyCourse {
       'is_paid': isPaid == true ? 1 : 0,
       'is_best': isBest == true ? 1 : 0,
       'price': price,
+      'price_for_payment': priceForPayment,
       'discounted_price': discountedPrice,
       'discount_flag': discountFlag == true ? 1 : 0,
       'enable_drip_content': enableDripContent == true ? 1 : 0,
@@ -200,13 +204,13 @@ class MyCourse {
     };
   }
 
-Future<void> calculateTotalDuration() async {
+  Future<void> calculateTotalDuration() async {
     // Check if the course ID is valid before fetching sections
-    if (id == null) return; 
+    if (id == null) return;
 
     final sectionController = Get.put(SectionController());
     final List<Section> sections = await sectionController.getSections(id!);
-    
+
     // (Ensure durationToSeconds is accessible/imported)
     int totalSeconds = sections.fold(0, (sum, section) {
       String durationString = section.totalDuration ?? '00:00:00';
@@ -227,7 +231,7 @@ Future<void> calculateTotalDuration() async {
       int remainingMinutes = (totalSeconds % 3600) ~/ 60;
       displayDurationString = '${hours}h ${remainingMinutes}m';
     }
-    
+
     // ⭐️ Assign the calculated value directly to the property
     totalDuration = displayDurationString;
   }

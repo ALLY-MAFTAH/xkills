@@ -310,10 +310,10 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                       paymentController.isLoading
                                           ? customLoader()
                                           : Text(
-                                            "Pay ${widget.totalAmount.toString()} TZS",
+                                            "Pay ${getMoneyFormat( widget.totalAmount)}",
                                             style: const TextStyle(
                                               color: Color(0xFF071B1A),
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w800,
                                             ),
                                           ),

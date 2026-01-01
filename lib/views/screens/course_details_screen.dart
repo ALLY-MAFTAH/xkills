@@ -27,7 +27,7 @@ import 'cart_screen.dart';
 import 'payment_options_screen.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
-  final Course thisCourse ;
+  final Course thisCourse;
   const CourseDetailsScreen({super.key, required this.thisCourse});
 
   @override
@@ -148,12 +148,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             ),
                           ),
                         ),
-
-                        appBrand(
-                          hasBackButton: true,
-                          context: context,
-                          showCartButton: false,
-                        ),
+                        if (!showVideoPlayer)
+                          appBrand(
+                            hasBackButton: true,
+                            context: context,
+                            showCartButton: false,
+                          ),
                         if (!widget.thisCourse.isPaid!)
                           Positioned(
                             top:
@@ -222,6 +222,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
 
                                         if (isYouTube) {
                                           nextPage = YoutubeVideoPlayerDialog(
+                                            showControls: false,
                                             courseId: courseId,
                                             videoUrl: videoUrl,
                                           );
@@ -230,6 +231,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                             isWebm ||
                                             isMkv) {
                                           nextPage = NetworkVideoPlayerDialog(
+                                            showControls: false,
                                             courseId: courseId,
                                             videoUrl: videoUrl,
                                           );
@@ -411,7 +413,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                   ),
                                 );
                               } else {
-                                 List<Section> sections = [];
+                                List<Section> sections = [];
                                 sections = asyncSnapshot.data!;
                                 int totalLessons = sections.fold(
                                   0,
@@ -488,7 +490,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                 lessonTitle: lesson.title!,
                                                 sectionName:
                                                     sections.first.title!,
-                                                courseTitle: widget.thisCourse.title!,
+                                                courseTitle:
+                                                    widget.thisCourse.title!,
                                                 duration: lesson.duration!,
                                                 userValidity:
                                                     lesson.userValidity!,
@@ -499,7 +502,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                       .any(
                                                         (myCourse) =>
                                                             myCourse.id ==
-                                                            widget.thisCourse.id,
+                                                            widget
+                                                                .thisCourse
+                                                                .id,
                                                       )) {
                                                     if (lesson.videoUrl !=
                                                             null &&
@@ -509,7 +514,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                         videoUrl:
                                                             lesson.videoUrl!,
                                                         courseId:
-                                                            widget.thisCourse.id!,
+                                                            widget
+                                                                .thisCourse
+                                                                .id!,
                                                         lessonId: lesson.id!,
                                                       );
                                                     } else {
@@ -603,7 +610,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                             sectionName:
                                                                 section.title!,
                                                             courseTitle:
-                                                                widget.thisCourse
+                                                                widget
+                                                                    .thisCourse
                                                                     .title!,
                                                             duration:
                                                                 lesson
@@ -624,7 +632,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                     ) =>
                                                                         myCourse
                                                                             .id ==
-                                                                        widget.thisCourse
+                                                                        widget
+                                                                            .thisCourse
                                                                             .id,
                                                                   )) {
                                                                 if (lesson.videoUrl !=
@@ -638,7 +647,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                         lesson
                                                                             .videoUrl!,
                                                                     courseId:
-                                                                        widget.thisCourse
+                                                                        widget
+                                                                            .thisCourse
                                                                             .id!,
                                                                     lessonId:
                                                                         lesson
@@ -707,9 +717,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             builder:
                                 (_) => PaymentOptionsScreen(
                                   courseIds: [widget.thisCourse.id!],
-                                  totalAmount: double.parse(
-                                    widget.thisCourse.discountedPrice.toString(),
-                                  ),
+                                  totalAmount:
+                                      widget.thisCourse.priceForPayment!,
                                 ),
                           ),
                         ),

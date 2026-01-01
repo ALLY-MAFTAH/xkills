@@ -19,7 +19,7 @@ Widget paymentOptionTile({
               : AppColors.secondaryColor.withOpacity(1),
       border:
           isSelected
-              ? Border.all(color: AppColors.tertiaryColor, width: 2)
+              ? Border.all(color: AppColors.tertiaryColor, width: 1)
               : Border.all(color: Colors.grey, width: .5),
     ),
     child: Column(

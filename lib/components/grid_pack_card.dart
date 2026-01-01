@@ -306,11 +306,13 @@ class _GridPackCardState extends State<GridPackCard> {
 
                 if (isYouTube) {
                   nextPage = YoutubeVideoPlayerDialog(
+                    showControls: false,
                     courseId: courseId,
                     videoUrl: videoUrl,
                   );
                 } else if (isMp4 || isOgg || isWebm || isMkv) {
                   nextPage = NetworkVideoPlayerDialog(
+                    showControls: false,
                     courseId: courseId,
                     videoUrl: videoUrl,
                   );

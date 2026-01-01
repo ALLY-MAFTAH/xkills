@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skillsbank/components/validations.dart';
 import '/components/shimmer_widgets/cart_items_shimmer.dart';
 import '../../components/custom_loader.dart';
 import '../../constants/app_brand.dart';
@@ -31,12 +32,7 @@ class _CartScreenState extends State<CartScreen> {
 
   void _calculateTotal(List<Course> cartItems) {
     _totalPrice = cartItems.fold(0.0, (sum, item) {
-      final rawPriceString =
-          item.discountFlag == true && item.discountedPrice != null
-              ? item.discountedPrice.toString()
-              : item.price.toString();
-      final cleanPriceString = rawPriceString.replaceAll(RegExp(r'[^\d.]'), '');
-      final price = double.tryParse(cleanPriceString) ?? 0.0;
+      final price = item.priceForPayment ?? 0.0;
       return sum + price;
     });
   }
@@ -336,9 +332,7 @@ class _CartScreenState extends State<CartScreen> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  _totalPrice.toStringAsFixed(
-                                                    2,
-                                                  ),
+                                                  getMoneyFormat(_totalPrice),
                                                   style: const TextStyle(
                                                     color: Color(0xFFE6C068),
                                                     fontSize: 16,

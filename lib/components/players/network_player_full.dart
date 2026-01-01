@@ -46,6 +46,7 @@ class _PlayVideoFromAssetState extends State<NetworkVideoPlayerFull> {
           VideoQalityUrls(quality: 360, url: fullUrl),
           VideoQalityUrls(quality: 720, url: fullUrl),
         ],
+        videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: false),
       ),
     )..initialise();
     super.initState();
@@ -130,9 +131,24 @@ class _PlayVideoFromAssetState extends State<NetworkVideoPlayerFull> {
           // Video Player (center)
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: PodVideoPlayer(
                 controller: controller,
+                podPlayerLabels: PodPlayerLabels(
+                  play: "Play",
+                  pause: "Pause",
+                  mute: "Mute",
+                  unmute: "Unmute",
+                  settings: 'Settings',
+                  fullscreen: "Full Screen",
+                  exitFullScreen: "Exit Full Screen",
+                  loopVideo: 'Loop Video',
+                  playbackSpeed: 'Playback speed',
+                  error: 'Error while playing video',
+                  quality: 'Quality',
+                  optionEnabled: 'on',
+                  optionDisabled: 'off',
+                ),
                 podProgressBarConfig: const PodProgressBarConfig(
                   playingBarColor: Colors.white,
                   circleHandlerColor: Colors.white,

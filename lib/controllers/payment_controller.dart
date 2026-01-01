@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import '../includes/checkout_webview.dart';
 import '/constants/auth_user.dart';
 import '/constants/endpoints.dart';
 
@@ -14,7 +14,7 @@ class PaymentController extends GetxController {
   bool isLoading = false;
   TextEditingController phoneController = TextEditingController();
 
-  PaymentMethod? selectedMethod=PaymentMethod.NONE;
+  PaymentMethod? selectedMethod = PaymentMethod.NONE;
 
   Future<String?> submitCardPayment(
     List<int> courseIds,
@@ -52,10 +52,9 @@ class PaymentController extends GetxController {
         "buyer_name": buyerName,
         "buyer_phone": buyerPhone,
         "currency": "TZS",
-        "amount": 1000,
+        "amount": amount,
         "webhook_url": "",
         "redirect_url": "https://zenopay.net",
-        
       };
 
       var dio = Dio();
@@ -63,8 +62,17 @@ class PaymentController extends GetxController {
       dio.options.headers['x-api-key'] = apiKey;
 
       var response = await dio.post(url, data: data);
+      print(response);
+      print(response.statusCode);
       print(response.data);
-      if (response.statusCode == 200 && response.data['status'] == 'success') {
+      if (response.statusCode == 200||response.statusCode == 201 && response.data['payment_link'] != null) {
+        String paymentLink = response.data['payment_link'];
+        print("payment link iSS ::::::::");
+        print(paymentLink);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => CompletePaymentWebView(url: paymentLink)),
+        );
         return orderId.toString();
       }
     } catch (ex) {

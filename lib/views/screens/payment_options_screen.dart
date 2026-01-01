@@ -73,9 +73,6 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                 ),
               ],
             ),
-            
-
-            appBrand(context: context,hasBackButton: true),
             Positioned.fill(
               top: topPadding + 55,
               child: SingleChildScrollView(
@@ -202,14 +199,11 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                           ),
 
                           const SizedBox(height: 20),
-
-                          if (paymentController.selectedMethod ==
-                              PaymentMethod.MOBILE)
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Phone Number",
+                                  "Phone Number ${paymentController.selectedMethod == PaymentMethod.MOBILE ? "For Payment" : ""}",
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13,
@@ -310,7 +304,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                       paymentController.isLoading
                                           ? customLoader()
                                           : Text(
-                                            "Pay ${getMoneyFormat( widget.totalAmount)}",
+                                            "Pay ${getMoneyFormat(widget.totalAmount)}",
                                             style: const TextStyle(
                                               color: Color(0xFF071B1A),
                                               fontSize: 14,
@@ -327,6 +321,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                 ),
               ),
             ),
+            appBrand(context: context, hasBackButton: true),
           ],
         ),
       ),

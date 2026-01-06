@@ -112,7 +112,7 @@ class _SignupPageState extends State<SignupPage> {
                               fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration('Full Name', () {}),
+                            decoration: getInputDecoration(authController,'Full Name', () {}),
                             cursorColor: Colors.white,
                             controller: authController.nameController,
                             keyboardType: TextInputType.name,
@@ -139,7 +139,7 @@ class _SignupPageState extends State<SignupPage> {
                               fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration('E-mail', () {}),
+                            decoration: getInputDecoration(authController,'E-mail', () {}),
                             cursorColor: Colors.white,
                             controller: authController.emailController,
                             keyboardType: TextInputType.emailAddress,
@@ -176,7 +176,7 @@ class _SignupPageState extends State<SignupPage> {
                               });
                             },
                             obscureText: authController.passwordObscure,
-                            decoration: getInputDecoration('Password', () {
+                            decoration: getInputDecoration(authController,'Password', () {
                               setState(() {
                                 authController.passwordObscure =
                                     !authController.passwordObscure;
@@ -210,7 +210,7 @@ class _SignupPageState extends State<SignupPage> {
                               });
                             },
                             obscureText: authController.confirmPasswordObscure,
-                            decoration: getInputDecoration(
+                            decoration: getInputDecoration(authController,
                               'Confirm Password',
                               () {
                                 setState(() {

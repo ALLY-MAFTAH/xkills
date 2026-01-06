@@ -115,7 +115,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration('E-mail', () {}),
+                            decoration: getInputDecoration(
+                              authController,
+                              'E-mail',
+                              () {},
+                            ),
                             cursorColor: Colors.white,
                             controller: authController.emailController,
                             keyboardType: TextInputType.emailAddress,

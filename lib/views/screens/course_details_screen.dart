@@ -770,7 +770,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   'Confirm Enroll',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 18,
                     color: AppColors.secondaryColor,
                   ),
                 ),
@@ -781,6 +781,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: AppColors.secondaryColor,
+                    fontSize: 14
                   ),
                 ),
                 actions: [

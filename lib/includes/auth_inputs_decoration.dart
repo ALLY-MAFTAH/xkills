@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../controllers/auth_controller.dart';
 
-InputDecoration getInputDecoration(String hintext, VoidCallback toggleObscure) {
-
-
-  final authController = Get.put(AuthController());
+InputDecoration getInputDecoration(
+  AuthController authController,
+  String hintext,
+  VoidCallback toggleObscure,
+) {
   return InputDecoration(
     enabledBorder: OutlineInputBorder(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -20,49 +20,38 @@ InputDecoration getInputDecoration(String hintext, VoidCallback toggleObscure) {
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       borderSide: BorderSide.none,
     ),
-    focusedErrorBorder: const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      borderSide: BorderSide.none,
-    ),
-    errorBorder: const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      borderSide: BorderSide.none,
-    ),
     filled: true,
-    hintStyle: TextStyle(
-      color: Colors.grey,
-      fontSize: 12,
-    ),
+    hintStyle: const TextStyle(color: Colors.grey, fontSize: 12),
     hintText: hintext,
     fillColor:
         authController.isSubmitting
             ? Colors.white.withOpacity(.05)
             : Colors.white.withOpacity(.1),
     contentPadding: const EdgeInsets.all(15),
+
     suffixIcon:
-        hintext == "Password" || hintext == "Confirm Password"
+        hintext.contains("Password")
             ? IconButton(
-              onPressed:
-                  authController.isSubmitting
-                      ? null
-                      : () {
-                        toggleObscure();
-                      },
-              disabledColor: Colors.grey[700],
+              onPressed: authController.isSubmitting ? null : toggleObscure,
               color: Colors.white,
-              icon:
-                  hintext == "Password"
-                      ? Icon(
-                        authController.passwordObscure
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
-                      )
-                      : Icon(
-                        authController.confirmPasswordObscure
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
-                      ),
+              icon: Icon(_getIcon(authController, hintext)),
             )
             : null,
   );
+}
+
+IconData _getIcon(AuthController c, String hint) {
+  if (hint == "Current Password") {
+    return c.currentPasswordObscure
+        ? Icons.visibility_off_outlined
+        : Icons.visibility_outlined;
+  } else if (hint == "New Password") {
+    return c.newPasswordObscure
+        ? Icons.visibility_off_outlined
+        : Icons.visibility_outlined;
+  } else {
+    return c.confirmPasswordObscure
+        ? Icons.visibility_off_outlined
+        : Icons.visibility_outlined;
+  }
 }

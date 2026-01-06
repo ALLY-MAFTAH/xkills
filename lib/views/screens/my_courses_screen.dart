@@ -277,7 +277,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            !myCourse.isPaid! ? "Purchased".tr : "Free".tr,
+                            myCourse.isPaid! ? "Purchased".tr : "Free".tr,
                             style: const TextStyle(
                               color: Color(0xFFE6C068),
                               fontSize: 12,
@@ -299,7 +299,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
 
   Widget _buildEmptyMyCoursesContent(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.7,
+      height: MediaQuery.of(context).size.height * 0.5,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -308,7 +308,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
             const SizedBox(height: 15),
             Text(
               "You haven't enrolled to any course yet.".tr,
-              style: TextStyle(color: Colors.white70, fontSize: 18),
+              style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
             const SizedBox(height: 20),
             TextButton(
@@ -320,7 +320,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
               },
               child: Text(
                 "Browse Courses".tr,
-                style: TextStyle(color: const Color(0xFFE6C068), fontSize: 16),
+                style: TextStyle(color: const Color(0xFFE6C068), fontSize: 14),
               ),
             ),
           ],

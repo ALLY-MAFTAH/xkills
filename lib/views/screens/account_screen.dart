@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import '../../components/toasts.dart';
+import '../../includes/auth_inputs_decoration.dart';
 import '/components/slide_animations.dart';
 import '/enums/enums.dart';
 import '../../controllers/auth_controller.dart';
@@ -28,6 +30,7 @@ class _AccountScreenState extends State<AccountScreen> {
   bool isInEditMode = false;
   final ImagePicker _picker = ImagePicker();
   final FocusNode phoneFocusNode = FocusNode();
+  GlobalKey<FormState> changePasswordFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -53,7 +56,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   Future<void> _refreshData() async {
     authController.nameEditController.text = thisUser?.name ?? '';
-    await authController.updateProfile();
+    await authController.getUserData();
     _loadInitialData();
     if (mounted) {
       setState(() {});
@@ -62,7 +65,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   void _showImageSourceOptions() async {
     Get.bottomSheet(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.secondaryColor,
       isScrollControlled: true,
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -72,19 +75,16 @@ class _AccountScreenState extends State<AccountScreen> {
               runSpacing: 20,
               children: [
                 ListTile(
-                  leading: Icon(
-                    Icons.photo_library,
-                    color: AppColors.secondaryColor,
-                  ),
+                  leading: Icon(Icons.photo_library, color: Colors.white),
                   title: Text(
                     'Choose From Gallery'.tr,
                     style: TextStyle(
-                      color: AppColors.secondaryColor,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
-                  tileColor: AppColors.secondaryColor.withOpacity(.2),
+                  tileColor: Colors.white.withOpacity(.1),
                   shape: ShapeBorder.lerp(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -105,17 +105,14 @@ class _AccountScreenState extends State<AccountScreen> {
                   },
                 ),
                 ListTile(
-                  tileColor: AppColors.secondaryColor.withOpacity(.2),
-                  leading: Icon(
-                    Icons.camera_alt,
-                    color: AppColors.secondaryColor,
-                  ),
+                  tileColor: Colors.white.withOpacity(.1),
+                  leading: Icon(Icons.camera_alt, color: Colors.white),
                   title: Text(
                     'Capture Using Camera'.tr,
                     style: TextStyle(
-                      color: AppColors.secondaryColor,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
                   shape: ShapeBorder.lerp(
@@ -138,6 +135,269 @@ class _AccountScreenState extends State<AccountScreen> {
                   },
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _changePasswordDialog() async {
+    Get.bottomSheet(
+      backgroundColor: AppColors.secondaryColor,
+      isScrollControlled: true,
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Form(
+              key: changePasswordFormKey,
+              child: Center(
+                child: SingleChildScrollView(
+                  child: GetBuilder<AuthController>(
+                    builder: (authController) {
+                      return Column(
+                        children: [
+                          Center(
+                            child: Text(
+                              'Change Password'.tr,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            height: 55,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 5,
+                            ),
+                            child: TextFormField(
+                              style: TextStyle(
+                                color:
+                                    authController.isLoading
+                                        ? Colors.grey[700]
+                                        : Colors.white,
+                                fontSize: 12,
+                              ),
+                              enabled: !authController.isLoading,
+                              keyboardType: TextInputType.text,
+                              cursorColor: Colors.white,
+                              controller:
+                                  authController.currentPasswordController,
+                              onSaved: (input) {
+                                setState(() {
+                                  authController
+                                      .currentPasswordController
+                                      .text = input as String;
+                                });
+                              },
+                              obscureText:
+                                  authController.currentPasswordObscure,
+                              decoration: getInputDecoration(
+                                authController,
+                                'Current Password',
+                                () {
+                                  authController.currentPasswordObscure =
+                                      !authController.currentPasswordObscure;
+                                  authController.update();
+                                },
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 55,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 5,
+                            ),
+                            child: TextFormField(
+                              style: TextStyle(
+                                color:
+                                    authController.isLoading
+                                        ? Colors.grey[700]
+                                        : Colors.white,
+                                fontSize: 12,
+                              ),
+                              enabled: !authController.isLoading,
+                              keyboardType: TextInputType.text,
+                              cursorColor: Colors.white,
+                              controller: authController.newPasswordController,
+                              onSaved: (input) {
+                                setState(() {
+                                  authController.newPasswordController.text =
+                                      input as String;
+                                });
+                              },
+                              obscureText: authController.newPasswordObscure,
+                              decoration: getInputDecoration(
+                                authController,
+                                'New Password',
+                                () {
+                                  authController.newPasswordObscure =
+                                      !authController.newPasswordObscure;
+                                  authController.update();
+                                },
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 55,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 5,
+                            ),
+                            child: TextFormField(
+                              style: TextStyle(
+                                color:
+                                    authController.isLoading
+                                        ? Colors.grey[700]
+                                        : Colors.white,
+                                fontSize: 12,
+                              ),
+                              enabled: !authController.isLoading,
+                              keyboardType: TextInputType.text,
+                              cursorColor: Colors.white,
+                              controller:
+                                  authController.confirmPasswordController,
+                              onSaved: (input) {
+                                setState(() {
+                                  authController
+                                      .confirmPasswordController
+                                      .text = input as String;
+                                });
+                              },
+                              obscureText:
+                                  authController.confirmPasswordObscure,
+                              decoration: getInputDecoration(
+                                authController,
+                                'Confirm Password',
+                                () {
+                                  authController.confirmPasswordObscure =
+                                      !authController.confirmPasswordObscure;
+                                  authController.update();
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 5,
+                            ),
+                            child: Center(
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        gradient: const LinearGradient(
+                                          colors: [
+                                            AppColors.primaryColor,
+                                            AppColors.secondaryColor,
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  MaterialButton(
+                                    onPressed:
+                                        authController.isLoading
+                                            ? null
+                                            : () {
+                                              if (authController
+                                                  .currentPasswordController
+                                                  .text
+                                                  .isEmpty) {
+                                                errorToast(
+                                                  "Current Password Field Cannot Be Empty"
+                                                      .tr,
+                                                );
+                                              }
+                                              if (authController
+                                                  .newPasswordController
+                                                  .text
+                                                  .isEmpty) {
+                                                errorToast(
+                                                  "New Password Field Cannot Be Empty"
+                                                      .tr,
+                                                );
+                                              } else if (authController
+                                                  .confirmPasswordController
+                                                  .text
+                                                  .isEmpty) {
+                                                errorToast(
+                                                  "Confirm Password Field Cannot Be Empty"
+                                                      .tr,
+                                                );
+                                              } else if (authController
+                                                      .newPasswordController
+                                                      .text
+                                                      .trim() !=
+                                                  authController
+                                                      .confirmPasswordController
+                                                      .text
+                                                      .trim()) {
+                                                errorToast(
+                                                  "Passwords Do Not Match".tr,
+                                                );
+                                              } else {
+                                                setState(() {
+                                                  authController
+                                                      .changePassword();
+                                                });
+                                              }
+                                            },
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15,
+                                      vertical: 13,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadiusDirectional.circular(10),
+                                      side: BorderSide.none,
+                                    ),
+                                    child:
+                                        authController.isLoading
+                                            ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [customLoader()],
+                                            )
+                                            : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Change Password'.tr,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -200,7 +460,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 authController.addressEditController,
               ),
               _infoRow(
-                Icons.person,
+                Icons.settings_accessibility_sharp,
                 GetUtils.capitalize(thisUser!.role!),
                 InputType.normalText,
                 TextEditingController(text: ""),
@@ -212,8 +472,8 @@ class _AccountScreenState extends State<AccountScreen> {
 
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.white, width: 2),
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(color: AppColors.tertiaryColor, width: 1),
             boxShadow: [
               BoxShadow(
                 color: AppColors.tertiaryColor.withOpacity(0.3),
@@ -225,8 +485,7 @@ class _AccountScreenState extends State<AccountScreen> {
           child:
               authController.isUploading
                   ? SizedBox(width: 100, height: 100, child: customLoader())
-                  : ClipRRect(
-                    borderRadius: BorderRadius.circular(9),
+                  : ClipOval(
                     child:
                         thisUser?.photo != null && thisUser!.photo!.isNotEmpty
                             ? CachedNetworkImage(
@@ -251,8 +510,8 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
         ),
         Positioned(
-          right: Get.width / 3.1,
-          top: 78,
+          right: Get.width / 3,
+          top: 65,
           child:
               authController.isUploading
                   ? SizedBox.shrink()
@@ -296,72 +555,152 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
         ),
         Align(
-          alignment: Alignment.centerRight,
-          child: Container(
-            margin: const EdgeInsets.only(top: 60, right: 10),
-            width: 70,
-            height: 32,
-            child: Center(
-              child: Card(
-                margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                color: Colors.white.withOpacity(0.08),
-                child: Center(
-                  child: ListTile(
-                    minTileHeight: 27,
-                    onTap:
-                        authController.isSubmitting
-                            ? null
-                            : () async {
-                              if (isInEditMode) {
-                                await authController.updateProfile();
-                                _loadInitialData();
-                              }
-                              isInEditMode = !isInEditMode;
-                              print(isInEditMode);
-                              setState(() {});
-                            },
-                    shape: ShapeBorder.lerp(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      0,
-                    ),
-                    contentPadding: EdgeInsets.zero,
-                    title:
-                        authController.isSubmitting
-                            ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                customLoader(
-                                  radius: 10,
-                                  color: AppColors.tertiaryColor,
+          alignment: Alignment.centerLeft,
+          child:
+              authController.isSubmitting || !isInEditMode
+                  ? Container()
+                  : LeftRightSlide(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 60, left: 10),
+                      width: 70,
+                      height: 32,
+                      child: Center(
+                        child: Card(
+                          margin: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          color: Colors.white.withOpacity(0.08),
+                          child: Center(
+                            child: ListTile(
+                              minTileHeight: 27,
+                              onTap:
+                                  authController.isSubmitting
+                                      ? null
+                                      : () async {
+                                        authController.nameEditController
+                                            .clear();
+                                        authController.phoneEditController
+                                            .clear();
+                                        authController.emailEditController
+                                            .clear();
+                                        authController.addressEditController
+                                            .clear();
+                                        authController.nameEditController.text =
+                                            thisUser?.name ?? '';
+                                        authController
+                                            .phoneEditController
+                                            .text = thisUser?.phone ?? '';
+                                        authController
+                                            .emailEditController
+                                            .text = thisUser?.email ?? '';
+                                        authController
+                                            .addressEditController
+                                            .text = thisUser?.address ?? '';
+                                        authController.update();
+                                        isInEditMode = false;
+                                        setState(() {});
+                                      },
+                              shape: ShapeBorder.lerp(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
-                              ],
-                            )
-                            : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                if (!isInEditMode)
-                                  Icon(
-                                    FontAwesomeIcons.edit,
-                                    color: AppColors.tertiaryColor,
-                                    size: 12,
-                                  ),
-                                Text(
-                                  isInEditMode ? "Save".tr : "Edit".tr,
-                                  style: TextStyle(
-                                    color: AppColors.tertiaryColor,
-                                    fontSize: 12,
-                                  ),
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
-                              ],
+                                0,
+                              ),
+                              contentPadding: EdgeInsets.zero,
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    "Cancel".tr,
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: RightLeftSlide(
+            child: Container(
+              margin: const EdgeInsets.only(top: 60, right: 10),
+              width: 70,
+              height: 32,
+              child: Center(
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  color: Colors.white.withOpacity(0.08),
+                  child: Center(
+                    child: ListTile(
+                      minTileHeight: 27,
+                      onTap:
+                          authController.isSubmitting
+                              ? null
+                              : () async {
+                                if (isInEditMode) {
+                                  await authController.updateProfile();
+                                  _loadInitialData();
+                                }
+                                isInEditMode = !isInEditMode;
+                                print(isInEditMode);
+                                setState(() {});
+                              },
+                      shape: ShapeBorder.lerp(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        0,
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      title:
+                          authController.isSubmitting
+                              ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  customLoader(
+                                    radius: 10,
+                                    color: AppColors.tertiaryColor,
+                                  ),
+                                ],
+                              )
+                              : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  if (!isInEditMode)
+                                    Icon(
+                                      FontAwesomeIcons.edit,
+                                      color: AppColors.tertiaryColor,
+                                      size: 12,
+                                    ),
+                                  Text(
+                                    isInEditMode ? "Save".tr : "Edit".tr,
+                                    style: TextStyle(
+                                      color: AppColors.tertiaryColor,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                    ),
                   ),
                 ),
               ),
@@ -521,7 +860,10 @@ class _AccountScreenState extends State<AccountScreen> {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white,
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 8.0,
+                      horizontal: 12,
+                    ),
                     margin: EdgeInsets.only(right: 10),
                     child: Text(
                       "DONE",
@@ -552,9 +894,7 @@ class _AccountScreenState extends State<AccountScreen> {
         body: GestureDetector(
           onTap: () {
             isInEditMode = false;
-            setState(() {
-              
-            });
+            setState(() {});
           },
           child: Container(
             decoration: BoxDecoration(
@@ -579,7 +919,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       automaticallyImplyLeading: false,
                       flexibleSpace: Container(),
                     ),
-          
+
                     SliverList(
                       delegate: SliverChildListDelegate([
                         Padding(
@@ -600,7 +940,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   SizedBox(height: 10),
                                   _buildProfileCard(),
                                   const SizedBox(height: 25),
-          
+
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -613,21 +953,23 @@ class _AccountScreenState extends State<AccountScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 12),
-          
+
                                   _buildActionCard(
                                     title: 'Change Password'.tr,
                                     icon: Icons.lock_outline,
-                                    onTap: () {},
+                                    onTap: () {
+                                      _changePasswordDialog();
+                                    },
                                   ),
-          
+
                                   _buildActionCard(
                                     title: 'Payment History'.tr,
                                     icon: Icons.history,
                                     onTap: () {},
                                   ),
-          
+
                                   const SizedBox(height: 30),
-          
+
                                   Card(
                                     color: Colors.red.withOpacity(0.12),
                                     shape: RoundedRectangleBorder(
@@ -637,10 +979,14 @@ class _AccountScreenState extends State<AccountScreen> {
                                     child: ListTile(
                                       shape: ShapeBorder.lerp(
                                         RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
                                         ),
                                         RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
                                         ),
                                         0,
                                       ),
@@ -661,7 +1007,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                       onTap: () => handleLogout(context),
                                     ),
                                   ),
-          
+
                                   const SizedBox(height: 50),
                                 ],
                               );

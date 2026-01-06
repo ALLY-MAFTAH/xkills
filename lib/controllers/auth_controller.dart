@@ -20,7 +20,9 @@ class AuthController extends GetxController {
   bool isForgotPassword = false;
   GetStorage storage = GetStorage();
 
+  bool currentPasswordObscure = true;
   bool passwordObscure = true;
+  bool newPasswordObscure = true;
   bool confirmPasswordObscure = true;
 
   final TextEditingController nameController = TextEditingController();
@@ -28,7 +30,8 @@ class AuthController extends GetxController {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController resetCodeController = TextEditingController();
 
-  final TextEditingController oldPasswordController = TextEditingController();
+  final TextEditingController currentPasswordController =
+      TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
@@ -137,7 +140,7 @@ class AuthController extends GetxController {
 
       final responseData = await HttpService.sendHttpRequest(
         RequestType.POST,
-        Endpoints.forgotPassowrd,
+        Endpoints.forgotPassword,
         {"email": email},
         isAuthRequest: false,
       );
@@ -163,9 +166,6 @@ class AuthController extends GetxController {
   }
 
   Future<void> getUserData() async {
-    isSubmitting = true;
-    update();
-
     try {
       final responseData = await HttpService.sendHttpRequest(
         RequestType.POST,
@@ -173,17 +173,12 @@ class AuthController extends GetxController {
         {},
         isAuthRequest: true,
       );
-
       if (responseData == null) return;
-
       User authUser = User.fromJson(responseData['user']);
       Auth().saveAuthUser(authUser);
-
-      successToast("Profile Updated Successfully".tr);
     } catch (e) {
       errorToast(e.toString());
     } finally {
-      isSubmitting = false;
       update();
     }
   }
@@ -398,57 +393,48 @@ class AuthController extends GetxController {
   //   }
   // }
 
-  // Future<void> changePassword() async {
-  //   isSubmitting = true;
-  //   update();
-  //   try {
-  //     if (confirmPasswordController.text != newPasswordController.text) {
-  //       confirmPasswordHasError = true;
-  //       isSubmitting = false;
-  //       update();
-  //       errorToast("passwords_not_match".tr);
-  //     } else {
-  //       confirmPasswordHasError = false;
-  //       await Future.delayed(Duration(seconds: 1));
-  //       int staffId = Auth().user!.id!;
-  //       String oldPassword = oldPasswordController.text.trim();
-  //       String newPassword = newPasswordController.text.trim();
-  //       final responseData = await HttpService.sendHttpRequest(
-  //         RequestType.PATCH,
-  //         Endpoints.changePassword,
-  //         {
-  //           "staffid": staffId,
-  //           "staffpassword": newPassword,
-  //           "oldpassword": oldPassword,
-  //         },
-  //         false,
-  //       );
-  //       print(responseData['message']);
-  //       if (responseData['success'] == true) {
-  //         print(responseData['data']);
-  //         oldPasswordController.clear();
-  //         newPasswordController.clear();
-  //         confirmPasswordController.clear();
-  //         isSubmitting = false;
-  //         update();
-  //         Get.back();
-  //         successToast("pass_change_success".tr);
-  //       } else {
-  //         isSubmitting = false;
-  //         update();
-  //         errorToast(responseData['message'].toString());
-  //       }
-  //     }
-  //   } catch (ex) {
-  //     isSubmitting = false;
-  //     update();
-  //     print(ex.toString());
-  //     errorToast(ex.toString());
-  //   } finally {
-  //     isSubmitting = false;
-  //     update();
-  //   }
-  // }
+  Future<void> changePassword() async {
+    isLoading = true;
+    update();
+    try {
+      String currentPassword = currentPasswordController.text.trim();
+      String newPassword = newPasswordController.text.trim();
+      String confirmPassword = confirmPasswordController.text.trim();
+      if (confirmPassword != newPassword) {
+        isLoading = false;
+        update();
+        errorToast("Passwords Do Not Match".tr);
+      } else {
+        await Future.delayed(Duration(seconds: 1));
+
+        final responseData = await HttpService.sendHttpRequest(
+          RequestType.POST,
+          Endpoints.changePassword,
+          {
+            "current_password": currentPassword,
+            "new_password": newPassword,
+            "confirm_password": confirmPassword,
+          },
+        );
+        if (responseData['status'] == "success") {
+          currentPasswordController.clear();
+          newPasswordController.clear();
+          confirmPasswordController.clear();
+
+          Get.back();
+          successToast("Password Changes Successful".tr);
+        } else {
+          errorToast(responseData['message'].toString());
+        }
+      }
+    } catch (ex) {
+      print(ex.toString());
+      errorToast(ex.toString());
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
 
   // Future<bool> isTokenStillAlive() async {
   //   final storage = GetStorage();
@@ -493,7 +479,7 @@ class AuthController extends GetxController {
   void clearFields() {
     emailController.clear();
     passwordController.clear();
-    oldPasswordController.clear();
+    currentPasswordController.clear();
     newPasswordController.clear();
     confirmPasswordController.clear();
     resetCodeController.clear();

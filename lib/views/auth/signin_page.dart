@@ -89,7 +89,7 @@ class _SigninPageState extends State<SigninPage> {
                               fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration('E-mail', () {}),
+                            decoration: getInputDecoration(authController,'E-mail', () {}),
                             cursorColor: Colors.white,
                             controller: authController.emailController,
                             keyboardType: TextInputType.emailAddress,
@@ -126,7 +126,7 @@ class _SigninPageState extends State<SigninPage> {
                               });
                             },
                             obscureText: authController.passwordObscure,
-                            decoration: getInputDecoration('Password', () {
+                            decoration: getInputDecoration(authController,'Password', () {
                                setState(() {
                                 authController.passwordObscure =
                                     !authController.passwordObscure;

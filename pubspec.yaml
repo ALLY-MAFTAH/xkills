@@ -40,7 +40,6 @@ dependencies:
   flutter_svg: ^2.0.9
   universal_html: ^2.2.4
   flutter_html: ^3.0.0-beta.2
-  # flutter_inappwebview: ^6.1.5
   webview_flutter: ^4.13.0
   logging: ^1.2.0
   video_player: ^2.9.1
@@ -52,6 +51,7 @@ dependencies:
   carousel_slider: ^5.1.1
   lottie: ^3.3.2
   liquid_glass_renderer: ^0.2.0-dev.4
+  keyboard_actions: "^4.1.0"
 
 
 

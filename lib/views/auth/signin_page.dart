@@ -14,7 +14,6 @@ import '../../theme/app_colors.dart';
 import 'signup_page.dart';
 
 class SigninPage extends StatefulWidget {
-  static const routeName = '/login';
   const SigninPage({super.key});
 
   @override
@@ -23,7 +22,7 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  // final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final authController = Get.put(AuthController());
 
@@ -54,7 +53,7 @@ class _SigninPageState extends State<SigninPage> {
             left: 0,
             right: 0,
 
-            child: appBrand(),
+            child: appLogo(),
           ),
           Form(
             key: loginFormKey,
@@ -68,7 +67,7 @@ class _SigninPageState extends State<SigninPage> {
                           child: Text(
                             'Sign In',
                             style: TextStyle(
-                              fontSize: 28,
+                              fontSize: 25,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
@@ -76,7 +75,7 @@ class _SigninPageState extends State<SigninPage> {
                         ),
                         const SizedBox(height: 10),
                         Container(
-                          height: 60,
+                          height: 55,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
                             vertical: 5,
@@ -87,7 +86,7 @@ class _SigninPageState extends State<SigninPage> {
                                   authController.isSubmitting
                                       ? Colors.grey[700]
                                       : Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
                             decoration: getInputDecoration('E-mail', () {}),
@@ -103,7 +102,7 @@ class _SigninPageState extends State<SigninPage> {
                           ),
                         ),
                         Container(
-                          height: 60,
+                          height: 55,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
                             vertical: 5,
@@ -114,7 +113,7 @@ class _SigninPageState extends State<SigninPage> {
                                   authController.isSubmitting
                                       ? Colors.grey[700]
                                       : Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
                             keyboardType: TextInputType.text,
@@ -128,13 +127,10 @@ class _SigninPageState extends State<SigninPage> {
                             },
                             obscureText: authController.passwordObscure,
                             decoration: getInputDecoration('Password', () {
-                              print("Clicked");
-                              print(authController.passwordObscure);
-                              setState(() {
+                               setState(() {
                                 authController.passwordObscure =
                                     !authController.passwordObscure;
                               });
-                              print(authController.passwordObscure);
                             }),
                           ),
                         ),
@@ -151,7 +147,7 @@ class _SigninPageState extends State<SigninPage> {
                                 'Forgot password? ',
                                 style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -168,7 +164,7 @@ class _SigninPageState extends State<SigninPage> {
                                   ' Reset',
                                   style: TextStyle(
                                     color: AppColors.tertiaryColor,
-                                    fontSize: 14,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ),
@@ -264,7 +260,7 @@ class _SigninPageState extends State<SigninPage> {
                                               Text(
                                                 'Sign In',
                                                 style: TextStyle(
-                                                  fontSize: 16,
+                                                  fontSize: 14,
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -287,7 +283,7 @@ class _SigninPageState extends State<SigninPage> {
                                 "Don't you have an account yet? ",
                                 style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -304,7 +300,7 @@ class _SigninPageState extends State<SigninPage> {
                                   ' Sign Up',
                                   style: TextStyle(
                                     color: AppColors.tertiaryColor,
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),

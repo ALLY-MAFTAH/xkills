@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import '/views/auth/signin_page.dart';
 import '/views/screens/tab_screen.dart';
 import '/components/validations.dart';
@@ -15,6 +16,7 @@ import '../services/http_service.dart';
 class AuthController extends GetxController {
   bool isLoading = false;
   bool isSubmitting = false;
+  bool isUploading = false;
   bool isForgotPassword = false;
   GetStorage storage = GetStorage();
 
@@ -30,6 +32,13 @@ class AuthController extends GetxController {
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+
+  final nameEditController = TextEditingController();
+  final phoneEditController = TextEditingController();
+  final emailEditController = TextEditingController();
+  final addressEditController = TextEditingController();
+
+  XFile? selectedProfileImage;
 
   int? temporaryUserId;
   String? temporaryUserToken;
@@ -48,7 +57,6 @@ class AuthController extends GetxController {
         RequestType.POST,
         Endpoints.login,
         {"email": convertToInternationalFormat(email), "password": password},
-        false,
         isAuthRequest: false,
       );
       if (responseData == null) return;
@@ -95,7 +103,6 @@ class AuthController extends GetxController {
           "password": password,
           'password_confirmation': confirmPassword,
         },
-        false,
         isAuthRequest: false,
       );
       if (responseData == null) return;
@@ -132,7 +139,6 @@ class AuthController extends GetxController {
         RequestType.POST,
         Endpoints.forgotPassowrd,
         {"email": email},
-        false,
         isAuthRequest: false,
       );
       if (responseData == null) return;
@@ -152,6 +158,98 @@ class AuthController extends GetxController {
       errorToast(ex.toString());
     } finally {
       isSubmitting = false;
+      update();
+    }
+  }
+
+  Future<void> getUserData() async {
+    isSubmitting = true;
+    update();
+
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.POST,
+        Endpoints.getUserData,
+        {},
+        isAuthRequest: true,
+      );
+
+      if (responseData == null) return;
+
+      User authUser = User.fromJson(responseData['user']);
+      Auth().saveAuthUser(authUser);
+
+      successToast("Profile Updated Successfully".tr);
+    } catch (e) {
+      errorToast(e.toString());
+    } finally {
+      isSubmitting = false;
+      update();
+    }
+  }
+
+  Future<void> updateProfile() async {
+    isSubmitting = true;
+    update();
+
+    if (nameEditController.text.isEmpty || emailEditController.text.isEmpty) {
+      errorToast("Email or Name Cannot be Empty".tr);
+      isSubmitting = false;
+      update();
+      return;
+    }
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.POST,
+        Endpoints.updateProfile,
+        {
+          "name": nameEditController.text.trim(),
+          "phone": phoneEditController.text.trim(),
+          "email": emailEditController.text.trim(),
+          "address": addressEditController.text.trim(),
+        },
+        isAuthRequest: true,
+      );
+
+      if (responseData == null) return;
+
+      User authUser = User.fromJson(responseData['user']);
+      Auth().saveAuthUser(authUser);
+
+      successToast("Profile Updated Successfully".tr);
+    } catch (e) {
+      errorToast(e.toString());
+    } finally {
+      isSubmitting = false;
+      update();
+    }
+  }
+
+  Future<void> updateProfilePhoto() async {
+    isUploading = true;
+    update();
+
+    try {
+      final responseData = await HttpService().sendMultipartRequest(
+        url: Endpoints.updateProfile,
+        file: selectedProfileImage,
+        fields: {
+          "name": Auth().user!.name!,
+          "email": Auth().user!.email!,
+          "phone": Auth().user!.phone!,
+          "address": Auth().user!.address!,
+        },
+        method: RequestType.POST,
+      );
+
+      User authUser = User.fromJson(responseData['user']);
+      Auth().saveAuthUser(authUser);
+
+      successToast("Profile Photo Updated Successfully".tr);
+    } catch (e) {
+      errorToast(e.toString());
+    } finally {
+      isUploading = false;
       update();
     }
   }
@@ -400,5 +498,4 @@ class AuthController extends GetxController {
     confirmPasswordController.clear();
     resetCodeController.clear();
   }
-
 }

@@ -3,6 +3,7 @@
 enum InputType {
   NIDA,
   file,
+  address,
   email,
   phone,
   number,

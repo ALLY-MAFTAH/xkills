@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 class AppColors {
   static const Color primaryColor = Color.fromARGB(255, 5, 19, 19); // #071C1C

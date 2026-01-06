@@ -704,6 +704,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               builder: (context, cartSnapshot) {
                 if (cartSnapshot.connectionState == ConnectionState.waiting) {
                   return Container();
+                } else if (courseController.myCourses.any(
+                  (myCourse) => myCourse.id == widget.thisCourse.id,
+                )) {
+                  return Container();
                 } else if (!widget.thisCourse.isPaid!) {
                   return Container();
                 } else {

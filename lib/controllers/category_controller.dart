@@ -7,16 +7,16 @@ import '../models/sub_category.dart';
 import '../services/http_service.dart';
 
 class CategoryController extends GetxController {
-  Category? selectedCategory;
+  // Category? selectedCategory;
 
-  void selectCategory(int id) {
-    if (id == 0) {
-      selectedCategory = null;
-    } else {
-      selectedCategory = categories.firstWhere((category) => category.id == id);
-    }
-    update();
-  }
+  // void selectCategory(int id) {
+  //   if (id == 0) {
+  //     selectedCategory = null;
+  //   } else {
+  //     selectedCategory = categories.firstWhere((category) => category.id == id);
+  //   }
+  //   update();
+  // }
 
   Future<List<Category>>? categoriesFuture;
   List<Category> _categories = [];
@@ -33,7 +33,6 @@ class CategoryController extends GetxController {
         RequestType.GET,
         Endpoints.getCategories,
         {},
-        false,
       );
       if (responseData == null) return categories;
 
@@ -62,7 +61,6 @@ class CategoryController extends GetxController {
         RequestType.GET,
         Endpoints.getSubCategories,
         {},
-        false,
       );
       if (responseData == null) return subCategories;
 

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../components/custom_loader.dart';
-import '/controllers/payment_controller.dart';
 
 import '../../constants/app_brand.dart';
 import '../../theme/app_colors.dart';

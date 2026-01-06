@@ -56,7 +56,9 @@ Widget appBrand({
               ),
             ),
           ),
-        TopBottomSlide(child: Image.asset('assets/images/horizontal_logo.png', height: 38)),
+        TopBottomSlide(
+          child: Image.asset('assets/images/horizontal_logo.png', height: 38),
+        ),
         if (showCartButton)
           RightLeftSlide(
             child: InkWell(
@@ -124,4 +126,17 @@ Widget appBrand({
 
 String appName() {
   return "SkillsBank";
+}
+
+Widget appLogo({
+  VoidCallback? onCardPressed,
+  BuildContext? context,
+  bool hasBackButton = false,
+  bool showCartButton = true,
+}) {
+  return Center(
+    child: TopBottomSlide(
+      child: Image.asset('assets/images/horizontal_logo.png', height: 38),
+    ),
+  );
 }

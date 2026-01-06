@@ -543,16 +543,16 @@ class _HomeScreenState extends State<HomeScreen>
                                                         "${Endpoints.baseUrl}/public/${item.categoryLogo}",
                                                     isGolden: item.isGolden!,
                                                     onTap: () {
-                                                      categoryController
-                                                          .selectCategory(
-                                                            item.id!,
-                                                          );
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
                                                           builder:
-                                                              (_) =>
-                                                                  CoursesScreen(),
+                                                              (
+                                                                _,
+                                                              ) => CoursesScreen(
+                                                                selectedCategory:
+                                                                    item,
+                                                              ),
                                                         ),
                                                       );
                                                     },
@@ -595,13 +595,13 @@ class _HomeScreenState extends State<HomeScreen>
 
                                   InkWell(
                                     onTap: () {
-                                      categoryController.selectCategory(0);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder:
-                                              (context) =>
-                                                  const CoursesScreen(),
+                                              (context) => const CoursesScreen(
+                                                selectedCategory: null,
+                                              ),
                                         ),
                                       );
                                     },

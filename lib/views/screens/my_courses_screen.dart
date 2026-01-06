@@ -315,7 +315,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => CoursesScreen()),
+                  MaterialPageRoute(builder: (_) => CoursesScreen(selectedCategory: null,)),
                 );
               },
               child: Text(

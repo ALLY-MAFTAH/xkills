@@ -72,7 +72,6 @@ class CourseController extends GetxController {
         RequestType.GET,
         Endpoints.getAllPacks,
         {},
-        false,
       );
       if (responseData == null) return allPacks;
 
@@ -100,7 +99,6 @@ class CourseController extends GetxController {
         RequestType.GET,
         Endpoints.getMyPacks,
         {},
-        false,
       );
       if (responseData == null) return myPacks;
 
@@ -135,7 +133,6 @@ class CourseController extends GetxController {
         RequestType.GET,
         Endpoints.getOtherCourses,
         {},
-        false,
       );
       if (responseData == null) return allCourses;
 
@@ -163,7 +160,6 @@ class CourseController extends GetxController {
         RequestType.GET,
         Endpoints.getTopCourses,
         {},
-        false,
       );
       if (responseData == null) return topCourses;
 
@@ -191,7 +187,6 @@ class CourseController extends GetxController {
         RequestType.GET,
         Endpoints.getMyCourses,
         {},
-        false,
       );
       if (responseData == null) return _myCourses;
 
@@ -225,7 +220,6 @@ class CourseController extends GetxController {
         RequestType.GET,
         Endpoints.getCoursesByInstructor,
         {"instructor_id": id},
-        false,
       );
       if (responseData == null) return _instructorCourses;
 
@@ -254,7 +248,6 @@ class CourseController extends GetxController {
         RequestType.GET,
         Endpoints.getCartList,
         {},
-        false,
       );
       if (responseData == null) return cartList;
 
@@ -287,7 +280,6 @@ class CourseController extends GetxController {
         RequestType.GET,
         "${Endpoints.freeCourseEnroll}/$courseId",
         {},
-        false,
       );
       if (responseData == null) return false;
       print(responseData);
@@ -325,7 +317,6 @@ class CourseController extends GetxController {
         RequestType.GET,
         Endpoints.addOrRemoveCart,
         {"course_id": courseId},
-        false,
       );
 
       if (responseData == null) return "";

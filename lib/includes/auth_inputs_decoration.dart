@@ -31,8 +31,7 @@ InputDecoration getInputDecoration(String hintext, VoidCallback toggleObscure) {
     filled: true,
     hintStyle: TextStyle(
       color: Colors.grey,
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: 12,
     ),
     hintText: hintext,
     fillColor:

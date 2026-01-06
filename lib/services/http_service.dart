@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import '../constants/endpoints.dart';
 import '../enums/enums.dart';
 import 'package:http/http.dart' as http;
@@ -15,8 +16,7 @@ class HttpService {
   static Future<dynamic> sendHttpRequest(
     RequestType requestType,
     String url,
-    dynamic body,
-    bool isFirstLogin, {
+    dynamic body,{
     bool? isAuthRequest = true,
   }) async {
     print("URL: $url Request Type: $requestType Body: $body");
@@ -163,45 +163,53 @@ class HttpService {
 
   Future<dynamic> sendMultipartRequest({
     required String url,
-    required XFile file,
-    required String fieldName,
-    RequestType method = RequestType.PUT,
-    Map<String, String>? extraHeaders,
+    XFile? file,
+    required Map<String, String> fields,
+    String fileFieldName = 'photo',
+    RequestType method = RequestType.POST,
   }) async {
     try {
       final storage = GetStorage();
       final userToken = storage.read("userToken");
       final uri = Uri.parse('${Endpoints.baseUrl}/$url');
 
-      final request = http.MultipartRequest(method.name, uri)
-        ..headers.addAll({
-          'Authorization': 'Bearer $userToken',
-          'accept': 'application/json',
-          if (extraHeaders != null) ...extraHeaders,
-        });
-
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          fieldName,
-          file.path,
-          filename: file.name,
-          contentType: MediaType('image', 'jpeg'), // Change if needed
-        ),
-      );
+      final request =
+          http.MultipartRequest(method.name, uri)
+            ..headers.addAll({
+              'Authorization': 'Bearer $userToken',
+              'Accept': 'application/json',
+            })
+            ..fields.addAll(fields);
+      if (await hasNoInternet()) {
+        throw "Check Your Internet Connection";
+      }
+      if (file != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            fileFieldName,
+            file.path,
+            filename: file.name,
+            contentType: MediaType('image', 'jpeg'),
+          ).timeout(const Duration(seconds: 60)),
+        );
+      }
 
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
-      print(response.statusCode);
-      print(response.body);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
-      } else {
-        throw "Upload failed: ${response.statusCode}";
+      return _handleResponse(response);
+    } catch (ex) {
+      if (ex is TimeoutException) {
+        print("::::::::::::::::::::::::::");
+        print(ex.toString());
+        throw "Request timed out, please try again.".tr;
       }
-    } catch (e) {
-      print("Multipart Upload Error: $e");
-      throw e.toString();
+      if (ex is http.ClientException) {
+        print(ex.toString());
+        throw "Server not reached, please try again.".tr;
+      } else {
+        throw ex.toString();
+      }
     }
   }
 }

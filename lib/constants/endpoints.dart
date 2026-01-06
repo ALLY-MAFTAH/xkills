@@ -9,6 +9,8 @@ class Endpoints {
   static String signup = dotenv.env['SIGNUP']!;
   static String changePassowrd = dotenv.env['CHANGE_PASSWORD']!;
   static String forgotPassowrd = dotenv.env['FORGOT_PASSWORD']!;
+  static String getUserData = dotenv.env['GET_USER_DATA']!;
+  static String updateProfile = dotenv.env['UPDATE_USER_DATA']!;
   // Categories
   static String getCategories = dotenv.env['GET_CATEGORIES']!;
   static String getSubCategories = dotenv.env['GET_SUB_CATEGORIES']!;

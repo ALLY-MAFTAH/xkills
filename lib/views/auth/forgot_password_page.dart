@@ -78,7 +78,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             left: 0,
             right: 0,
 
-            child: appBrand(),
+            child: appLogo(),
           ),
           Form(
             key: loginFormKey,
@@ -92,7 +92,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           child: Text(
                             'Forgot Password',
                             style: TextStyle(
-                              fontSize: 28,
+                              fontSize: 25,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
@@ -101,7 +101,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         const SizedBox(height: 10),
 
                         Container(
-                          height: 60,
+                          height: 55,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
                             vertical: 5,
@@ -112,7 +112,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                   authController.isSubmitting
                                       ? Colors.grey[700]
                                       : Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
                             decoration: getInputDecoration('E-mail', () {}),
@@ -199,7 +199,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                               Text(
                                                 'Send',
                                                 style: TextStyle(
-                                                  fontSize: 16,
+                                                  fontSize: 14,
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -219,7 +219,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                             "Reset link will be sent to this email.",
                             style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 14,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

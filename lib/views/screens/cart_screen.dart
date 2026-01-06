@@ -10,6 +10,7 @@ import '../../controllers/course_controller.dart';
 import '../../models/course.dart';
 import '../../theme/app_colors.dart';
 import 'course_details_screen.dart';
+import 'courses_screen.dart';
 import 'payment_options_screen.dart';
 
 class CartScreen extends StatefulWidget {
@@ -200,11 +201,16 @@ class _CartScreenState extends State<CartScreen> {
             const SizedBox(height: 20),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CoursesScreen(selectedCategory: null),
+                  ),
+                );
               },
               child: Text(
-                "Browse Courses",
-                style: TextStyle(color: const Color(0xFFE6C068), fontSize: 16),
+                "Browse Courses".tr,
+                style: TextStyle(color: const Color(0xFFE6C068), fontSize: 14),
               ),
             ),
           ],

@@ -31,7 +31,6 @@ class SectionController extends GetxController {
         RequestType.GET,
         Endpoints.getSections,
         {"course_id": courseId},
-        false,
       );
       if (responseData == null) return sections;
 

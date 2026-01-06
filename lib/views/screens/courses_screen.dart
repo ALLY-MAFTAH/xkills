@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skillsbank/components/slide_animations.dart';
+import 'package:skillsbank/models/category.dart';
 import '../../components/custom_search.dart';
 import '../../controllers/category_controller.dart';
 import '../../theme/app_metrices.dart';
@@ -15,7 +15,8 @@ import '/models/course.dart';
 import '/theme/app_colors.dart';
 
 class CoursesScreen extends StatefulWidget {
-  const CoursesScreen({super.key});
+  final Category? selectedCategory;
+  const CoursesScreen({super.key,  this.selectedCategory});
 
   @override
   State<CoursesScreen> createState() => CoursesScreenState();
@@ -37,10 +38,10 @@ class CoursesScreenState extends State<CoursesScreen> {
   }
 
   void _loadInitialData() {
-    if (categoryController.selectedCategory != null) {
-      categoryTitle = "${categoryController.selectedCategory!.title!} ";
+    if (widget.selectedCategory != null) {
+      categoryTitle = "${widget.selectedCategory!.title!} ";
       courseController.allCoursesFuture = courseController.getCoursesByCategory(
-        categoryController.selectedCategory!.id!,
+        widget.selectedCategory!.id!,
       );
     } else {
       courseController.allCoursesFuture = courseController.getAllCourses();
@@ -65,7 +66,7 @@ class CoursesScreenState extends State<CoursesScreen> {
         extendBody: true,
         body: Stack(
           children: [
-            categoryController.selectedCategory!.isGolden!
+            widget.selectedCategory!=null&&widget.selectedCategory!.isGolden!
                 ? Transform.rotate(
                   angle: pi, // 90 degrees in radians
                   child: Image.asset(
@@ -75,21 +76,17 @@ class CoursesScreenState extends State<CoursesScreen> {
                     width: double.infinity,
                   ),
                 )
-                : Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.secondaryColor,
-                        AppColors.primaryColor,
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                  ),
+                :
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColors.secondaryColor, AppColors.primaryColor],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
                 ),
+              ),
+            ),
 
-            // 🌈 Content
-            // if("a"=="v")
             SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
@@ -225,9 +222,9 @@ class CoursesScreenState extends State<CoursesScreen> {
                                 return GridCourseCard(
                                   thisCourse: filteredCourses[index],
                                   isGolden:
-                                      categoryController.selectedCategory !=
+                                      widget.selectedCategory !=
                                               null
-                                          ? categoryController
+                                          ? widget
                                               .selectedCategory!
                                               .isGolden!
                                           : false,
@@ -266,7 +263,7 @@ class CoursesScreenState extends State<CoursesScreen> {
               selected
                   ? LinearGradient(
                     colors:
-                        categoryController.selectedCategory!.isGolden!
+                       widget.selectedCategory!=null&& widget.selectedCategory!.isGolden!
                             ? [
                               AppColors.goldenColor,
                               AppColors.goldenColor.withOpacity(.2),
@@ -281,7 +278,7 @@ class CoursesScreenState extends State<CoursesScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             side: BorderSide(
               color:
-                  categoryController.selectedCategory!.isGolden!
+                 widget.selectedCategory!=null&& widget.selectedCategory!.isGolden!
                       ? AppColors.goldenColor
                       : Colors.grey,
               width: 0.5,

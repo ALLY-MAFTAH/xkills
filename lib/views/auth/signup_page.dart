@@ -76,7 +76,7 @@ class _SignupPageState extends State<SignupPage> {
             left: 0,
             right: 0,
 
-            child: appBrand(),
+            child: appLogo(),
           ),
           Form(
             key: loginFormKey,
@@ -90,7 +90,7 @@ class _SignupPageState extends State<SignupPage> {
                           child: Text(
                             'Sign Up',
                             style: TextStyle(
-                              fontSize: 28,
+                              fontSize: 25,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
@@ -98,7 +98,7 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                         const SizedBox(height: 10),
                         Container(
-                          height: 60,
+                          height: 55,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
                             vertical: 5,
@@ -109,7 +109,7 @@ class _SignupPageState extends State<SignupPage> {
                                   authController.isSubmitting
                                       ? Colors.grey[700]
                                       : Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
                             decoration: getInputDecoration('Full Name', () {}),
@@ -125,7 +125,7 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                         ),
                         Container(
-                          height: 60,
+                          height: 55,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
                             vertical: 5,
@@ -136,7 +136,7 @@ class _SignupPageState extends State<SignupPage> {
                                   authController.isSubmitting
                                       ? Colors.grey[700]
                                       : Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
                             decoration: getInputDecoration('E-mail', () {}),
@@ -152,7 +152,7 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                         ),
                         Container(
-                          height: 60,
+                          height: 55,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
                             vertical: 5,
@@ -163,7 +163,7 @@ class _SignupPageState extends State<SignupPage> {
                                   authController.isSubmitting
                                       ? Colors.grey[700]
                                       : Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
                             keyboardType: TextInputType.text,
@@ -185,7 +185,7 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                         ),
                         Container(
-                          height: 60,
+                          height: 55,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
                             vertical: 5,
@@ -196,7 +196,7 @@ class _SignupPageState extends State<SignupPage> {
                                   authController.isSubmitting
                                       ? Colors.grey[700]
                                       : Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
                             keyboardType: TextInputType.text,
@@ -326,7 +326,7 @@ class _SignupPageState extends State<SignupPage> {
                                               Text(
                                                 'Sign Up',
                                                 style: TextStyle(
-                                                  fontSize: 16,
+                                                  fontSize: 14,
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -348,7 +348,7 @@ class _SignupPageState extends State<SignupPage> {
                                 "Already have an account? ",
                                 style: TextStyle(
                                   color: Colors.grey,
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -360,7 +360,7 @@ class _SignupPageState extends State<SignupPage> {
                                   ' Sign In',
                                   style: TextStyle(
                                     color: AppColors.tertiaryColor,
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),

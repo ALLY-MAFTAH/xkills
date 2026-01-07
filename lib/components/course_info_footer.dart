@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/course_controller.dart';
 import '../includes/ratings.dart';
 import '../models/course.dart';
 import '/theme/app_colors.dart'; // Ensure this path is correct
@@ -13,9 +15,12 @@ class CourseInfoFooter extends StatelessWidget {
     required this.onBookmarkPressed,
   });
 
- 
   @override
   Widget build(BuildContext context) {
+    final courseController = Get.put(CourseController());
+    bool hasEnrolled = courseController.myCourses.any(
+      (course) => course.id == thisCourse.id,
+    );
     return Container(
       color: AppColors.secondaryColor,
       child: Stack(
@@ -71,10 +76,16 @@ class CourseInfoFooter extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buildRatingStars(thisCourse.averageRating ?? 0.0),
+                    buildRatingStars(
+                      context,
+                      thisCourse.id!,
+                      hasEnrolled,
+                      thisCourse.averageRating ?? 0.0,
+                    ),
                     Text(
                       thisCourse.isPaid!
-                          ? thisCourse.discountFlag!&&thisCourse.discountedPrice != null
+                          ? thisCourse.discountFlag! &&
+                                  thisCourse.discountedPrice != null
                               ? '\$${thisCourse.discountedPrice}'
                               : '${thisCourse.price}'
                           : "Free",

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/course_controller.dart';
 import '../includes/ratings.dart';
 import '../models/course.dart';
 
@@ -14,6 +16,10 @@ class PackInfoFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final courseController = Get.put(CourseController());
+    bool hasEnrolled = courseController.myPacks.any(
+      (course) => course.id == thisPack.id,
+    );
     return Stack(
       children: [
         Column(
@@ -62,7 +68,12 @@ class PackInfoFooter extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                buildRatingStars(thisPack.averageRating ?? 0.0),
+                buildRatingStars(
+                  context,
+                  thisPack.id!,
+                  hasEnrolled,
+                  thisPack.averageRating ?? 0.0,
+                ),
               ],
             ),
           ],

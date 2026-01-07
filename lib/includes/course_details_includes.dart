@@ -29,7 +29,6 @@ Widget buildLessonItem({
 
   return GetBuilder<CourseController>(
     builder: (_) {
-    
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Container(
@@ -109,7 +108,7 @@ Widget buildLessonItem({
                   if (!userValidity)
                     IconButton(
                       style: IconButton.styleFrom(padding: EdgeInsets.zero),
-                      icon:  Icon(
+                      icon: Icon(
                         Icons.lock_outline_rounded,
                         color: AppColors.tertiaryColor,
                         size: 24,
@@ -355,7 +354,8 @@ List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
 
     Text(
       thisCourse.totalEnrollment != null
-          ? '${thisCourse.totalEnrollment} Students'
+          ? '${thisCourse.totalEnrollment} ${thisCourse.totalEnrollment == 1 ? "Student".tr 
+          : "Students".tr}'
           : 'N/A',
       style: TextStyle(
         fontWeight: FontWeight.bold,

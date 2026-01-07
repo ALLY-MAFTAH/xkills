@@ -30,5 +30,6 @@ class Endpoints {
   static String getSections = dotenv.env['GET_SECTIONS']!;
   static String getCartList = dotenv.env['CART_LIST']!;
   static String addOrRemoveCart = dotenv.env['TOGGLE_CART_ITEMS']!;
+  static String storeCourseRate = dotenv.env['STORE_COURSE_RATE']!;
   static String updateWatchHistory = dotenv.env['UPDATE_WATCH_HISTORY']!;
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:skillsbank/constants/auth_user.dart';
 import '/controllers/section_controller.dart';
 import '../components/toasts.dart';
 import '../constants/app_brand.dart';
@@ -337,6 +338,45 @@ class CourseController extends GetxController {
     }
 
     return "";
+  }
+
+  Future<void> storeCourseRate(
+    int courseId,
+    double rating,
+    String review,
+  ) async {
+    isLoading = true;
+    update();
+
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.POST,
+        Endpoints.storeCourseRate,
+        {
+          "user_id": Auth().user!.id,
+          "course_id": courseId,
+          "rating": rating, // now double (e.g. 3.5)
+          "review": review,
+        },
+      );
+
+      if (responseData == null) return;
+
+      bool returnedStatus = responseData['status'];
+      String message = responseData['message'];
+
+      if (returnedStatus != true) {
+        errorToast(message);
+        return;
+      } else {
+        successToast(message);
+      }
+    } catch (e) {
+      errorToast(e.toString());
+    } finally {
+      isLoading = false;
+      update();
+    }
   }
 
   void downloadCourse(int courseId) async {

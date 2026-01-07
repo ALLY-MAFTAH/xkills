@@ -57,10 +57,10 @@ class _GridPackCardState extends State<GridPackCard> {
                     SizedBox(height: 10),
                     GetBuilder<CourseController>(
                       builder: (courseController) {
-                        bool hasEnrollered = courseController.myPacks.any(
+                        bool hasEnrolled = courseController.myPacks.any(
                           (course) => course.id == widget.thisPack.id,
                         );
-                        if (hasEnrollered) {
+                        if (hasEnrolled) {
                           final isDownloading =
                               courseController.isDownloading[widget
                                   .thisPack

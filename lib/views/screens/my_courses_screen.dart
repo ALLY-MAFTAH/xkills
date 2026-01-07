@@ -87,7 +87,9 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => CourseDetailsScreen(thisCourse: course,)),
+            MaterialPageRoute(
+              builder: (_) => CourseDetailsScreen(thisCourse: course),
+            ),
           );
         },
         child: Stack(
@@ -242,6 +244,9 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                           ],
                         ),
                         buildRatingStars(
+                          context,
+                          myCourse.id!,
+                          true,
                           myCourse.averageRating ?? 0.0,
                           fontSize: 12,
                         ),
@@ -315,7 +320,9 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => CoursesScreen(selectedCategory: null,)),
+                  MaterialPageRoute(
+                    builder: (_) => CoursesScreen(selectedCategory: null),
+                  ),
                 );
               },
               child: Text(

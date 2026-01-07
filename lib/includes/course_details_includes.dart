@@ -4,6 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:skillsbank/includes/ratings.dart';
 import '/components/toasts.dart';
 import '../controllers/section_controller.dart';
 import '/components/custom_loader.dart';
@@ -337,8 +338,18 @@ Widget buildBuyButton(
   );
 }
 
-List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
+List<Widget> buildCourseSection(
+  BuildContext context,
+  Course thisCourse,
+  void Function() onSavedPressed,
+  Color color,
+  IconData iconData,
+) {
   final GlobalKey shareWidgetKey = GlobalKey();
+  final courseController = Get.put(CourseController());
+  bool hasEnrolled = courseController.myCourses.any(
+    (course) => course.id == thisCourse.id,
+  );
   return [
     Padding(
       padding: EdgeInsetsGeometry.symmetric(vertical: 10),
@@ -354,8 +365,7 @@ List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
 
     Text(
       thisCourse.totalEnrollment != null
-          ? '${thisCourse.totalEnrollment} ${thisCourse.totalEnrollment == 1 ? "Student".tr 
-          : "Students".tr}'
+          ? '${thisCourse.totalEnrollment} ${thisCourse.totalEnrollment == 1 ? "Student".tr : "Students".tr}'
           : 'N/A',
       style: TextStyle(
         fontWeight: FontWeight.bold,
@@ -377,57 +387,51 @@ List<Widget> buildCourseSection(BuildContext context, Course thisCourse) {
       },
     ),
     Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: TextButton.icon(
-            onPressed: () {
-              print("Save button pressed");
-            },
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-            ),
-            label: Text(
-              'Save',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            icon: Icon(Icons.bookmark_border, size: 20, color: Colors.white),
-          ),
+        buildRatingStars(
+          context,
+          thisCourse.id!,
+          hasEnrolled,
+          thisCourse.averageRating ?? 0.0,
+          fontSize: 14,
         ),
-        Expanded(
-          child: TextButton.icon(
-            key: shareWidgetKey,
-            onPressed: () {
-              final RenderBox? box =
-                  shareWidgetKey.currentContext?.findRenderObject()
-                      as RenderBox?;
-
-              Share.share(
-                'Check out this course from Skillsbank: ${thisCourse.title}\nBy: ${thisCourse.instructorName}\n\n${thisCourse.shortDescription}\n\nLink: ${thisCourse.shareableLink}',
-                sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-              );
-            },
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
+        TextButton(
+          onPressed: onSavedPressed,
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0),
             ),
-            icon: Icon(Icons.share_outlined, size: 20, color: Colors.white),
-            label: Text(
-              'Share',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+          ),
+        
+          child: Icon(iconData, size: 20, color: color),
+        ),
+        TextButton.icon(
+          key: shareWidgetKey,
+          onPressed: () {
+            final RenderBox? box =
+                shareWidgetKey.currentContext?.findRenderObject()
+                    as RenderBox?;
+        
+            Share.share(
+              'Check out this course from Skillsbank: ${thisCourse.title}\nBy: ${thisCourse.instructorName}\n\n${thisCourse.shortDescription}\n\nLink: ${thisCourse.shareableLink}',
+              sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+            );
+          },
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0),
+            ),
+          ),
+          icon: Icon(Icons.share_outlined, size: 20, color: Colors.white),
+          label: Text(
+            'Share',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ),

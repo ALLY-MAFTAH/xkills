@@ -46,7 +46,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   bool hasEnrolled = false;
   bool showVideoPlayer = false;
   Widget? nextPage;
-
+  bool isSaved = false;
   @override
   void initState() {
     // thisCourse = courseController.selectedCourse;
@@ -54,6 +54,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       widget.thisCourse.id!,
     );
     courseController.cartListFuture = courseController.getCartList();
+    courseController.savedCoursesFuture =
+        courseController.getSavedCourses();
+    isSaved = courseController.savedCourses.any(
+      (course) => course.id == widget.thisCourse.id,
+    );
     super.initState();
   }
 
@@ -350,7 +355,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ...buildCourseSection(context, widget.thisCourse),
+                          ...buildCourseSection(
+                            context,
+                            widget.thisCourse,
+                            () {
+                              isSaved = !isSaved;
+                              setState(() {});
+                              courseController.addOrRemoveSavedCourse(
+                                widget.thisCourse.id!,
+                              );
+                            },
+                            isSaved ? AppColors.tertiaryColor : Colors.white,
+                            isSaved
+                                ? Icons.bookmark_rounded
+                                : Icons.bookmark_outline,
+                          ),
                           FutureBuilder(
                             future: sectionController.sectionsFuture,
                             builder: (context, asyncSnapshot) {
@@ -781,7 +800,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: AppColors.secondaryColor,
-                    fontSize: 14
+                    fontSize: 14,
                   ),
                 ),
                 actions: [

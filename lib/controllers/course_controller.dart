@@ -43,6 +43,10 @@ class CourseController extends GetxController {
   List<Course> get cartList => _cartList;
   bool isLoading = false;
   Set<int> loadingCartIds = {};
+  Future<List<Course>>? savedCoursesFuture;
+  List<Course> _savedCourses = [];
+  List<Course> get savedCourses => _savedCourses;
+  Set<int> loadingCourseIds = {};
 
   Future<List<MyCourse>>? myPacksFuture;
   List<MyCourse> _myPacks = [];
@@ -377,6 +381,66 @@ class CourseController extends GetxController {
       isLoading = false;
       update();
     }
+  }
+
+  Future<String> addOrRemoveSavedCourse(int courseId) async {
+    loadingCourseIds.add(courseId);
+    update();
+
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.GET,
+        Endpoints.addOrRemoveSavedCourse,
+        {"course_id": courseId},
+      );
+
+      if (responseData == null) return "";
+
+      String returnedStatus = responseData['status'];
+
+      savedCoursesFuture = getSavedCourses();
+      await savedCoursesFuture;
+      update();
+
+      return returnedStatus;
+    } catch (e) {
+      print(e.toString());
+      errorToast(e.toString());
+    } finally {
+      loadingCourseIds.remove(courseId); // ✅ ONLY remove THIS item
+      update();
+    }
+
+    return "";
+  }
+
+  Future<List<Course>> getSavedCourses() async {
+    try {
+      final responseData = await HttpService.sendHttpRequest(
+        RequestType.GET,
+        Endpoints.getSavedCourses,
+        {},
+      );
+      if (responseData == null) return savedCourses;
+
+      final List fetchedSavedCourses = responseData;
+      _savedCourses = [];
+      if (fetchedSavedCourses.isNotEmpty) {
+        for (var savedCourse in fetchedSavedCourses) {
+          final calledDataSet = Course.fromJson(savedCourse);
+          _savedCourses.add(calledDataSet);
+        }
+      }
+      update();
+      return savedCourses;
+    } catch (e) {
+      print(e.toString());
+      errorToast(e.toString());
+    } finally {
+      isLoading = false;
+      update();
+    }
+    return savedCourses;
   }
 
   void downloadCourse(int courseId) async {

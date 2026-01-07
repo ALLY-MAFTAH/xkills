@@ -19,6 +19,8 @@ class Endpoints {
   static String getAllPacks = dotenv.env['GET_ALL_PACKS']!;
   static String getOtherPacks = dotenv.env['GET_OTHER_PACKS']!;
   static String getMyPacks = dotenv.env['GET_MY_PACKS']!;
+  static String getSavedCourses = dotenv.env['MY_WISH_LIST']!;
+  static String addOrRemoveSavedCourse = dotenv.env['TOGGLE_WISHLIST_ITEMS']!;
   // Courses
   static String getTopCourses = dotenv.env['GET_TOP_COURSES']!;
   static String getAllCourses = dotenv.env['GET_ALL_COURSES']!;

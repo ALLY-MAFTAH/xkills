@@ -38,8 +38,8 @@ class CategoryController extends GetxController {
 
       final List fetchedCategories = responseData;
 
-      if (fetchedCategories.isNotEmpty) {
         _categories = [];
+      if (fetchedCategories.isNotEmpty) {
         _subCategories = [];
         for (var category in fetchedCategories) {
           final calledDataSet = Category.fromJson(category);
@@ -66,8 +66,8 @@ class CategoryController extends GetxController {
 
       final List fetchedSubCategories = responseData;
 
-      if (fetchedSubCategories.isNotEmpty) {
         _subCategories = [];
+      if (fetchedSubCategories.isNotEmpty) {
         for (var subCategory in fetchedSubCategories) {
           final calledDataSet = SubCategory.fromJson(subCategory);
           _subCategories.add(calledDataSet);

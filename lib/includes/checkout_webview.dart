@@ -103,7 +103,7 @@ class _CompletePaymentWebViewState extends State<CompletePaymentWebView> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    top: topPadding + 35,
+                    top:  65,
                     left: 10,
                     right: 10,
                     bottom: 10,
@@ -112,7 +112,7 @@ class _CompletePaymentWebViewState extends State<CompletePaymentWebView> {
                     "Complete Card Payment".tr,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

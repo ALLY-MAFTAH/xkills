@@ -7,8 +7,10 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:skillsbank/components/slide_animations.dart';
+import 'package:vibration/vibration.dart';
 import '../../components/players/network_player_dialog.dart';
 import '../../components/players/youtube_player_dialog.dart';
+import '../../components/shake_widget.dart';
 import '/constants/app_brand.dart';
 import '../../models/lesson.dart';
 import '/components/toasts.dart';
@@ -37,6 +39,7 @@ class CourseDetailsScreen extends StatefulWidget {
 class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   final courseController = Get.put(CourseController());
   final sectionController = Get.put(SectionController());
+  bool _shakePayment = false;
 
   final bool _isNavigatingPreview = false;
   AsyncSnapshot<List<Section>> snapshot = AsyncSnapshot.withData(
@@ -44,9 +47,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     [],
   );
   bool hasEnrolled = false;
+  bool hasAccess = false;
+  bool isSaved = false;
   bool showVideoPlayer = false;
   Widget? nextPage;
-  bool isSaved = false;
   @override
   void initState() {
     // thisCourse = courseController.selectedCourse;
@@ -54,10 +58,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       widget.thisCourse.id!,
     );
     courseController.cartListFuture = courseController.getCartList();
-    courseController.savedCoursesFuture =
-        courseController.getSavedCourses();
+    courseController.savedCoursesFuture = courseController.getSavedCourses();
     isSaved = courseController.savedCourses.any(
       (course) => course.id == widget.thisCourse.id,
+    );
+    hasAccess = courseController.myCourses.any(
+      (myCourse) => myCourse.id == widget.thisCourse.id,
     );
     super.initState();
   }
@@ -176,7 +182,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                 color: AppColors.primaryColor,
                               ),
                               child: Text(
-                                "Free",
+                                "Free".tr,
                                 style: TextStyle(
                                   color: AppColors.tertiaryColor,
                                   fontWeight: FontWeight.bold,
@@ -263,8 +269,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                       color: Colors.white54,
                                                     ),
                                                     const SizedBox(height: 15),
-                                                    const Text(
-                                                      "Video URL is not available.",
+                                                     Text(
+                                                      "Video URL is not available.".tr,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -327,8 +333,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                       showVideoPlayer
                                           ? "Stop".tr
                                           : _isNavigatingPreview
-                                          ? 'Loading...'
-                                          : 'Watch Course Preview',
+                                          ? 'Loading....'.tr
+                                          : 'Watch Course Preview'.tr,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 12,
@@ -427,7 +433,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                   asyncSnapshot.data!.isEmpty) {
                                 return Center(
                                   child: Text(
-                                    'No section yet',
+                                    'No Lessons Yet.tr',
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 );
@@ -474,8 +480,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Text(
-                                          'Lessons in This Course',
+                                         Text(
+                                          'Lessons in This Course'.tr,
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
@@ -512,19 +518,20 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                 courseTitle:
                                                     widget.thisCourse.title!,
                                                 duration: lesson.duration!,
-                                                userValidity:
-                                                    lesson.userValidity!,
+                                                hasAccess: hasAccess,
                                                 gradient: lessonGradient,
                                                 screenWidth: screenWidth,
                                                 onPlayPressed: () {
-                                                  if (courseController.myCourses
+                                                  hasEnrolled = courseController
+                                                      .myCourses
                                                       .any(
                                                         (myCourse) =>
                                                             myCourse.id ==
                                                             widget
                                                                 .thisCourse
                                                                 .id,
-                                                      )) {
+                                                      );
+                                                  if (hasEnrolled) {
                                                     if (lesson.videoUrl !=
                                                             null &&
                                                         lesson.id != null) {
@@ -547,10 +554,35 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                   NoVideoUrl(),
                                                         ),
                                                       );
-                                                      print(
-                                                        "Lesson video URL is null",
-                                                      );
+                                                     
                                                     }
+                                                  } else if (widget
+                                                      .thisCourse
+                                                      .isPaid!) {
+                                                    errorToast(
+                                                      "This is a paid course. Please buy to access the lessons.".tr,
+                                                    );
+                                                    Vibration.vibrate(
+                                                      duration: 100,
+                                                    );
+
+                                                    setState(() {
+                                                      _shakePayment = true;
+                                                    });
+                                                    Future.delayed(
+                                                      const Duration(
+                                                        milliseconds: 450,
+                                                      ),
+                                                      () {
+                                                        if (mounted) {
+                                                          setState(
+                                                            () =>
+                                                                _shakePayment =
+                                                                    false,
+                                                          );
+                                                        }
+                                                      },
+                                                    );
                                                   } else {
                                                     openConfirmEnrollDialog(
                                                       "Play",
@@ -559,6 +591,33 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                   }
                                                 },
                                                 downloadUrl: lesson.videoUrl!,
+                                                unlockPressed: () {
+                                                  errorToast(
+                                                    "This is a paid course. Please buy to access the lessons."
+                                                        .tr,
+                                                  );
+                                                  Vibration.vibrate(
+                                                    duration: 100,
+                                                  );
+
+                                                  setState(() {
+                                                    _shakePayment = true;
+                                                  });
+                                                  Future.delayed(
+                                                    const Duration(
+                                                      milliseconds: 450,
+                                                    ),
+                                                    () {
+                                                      if (mounted) {
+                                                        setState(
+                                                          () =>
+                                                              _shakePayment =
+                                                                  false,
+                                                        );
+                                                      }
+                                                    },
+                                                  );
+                                                },
                                               );
                                             }).toList(),
                                       )
@@ -635,15 +694,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                             duration:
                                                                 lesson
                                                                     .duration!,
-                                                            userValidity:
-                                                                lesson
-                                                                    .userValidity!,
+                                                            hasAccess:
+                                                                hasAccess,
                                                             gradient:
                                                                 lessonGradient,
                                                             screenWidth:
                                                                 screenWidth,
                                                             onPlayPressed: () {
-                                                              if (courseController
+                                                              hasEnrolled = courseController
                                                                   .myCourses
                                                                   .any(
                                                                     (
@@ -654,7 +712,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                         widget
                                                                             .thisCourse
                                                                             .id,
-                                                                  )) {
+                                                                  );
+                                                              if (hasEnrolled) {
                                                                 if (lesson.videoUrl !=
                                                                         null &&
                                                                     lesson.id !=
@@ -684,10 +743,37 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                               NoVideoUrl(),
                                                                     ),
                                                                   );
-                                                                  print(
-                                                                    "Lesson video URL is null",
-                                                                  );
                                                                 }
+                                                              } else if (widget
+                                                                  .thisCourse
+                                                                  .isPaid!) {
+                                                                errorToast(
+                                                                  "This is a paid course. Please buy to access the lessons."
+                                                                      .tr,
+                                                                );
+                                                                Vibration.vibrate(
+                                                                  duration: 100,
+                                                                );
+
+                                                                setState(() {
+                                                                  _shakePayment =
+                                                                      true;
+                                                                });
+                                                                Future.delayed(
+                                                                  const Duration(
+                                                                    milliseconds:
+                                                                        450,
+                                                                  ),
+                                                                  () {
+                                                                    if (mounted) {
+                                                                      setState(
+                                                                        () =>
+                                                                            _shakePayment =
+                                                                                false,
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                );
                                                               } else {
                                                                 openConfirmEnrollDialog(
                                                                   "Play",
@@ -698,6 +784,35 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                             downloadUrl:
                                                                 lesson
                                                                     .videoUrl!,
+                                                            unlockPressed: () {
+                                                              errorToast(
+                                                                "This is a paid course. Please buy to access the lessons."
+                                                                    .tr,
+                                                              );
+                                                              Vibration.vibrate(
+                                                                duration: 100,
+                                                              );
+
+                                                              setState(() {
+                                                                _shakePayment =
+                                                                    true;
+                                                              });
+                                                              Future.delayed(
+                                                                const Duration(
+                                                                  milliseconds:
+                                                                      450,
+                                                                ),
+                                                                () {
+                                                                  if (mounted) {
+                                                                    setState(
+                                                                      () =>
+                                                                          _shakePayment =
+                                                                              false,
+                                                                    );
+                                                                  }
+                                                                },
+                                                              );
+                                                            },
                                                           );
                                                         }).toList(),
                                                   ),
@@ -732,38 +847,48 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                 } else {
                   return GetBuilder<CourseController>(
                     builder: (courseController) {
-                      return buildBuyButton(
-                        widget.thisCourse,
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) => PaymentOptionsScreen(
-                                  courseIds: [widget.thisCourse.id!],
-                                  totalAmount:
-                                      widget.thisCourse.priceForPayment!,
-                                ),
+                      return Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: ShakeWidget(
+                          shake: _shakePayment,
+                          child: buildBuyButton(
+                            widget.thisCourse,
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) => PaymentOptionsScreen(
+                                      courseIds: [widget.thisCourse.id!],
+                                      totalAmount:
+                                          widget.thisCourse.priceForPayment!,
+                                    ),
+                              ),
+                            ),
+                            () {
+                              if (!courseController.isLoading) {
+                                courseController
+                                    .addOrRemoveCart(widget.thisCourse.id!)
+                                    .then((status) {
+                                      if (status == "added") {
+                                        successToast("Course added to cart".tr);
+                                      } else if (status == "removed") {
+                                        successToast(
+                                          "Course removed from cart".tr,
+                                        );
+                                      }
+                                    });
+                              }
+                            },
+                            () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => CartScreen()),
+                              );
+                            },
                           ),
                         ),
-                        () {
-                          if (!courseController.isLoading) {
-                            courseController
-                                .addOrRemoveCart(widget.thisCourse.id!)
-                                .then((status) {
-                                  if (status == "added") {
-                                    successToast("Course added to cart".tr);
-                                  } else if (status == "removed") {
-                                    successToast("Course removed from cart".tr);
-                                  }
-                                });
-                          }
-                        },
-                        () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => CartScreen()),
-                          );
-                        },
                       );
                     },
                   );
@@ -786,19 +911,20 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               return AlertDialog(
                 backgroundColor: Colors.grey,
                 title: Text(
-                  'Confirm Enroll',
+                  'Confirm Enroll'.tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 16,
                     color: AppColors.secondaryColor,
                   ),
                 ),
                 content: Text(
                   playOrDownload == "Play"
                       ? 'By playing this lesson you confirm enrollment to this course'
-                      : 'By downloading this lesson you confirm enrollment to this course',
+                          .tr
+                      : 'By downloading this lesson you confirm enrollment to this course'
+                          .tr,
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
                     color: AppColors.secondaryColor,
                     fontSize: 14,
                   ),
@@ -861,8 +987,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     if (confirm == true) {
       if (hasEnrolled) {
         if (playOrDownload == "Play") {
-          print("Playyyyyy ::::::");
-
           if (lesson.videoUrl != null && lesson.id != null) {
             navigateToVideoPlayer(
               context: context,
@@ -875,13 +999,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               context,
               MaterialPageRoute(builder: (context) => NoVideoUrl()),
             );
-            print("Lesson video URL is null");
           }
         } else {
           print("Download ::::::");
         }
       } else {
-        errorToast("Failed to enroll, please try again");
+        errorToast("Failed to enroll, please try again".tr);
       }
       setState(() {});
     }

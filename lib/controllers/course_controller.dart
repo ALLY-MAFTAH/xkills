@@ -82,8 +82,8 @@ class CourseController extends GetxController {
 
       final List fetchedPacks = responseData;
 
-      if (fetchedPacks.isNotEmpty) {
         _allPacks = [];
+      if (fetchedPacks.isNotEmpty) {
         for (var pack in fetchedPacks) {
           final calledDataSet = Course.fromJson(pack);
 
@@ -109,8 +109,8 @@ class CourseController extends GetxController {
 
       final List fetchedPacks = responseData;
 
-      if (fetchedPacks.isNotEmpty) {
         _myPacks = [];
+      if (fetchedPacks.isNotEmpty) {
         for (var pack in fetchedPacks) {
           final calledDataSet = MyCourse.fromJson(pack);
 
@@ -143,8 +143,8 @@ class CourseController extends GetxController {
 
       final List fetchedCourses = responseData;
 
-      if (fetchedCourses.isNotEmpty) {
         _allCourses = [];
+      if (fetchedCourses.isNotEmpty) {
         for (var course in fetchedCourses) {
           final calledDataSet = Course.fromJson(course);
           _allCourses.add(calledDataSet);
@@ -170,8 +170,8 @@ class CourseController extends GetxController {
 
       final List fetchedCourses = responseData;
 
-      if (fetchedCourses.isNotEmpty) {
         _topCourses = [];
+      if (fetchedCourses.isNotEmpty) {
         for (var course in fetchedCourses) {
           final calledDataSet = Course.fromJson(course);
           _topCourses.add(calledDataSet);
@@ -229,8 +229,8 @@ class CourseController extends GetxController {
       if (responseData == null) return _instructorCourses;
 
       final List fetchedInstructorCourses = responseData;
-      if (fetchedInstructorCourses.isNotEmpty) {
         _instructorCourses = [];
+      if (fetchedInstructorCourses.isNotEmpty) {
         for (var course in fetchedInstructorCourses) {
           final calledDataSet = Course.fromJson(course);
           if (calledDataSet.categoryId != 1) {

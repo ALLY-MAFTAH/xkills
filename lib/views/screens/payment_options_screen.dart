@@ -167,7 +167,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                               isSelected:
                                   paymentController.selectedMethod ==
                                   PaymentMethod.CARD,
-                              title: "Pay by Card",
+                              title: "Pay by Card".tr,
                               alignment: MainAxisAlignment.spaceBetween,
                               options: [
                                 ServiceProvider(
@@ -206,8 +206,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                   "Phone Number ${paymentController.selectedMethod == PaymentMethod.MOBILE ? "For Payment" : ""}",
                                   style: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
                                   ),
                                 ),
                                 const SizedBox(height: 10),

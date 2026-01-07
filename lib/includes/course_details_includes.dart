@@ -4,8 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:skillsbank/includes/ratings.dart';
-import '/components/toasts.dart';
+import '/includes/ratings.dart';
 import '../controllers/section_controller.dart';
 import '/components/custom_loader.dart';
 import '/components/slide_animations.dart';
@@ -20,10 +19,11 @@ Widget buildLessonItem({
   required String sectionName,
   required String courseTitle,
   required String duration,
-  required bool userValidity,
+  required bool hasAccess,
   required Gradient gradient,
   required double screenWidth,
-  void Function()? onPlayPressed,
+  required void Function() onPlayPressed,
+  required void Function() unlockPressed,
   String? downloadUrl,
 }) {
   final sectionController = Get.put(SectionController());
@@ -40,7 +40,7 @@ Widget buildLessonItem({
             borderRadius: BorderRadius.circular(10),
           ),
           child: ListTile(
-            onTap: userValidity ? onPlayPressed : null,
+            onTap: onPlayPressed,
             minTileHeight: 0,
             contentPadding: EdgeInsets.zero,
             minVerticalPadding: 3,
@@ -55,7 +55,7 @@ Widget buildLessonItem({
                 padding: EdgeInsets.zero,
                 child: Icon(
                   Icons.play_arrow_rounded,
-                  color: userValidity ? Colors.white : Colors.grey,
+                  color: hasAccess ? Colors.white : Colors.grey,
                   size: 24,
                 ),
               ),
@@ -88,7 +88,7 @@ Widget buildLessonItem({
                     ),
                   ),
                   const SizedBox(width: 5),
-                  if (userValidity && downloadUrl != null)
+                  if (hasAccess && downloadUrl != null)
                     IconButton(
                       style: IconButton.styleFrom(padding: EdgeInsets.zero),
                       icon: Icon(
@@ -106,7 +106,7 @@ Widget buildLessonItem({
                         );
                       },
                     ),
-                  if (!userValidity)
+                  if (!hasAccess)
                     IconButton(
                       style: IconButton.styleFrom(padding: EdgeInsets.zero),
                       icon: Icon(
@@ -114,8 +114,7 @@ Widget buildLessonItem({
                         color: AppColors.tertiaryColor,
                         size: 24,
                       ),
-                      onPressed:
-                          () => infoToast("Please purchase to unlock.".tr),
+                      onPressed: () => unlockPressed(),
                     ),
                 ],
               ),
@@ -145,15 +144,7 @@ LinearGradient getLessonGradient(dynamic lesson) {
   return LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-    colors: [
-      // Conditional colors based on is_free or user_validity
-      lesson.isFree == true || lesson.userValidity == true
-          ? HexColor('#22695B')
-          : HexColor('#094A4F'),
-      lesson.isFree == true || lesson.userValidity == true
-          ? HexColor('#00403D')
-          : HexColor('#094A4F'),
-    ],
+    colors: [HexColor('#22695B'), HexColor('#094A4F')],
     stops: const [0.0, 1.0],
   );
 }
@@ -164,175 +155,168 @@ Widget buildBuyButton(
   void Function()? onAddToCartPressed,
   void Function()? onViewCartPressed,
 ) {
-  return Positioned(
-    left: 0,
-    right: 0,
-    bottom: 0,
-    child: BottomTopSlide(
-      child: Container(
-        height: Platform.isAndroid ? 85 : 100,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              AppColors.secondaryColor.withOpacity(0.2),
-              AppColors.secondaryColor.withOpacity(0.5),
-              AppColors.secondaryColor.withOpacity(0.8),
-              AppColors.secondaryColor,
-              AppColors.secondaryColor,
-              AppColors.secondaryColor,
-              AppColors.secondaryColor,
-              AppColors.secondaryColor,
-            ],
-            stops: const [0, 0.1, 0.2, 0.3, 1, 1, 1, 1, 1],
-          ),
+  return BottomTopSlide(
+    child: Container(
+      height: Platform.isAndroid ? 85 : 100,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.transparent,
+            AppColors.secondaryColor.withOpacity(0.2),
+            AppColors.secondaryColor.withOpacity(0.5),
+            AppColors.secondaryColor.withOpacity(0.8),
+            AppColors.secondaryColor,
+            AppColors.secondaryColor,
+            AppColors.secondaryColor,
+            AppColors.secondaryColor,
+            AppColors.secondaryColor,
+          ],
+          stops: const [0, 0.1, 0.2, 0.3, 1, 1, 1, 1, 1],
         ),
-        padding: EdgeInsets.only(
-          top: 25,
-          left: 12,
-          right: 12,
-          bottom: Platform.isAndroid ? 15 : 25,
-        ),
+      ),
+      padding: EdgeInsets.only(
+        top: 25,
+        left: 12,
+        right: 12,
+        bottom: Platform.isAndroid ? 15 : 25,
+      ),
 
-        child: GetBuilder<CourseController>(
-          builder: (courseController) {
-            final isLoading = courseController.loadingCartIds.contains(
-              thisCourse.id,
-            );
-            return Row(
-              spacing: 10,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onBuyPressed,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.tertiaryColor,
-                      surfaceTintColor: AppColors.tertiaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: EdgeInsets.all(2),
+      child: GetBuilder<CourseController>(
+        builder: (courseController) {
+          final isLoading = courseController.loadingCartIds.contains(
+            thisCourse.id,
+          );
+          return Row(
+            spacing: 10,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: onBuyPressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.tertiaryColor,
+                    surfaceTintColor: AppColors.tertiaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                    padding: EdgeInsets.all(2),
+                  ),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Buy ',
+                          style: const TextStyle(
+                            color: Color(0xFF071B1A),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          thisCourse.isPaid!
+                              ? thisCourse.discountFlag! &&
+                                      thisCourse.discountedPrice != null
+                                  ? '\$${thisCourse.discountedPrice}'
+                                  : '${thisCourse.price}'
+                              : "Free",
+                          style: const TextStyle(
+                            color: Color(0xFF071B1A),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        if (thisCourse.discountFlag!)
                           Text(
-                            'Buy ',
-                            style: const TextStyle(
-                              color: Color(0xFF071B1A),
+                            '${thisCourse.price}',
+                            style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              decoration:
+                                  TextDecoration
+                                      .lineThrough, // The strikethrough effect
+                              decorationColor: Colors.grey.withOpacity(0.9),
+                              decorationThickness: 2,
                             ),
                           ),
-                          const SizedBox(width: 5),
-                          Text(
-                            thisCourse.isPaid!
-                                ? thisCourse.discountFlag! &&
-                                        thisCourse.discountedPrice != null
-                                    ? '\$${thisCourse.discountedPrice}'
-                                    : '${thisCourse.price}'
-                                : "Free",
-                            style: const TextStyle(
-                              color: Color(0xFF071B1A),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          if (thisCourse.discountFlag!)
-                            Text(
-                              '${thisCourse.price}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                                decoration:
-                                    TextDecoration
-                                        .lineThrough, // The strikethrough effect
-                                decorationColor: Colors.grey.withOpacity(0.9),
-                                decorationThickness: 2,
-                              ),
-                            ),
-                        ],
-                      ),
+                      ],
                     ),
                   ),
                 ),
-                courseController.cartList.any(
-                      (item) => item.id == thisCourse.id,
-                    )
-                    ? ElevatedButton(
-                      onPressed: onViewCartPressed,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        padding: EdgeInsets.all(0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+              ),
+              courseController.cartList.any((item) => item.id == thisCourse.id)
+                  ? ElevatedButton(
+                    onPressed: onViewCartPressed,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                      padding: EdgeInsets.all(0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Center(
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Icon(
-                              Icons.shopping_cart_rounded,
-                              size: 30,
-                              color: AppColors.secondaryColor,
-                            ),
-                            Positioned(
-                              top: -2,
-                              left: 22,
-                              child: CircleAvatar(
-                                radius: 10,
-                                backgroundColor: AppColors.tertiaryColor,
-                                child: Text(
-                                  courseController.cartList.length.toString(),
-                                  style: const TextStyle(
-                                    color: AppColors.primaryColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                    ),
+                    child: Center(
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Icon(
+                            Icons.shopping_cart_rounded,
+                            size: 30,
+                            color: AppColors.secondaryColor,
+                          ),
+                          Positioned(
+                            top: -2,
+                            left: 22,
+                            child: CircleAvatar(
+                              radius: 10,
+                              backgroundColor: AppColors.tertiaryColor,
+                              child: Text(
+                                courseController.cartList.length.toString(),
+                                style: const TextStyle(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    )
-                    : ElevatedButton.icon(
-                      onPressed: onAddToCartPressed,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.tertiaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      icon:
-                          isLoading
-                              ? null
-                              : Icon(Icons.add_shopping_cart_rounded),
-                      label: Center(
-                        child:
-                            isLoading
-                                ? customLoader(color: AppColors.secondaryColor)
-                                : Text(
-                                  'Add to Cart',
-                                  style: const TextStyle(
-                                    color: Color(0xFF071B1A),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
+                          ),
+                        ],
                       ),
                     ),
-              ],
-            );
-          },
-        ),
+                  )
+                  : ElevatedButton.icon(
+                    onPressed: onAddToCartPressed,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.tertiaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    icon:
+                        isLoading
+                            ? null
+                            : Icon(Icons.add_shopping_cart_rounded),
+                    label: Center(
+                      child:
+                          isLoading
+                              ? customLoader(color: AppColors.secondaryColor)
+                              : Text(
+                                'Add to Cart',
+                                style: const TextStyle(
+                                  color: Color(0xFF071B1A),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                    ),
+                  ),
+            ],
+          );
+        },
       ),
     ),
   );
@@ -347,7 +331,7 @@ List<Widget> buildCourseSection(
 ) {
   final GlobalKey shareWidgetKey = GlobalKey();
   final courseController = Get.put(CourseController());
-  bool hasEnrolled = courseController.myCourses.any(
+  bool hasAccess = courseController.myCourses.any(
     (course) => course.id == thisCourse.id,
   );
   return [
@@ -392,7 +376,7 @@ List<Widget> buildCourseSection(
         buildRatingStars(
           context,
           thisCourse.id!,
-          hasEnrolled,
+          hasAccess,
           thisCourse.averageRating ?? 0.0,
           fontSize: 14,
         ),
@@ -404,16 +388,15 @@ List<Widget> buildCourseSection(
               borderRadius: BorderRadius.circular(0),
             ),
           ),
-        
+
           child: Icon(iconData, size: 20, color: color),
         ),
         TextButton.icon(
           key: shareWidgetKey,
           onPressed: () {
             final RenderBox? box =
-                shareWidgetKey.currentContext?.findRenderObject()
-                    as RenderBox?;
-        
+                shareWidgetKey.currentContext?.findRenderObject() as RenderBox?;
+
             Share.share(
               'Check out this course from Skillsbank: ${thisCourse.title}\nBy: ${thisCourse.instructorName}\n\n${thisCourse.shortDescription}\n\nLink: ${thisCourse.shareableLink}',
               sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,

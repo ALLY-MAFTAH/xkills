@@ -13,7 +13,7 @@ class Lesson {
   final String? attachmentType;
   final String? summary;
   final bool? isCompleted;
-  final bool? userValidity;
+  // final bool? userValidity;
 
   Lesson({
     this.id,
@@ -30,7 +30,7 @@ class Lesson {
     this.attachmentType,
     this.summary,
     this.isCompleted,
-    this.userValidity,
+    // this.userValidity,
   });
 
   factory Lesson.fromJson(Map<String, dynamic> json) {
@@ -51,7 +51,7 @@ class Lesson {
       attachmentType: json['attachment_type'] as String?,
       summary: json['summary'] as String?,
       isCompleted: json['is_completed'] as bool?,
-      userValidity: json['user_validity'] as bool,
+      // userValidity: json['user_validity'] as bool,
     );
   }
 
@@ -71,7 +71,7 @@ class Lesson {
       'attachment_type': attachmentType,
       'summary': summary,
       'is_completed': isCompleted,
-      'user_validity': userValidity,
+      // 'user_validity': userValidity,
     };
   }
 }

@@ -35,8 +35,8 @@ class SectionController extends GetxController {
       if (responseData == null) return sections;
 
       final List fetchedSections = responseData;
-      if (fetchedSections.isNotEmpty) {
         _sections = [];
+      if (fetchedSections.isNotEmpty) {
         for (var section in fetchedSections) {
           final calledDataSet = Section.fromJson(section);
 

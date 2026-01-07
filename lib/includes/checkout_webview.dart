@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -77,10 +76,7 @@ class _CompletePaymentWebViewState extends State<CompletePaymentWebView> {
 
   @override
   Widget build(BuildContext context) {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
-    final double topPadding =
-        Platform.isAndroid ? statusBarHeight + 15 : statusBarHeight;
-
+   
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,

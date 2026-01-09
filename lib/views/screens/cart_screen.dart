@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skillsbank/components/validations.dart';
+import '/components/validations.dart';
 import '/components/shimmer_widgets/cart_items_shimmer.dart';
 import '../../components/custom_loader.dart';
 import '../../constants/app_brand.dart';
@@ -183,7 +183,7 @@ class _CartScreenState extends State<CartScreen> {
   // Widget for displaying the Empty Cart content
   Widget _buildEmptyCartContent(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.7,
+                              height: Get.height/2,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -194,9 +194,9 @@ class _CartScreenState extends State<CartScreen> {
               color: Colors.white54,
             ),
             const SizedBox(height: 15),
-            const Text(
-              "Your cart is empty.",
-              style: TextStyle(color: Colors.white70, fontSize: 18),
+             Text(
+              "Your Cart Is Empty.".tr,
+              style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
             const SizedBox(height: 20),
             TextButton(
@@ -283,7 +283,7 @@ class _CartScreenState extends State<CartScreen> {
                         if (snapshot.hasError) {
                           return SliverToBoxAdapter(
                             child: SizedBox(
-                              height: 300,
+                              height: Get.height/3,
                               child: Center(
                                 child: Text(
                                   'Error loading cart: ${snapshot.error}',

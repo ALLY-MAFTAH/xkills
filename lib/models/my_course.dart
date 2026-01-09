@@ -28,9 +28,10 @@ class MyCourse {
   String? banner;
   String? preview;
   String? description;
-  List<dynamic>? requirements;
-  List<dynamic>? outcomes;
-  List<dynamic>? faqs;
+  List<String>? requirements;
+  List<String>? outcomes;
+  List<Map<String, String>>? faqs;
+
   String? instructorIds;
   double? averageRating; // Converted from String "0.0"
   String? createdAt;
@@ -124,10 +125,18 @@ class MyCourse {
       banner: json['banner'] as String?,
       preview: json['preview'] as String?,
       description: json['description'] as String?,
-      // Lists of dynamic content
-      requirements: json['requirements'] as List<dynamic>?,
-      outcomes: json['outcomes'] as List<dynamic>?,
-      faqs: json['faqs'] as List<dynamic>?,
+      requirements: _mapOrListToStringList(json['requirements']),
+      outcomes: _mapOrListToStringList(json['outcomes']),
+      faqs:
+          (json['faqs'] as List<dynamic>?)
+              ?.map(
+                (e) => {
+                  'title': e['title'].toString(),
+                  'description': e['description'].toString(),
+                },
+              )
+              .toList(),
+
       instructorIds: json['instructor_ids'] as String?,
       // Convert String to double
       averageRating: double.tryParse(
@@ -234,5 +243,19 @@ class MyCourse {
 
     // ⭐️ Assign the calculated value directly to the property
     totalDuration = displayDurationString;
+  }
+
+  static List<String>? _mapOrListToStringList(dynamic data) {
+    if (data == null) return [];
+
+    if (data is List) {
+      return data.map((e) => e.toString()).toList();
+    }
+
+    if (data is Map) {
+      return data.values.map((e) => e.toString()).toList();
+    }
+
+    return [];
   }
 }

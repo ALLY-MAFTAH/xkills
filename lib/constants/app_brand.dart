@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
-import 'package:skillsbank/theme/app_colors.dart';
-import 'package:skillsbank/views/screens/cart_screen.dart';
+import '/theme/app_colors.dart';
+import '/views/screens/cart_screen.dart';
 
 import '../components/slide_animations.dart';
 import '../controllers/course_controller.dart';

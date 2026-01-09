@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:skillsbank/components/slide_animations.dart';
+import '/components/slide_animations.dart';
 import 'package:vibration/vibration.dart';
 import '../../components/players/network_player_dialog.dart';
 import '../../components/players/youtube_player_dialog.dart';
@@ -73,15 +73,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // Set system UI style to have white status bar icons
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
-      ),
-    );
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -101,8 +92,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   automaticallyImplyLeading: false,
                   expandedHeight:
                       Platform.isAndroid
-                          ? screenHeight / 2.4
-                          : screenHeight / 2.8,
+                          ? screenHeight / 2.9
+                          : screenHeight / 3.8,
                   stretch: true,
                   pinned: false,
                   backgroundColor: Colors.transparent,
@@ -117,7 +108,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                               ? BottomTopSlide(
                                 child: CachedNetworkImage(
                                   imageUrl: widget.thisCourse.thumbnail!,
-                                  height: screenHeight / 4,
+                                  height: screenHeight / 4.4,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) => customLoader(),
                                   errorWidget:
@@ -133,9 +124,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         else
                           Align(
                             alignment: Alignment.topCenter,
-                            child: ClipRRect(child: nextPage),
+                            child: TopBottomSlide(
+                              child: ClipRRect(child: nextPage),
+                            ),
                           ),
-                        // if (!showVideoPlayer)
                         Positioned(
                           bottom: 0,
                           left: 0,
@@ -191,7 +183,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             ),
                           ),
                         Positioned(
-                          top: screenHeight / 3,
+                          top:Platform.isAndroid? screenHeight / 3.42:screenHeight / 3.85,
                           left: 10,
                           right: 10,
                           child: SizedBox(
@@ -269,8 +261,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                       color: Colors.white54,
                                                     ),
                                                     const SizedBox(height: 15),
-                                                     Text(
-                                                      "Video URL is not available.".tr,
+                                                    Text(
+                                                      "Video URL is not available."
+                                                          .tr,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -371,7 +364,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                 widget.thisCourse.id!,
                               );
                             },
-                            isSaved ? AppColors.tertiaryColor : Colors.white,
+                            isSaved ? AppColors.goldenColor : Colors.white,
                             isSaved
                                 ? Icons.bookmark_rounded
                                 : Icons.bookmark_outline,
@@ -390,10 +383,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Text(
-                                          'Lessons in This Course',
+                                        Text(
+                                          'Lessons In This Course'.tr,
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
@@ -433,8 +426,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                   asyncSnapshot.data!.isEmpty) {
                                 return Center(
                                   child: Text(
-                                    'No Lessons Yet.tr',
-                                    style: TextStyle(color: Colors.white),
+                                    'No Lessons Yet'.tr,
+                                    style: TextStyle(color: Colors.white, fontSize: 12),
                                   ),
                                 );
                               } else {
@@ -480,21 +473,32 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                         Text(
-                                          'Lessons in This Course'.tr,
+                                        Text(
+                                          '${'Lessons In This Course'.tr} ($totalLessons)',
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                            color: Colors.grey,
                                           ),
                                         ),
-                                        Text(
-                                          '$totalLessons Lessons ($displayDurationString)',
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white.withOpacity(1),
-                                          ),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.timer,
+                                              size: 16,
+                                              color: Colors.grey,
+                                            ),
+                                            Text(
+                                              ' $displayDurationString',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white.withOpacity(
+                                                  1,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -554,13 +558,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                   NoVideoUrl(),
                                                         ),
                                                       );
-                                                     
                                                     }
                                                   } else if (widget
                                                       .thisCourse
                                                       .isPaid!) {
                                                     errorToast(
-                                                      "This is a paid course. Please buy to access the lessons.".tr,
+                                                      "This is a paid course. Please buy to access the lessons."
+                                                          .tr,
                                                     );
                                                     Vibration.vibrate(
                                                       duration: 100,

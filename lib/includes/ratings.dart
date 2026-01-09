@@ -73,7 +73,7 @@ void _openRatingDialog(BuildContext context, int courseId) async {
           return AlertDialog(
             titlePadding: EdgeInsets.only(top: 20, left: 12, right: 12),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            backgroundColor: Colors.grey,
+            backgroundColor: Colors.grey[300],
 
             title: Text(
               'Rate This Course'.tr,
@@ -151,7 +151,7 @@ void _openRatingDialog(BuildContext context, int courseId) async {
                           Text(
                             "${rating.toStringAsFixed(1)} / 5",
                             style: const TextStyle(
-                              color: Colors.white70,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -259,14 +259,14 @@ class StarDisplay extends StatelessWidget {
 
         IconData icon;
         if (value >= starValue) {
-          icon = Icons.star;
+          icon = Icons.star_rounded;
         } else if (value >= starValue - 0.5) {
-          icon = Icons.star_half;
+          icon = Icons.star_half_rounded;
         } else {
-          icon = Icons.star_border;
+          icon = Icons.star_border_rounded;
         }
 
-        return Icon(icon, color:value==0?Colors.white: AppColors.tertiaryColor, size: size);
+        return Icon(icon, color:value==0?Colors.white: Colors.amber, size: size);
       }),
     );
   }
@@ -312,11 +312,11 @@ class GestureStarRating extends StatelessWidget {
 
     IconData icon;
     if (rating >= starValue) {
-      icon = Icons.star;
+      icon = Icons.star_rounded;
     } else if (rating >= starValue - 0.5) {
-      icon = Icons.star_half;
+      icon = Icons.star_half_rounded;
     } else {
-      icon = Icons.star_border;
+      icon = Icons.star_border_rounded;
     }
 
     return Icon(icon, color: Colors.amber, size: size);

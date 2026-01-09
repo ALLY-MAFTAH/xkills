@@ -4,6 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:share_plus/share_plus.dart';
+import '../enums/enums.dart';
 import '/includes/ratings.dart';
 import '../controllers/section_controller.dart';
 import '/components/custom_loader.dart';
@@ -11,6 +12,9 @@ import '/components/slide_animations.dart';
 import '../controllers/course_controller.dart';
 import '../models/course.dart';
 import '../theme/app_colors.dart';
+import 'faq_widget.dart';
+import 'outcomes_widget.dart';
+import 'requirements_widget.dart';
 
 Widget buildLessonItem({
   required BuildContext context,
@@ -337,13 +341,30 @@ List<Widget> buildCourseSection(
   return [
     Padding(
       padding: EdgeInsetsGeometry.symmetric(vertical: 10),
-      child: Text(
-        thisCourse.title ?? 'Unknown',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-          color: Colors.white,
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(
+              thisCourse.title ?? 'Unknown',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: InkWell(
+              onTap: onSavedPressed,
+              
+
+              child: Icon(iconData, size: 25, color: color),
+            ),
+          ),
+        ],
       ),
     ),
 
@@ -380,17 +401,7 @@ List<Widget> buildCourseSection(
           thisCourse.averageRating ?? 0.0,
           fontSize: 14,
         ),
-        TextButton(
-          onPressed: onSavedPressed,
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0),
-            ),
-          ),
 
-          child: Icon(iconData, size: 20, color: color),
-        ),
         TextButton.icon(
           key: shareWidgetKey,
           onPressed: () {
@@ -420,8 +431,176 @@ List<Widget> buildCourseSection(
         ),
       ],
     ),
-    const SizedBox(height: 5),
     Divider(color: HexColor('#094B50'), height: 0, thickness: 0),
     const SizedBox(height: 10),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Level: '.tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+            ),
+            Text(
+              " ${GetUtils.capitalize(thisCourse.level!)}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Text(
+              'Language: '.tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+            ),
+            Text(
+              " ${GetUtils.capitalize(thisCourse.language!)}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+    Divider(color: HexColor('#094B50'), height: 20, thickness: 0),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Expiry: '.tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+            ),
+            Text(
+              " ${GetUtils.capitalize(thisCourse.expiryPeriod ?? "Lifetime")}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Text(
+              'Certificate: '.tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+            ),
+            Text(
+              " Yes".tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+    const SizedBox(height: 10),
+
+    Divider(color: HexColor('#094B50'), height: 0, thickness: 0),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        if (thisCourse.requirements != null &&
+            thisCourse.requirements!.isNotEmpty)
+          TextButton(
+            child: Text(
+              'Requirements'.tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: AppColors.tertiaryColor,
+              ),
+            ),
+            onPressed: () {
+              openDefaultDialog(context, DialogType.REQUIREMENTS, thisCourse);
+            },
+          ),
+        if (thisCourse.outcomes != null && thisCourse.outcomes!.isNotEmpty)
+          TextButton(
+            child: Text(
+              'Outcomes'.tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: AppColors.tertiaryColor,
+              ),
+            ),
+            onPressed: () {
+              openDefaultDialog(context, DialogType.OUTCOMES, thisCourse);
+            },
+          ),
+        if (thisCourse.faqs != null && thisCourse.faqs!.isNotEmpty)
+          TextButton(
+            child: Text(
+              'FAQ'.tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: AppColors.tertiaryColor,
+              ),
+            ),
+            onPressed: () {
+              openDefaultDialog(context, DialogType.FAQ, thisCourse);
+            },
+          ),
+      ],
+    ),
+    Divider(color: HexColor('#094B50'), height: 0, thickness: 0),
+
+    const SizedBox(height: 20),
   ];
+}
+
+void openDefaultDialog(
+  BuildContext context,
+  DialogType dialogType,
+  Course thisCourse,
+) async {
+  Get.bottomSheet(
+    backgroundColor: Colors.grey[300],
+    isScrollControlled: true,
+    Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      child: SingleChildScrollView(
+        child: Center(
+          child:
+              dialogType == DialogType.FAQ
+                  ? FaqWidget(faqs: thisCourse.faqs!)
+                  : dialogType == DialogType.OUTCOMES
+                  ? OutcomesWidget(outcomes: thisCourse.outcomes!)
+                  : RequirementsWidget(requirements: thisCourse.requirements!),
+        ),
+      ),
+    ),
+  );
 }

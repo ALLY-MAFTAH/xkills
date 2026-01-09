@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:skillsbank/constants/auth_user.dart';
+import '/constants/auth_user.dart';
 import '/controllers/section_controller.dart';
 import '../components/toasts.dart';
 import '../constants/app_brand.dart';

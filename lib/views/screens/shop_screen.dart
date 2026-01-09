@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skillsbank/components/custom_search.dart';
-import 'package:skillsbank/components/slide_animations.dart';
-import 'package:skillsbank/models/sub_category.dart';
+import '/components/custom_search.dart';
+import '/components/slide_animations.dart';
+import '/models/sub_category.dart';
 import '../../components/grid_pack_card.dart';
 import '../../components/toasts.dart';
 import '../../controllers/category_controller.dart';

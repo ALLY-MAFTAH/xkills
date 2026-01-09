@@ -38,7 +38,6 @@ class SmsService {
         final responseBody = await response.stream.bytesToString();
         print("SMS Sent Successfully: $responseBody");
       } else {
-        print("Failed to send SMS: ${response.reasonPhrase}");
         errorToast(response.reasonPhrase.toString());
       }
     } catch (e) {

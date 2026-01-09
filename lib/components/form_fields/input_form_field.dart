@@ -203,19 +203,19 @@ class _InputFormFieldState extends State<InputFormField> {
                       if (widget.inputType == InputType.email &&
                           !isEmailValid(value)) {
                         widget.fieldHasError = true;
-                        return 'invalid_email'.tr; // me@domain.com
+                        return 'Invalid Email'.tr; // me@domain.com
                       }
 
                       if (widget.inputType == InputType.phone &&
                           !isShortPhoneNumberValid(value)) {
                         widget.fieldHasError = true;
-                        return 'invalid_phone'.tr;
+                        return 'Invalid Phone'.tr;
                       }
 
                       if (widget.inputType == InputType.NIDA &&
                           !isNidaValid(value)) {
                         widget.fieldHasError = true;
-                        return 'invalid_nida'.tr; // 20 digits
+                        return 'Invalid Nida'.tr; // 20 digits
                       }
                     }
 

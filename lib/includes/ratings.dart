@@ -79,7 +79,7 @@ void _openRatingDialog(BuildContext context, int courseId) async {
               'Rate This Course'.tr,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: 14,
                 color: AppColors.secondaryColor,
               ),
             ),
@@ -92,7 +92,7 @@ void _openRatingDialog(BuildContext context, int courseId) async {
                         .tr,
                     style: TextStyle(
                       color: AppColors.secondaryColor,
-                      fontSize: 14,
+                      fontSize: 12,
                     ),
                   ),
 
@@ -143,16 +143,32 @@ void _openRatingDialog(BuildContext context, int courseId) async {
                                 rating = newRating;
                               });
                             },
-                            child: StarDisplay(value: rating, size: 40),
+                            child: StarDisplay(value: rating, size: 50),
                           ),
 
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 5),
 
                           Text(
                             "${rating.toStringAsFixed(1)} / 5",
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            rating <= 1
+                                ? 'Terrible'.tr
+                                : rating <= 2
+                                ? 'Not Good'.tr
+                                : rating <= 3
+                                ? 'Okay'.tr
+                                : rating <= 4
+                                ? 'Good'.tr
+                                : 'Excellent'.tr,
+                            style: const TextStyle(
+                              color: AppColors.secondaryColor,
+                              fontWeight: FontWeight.bold,fontSize: 12
                             ),
                           ),
                         ],
@@ -182,10 +198,10 @@ void _openRatingDialog(BuildContext context, int courseId) async {
                         decoration: TextDecoration.none,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Write a short review (optional)'.tr,
+                        hintText: 'Write A Short Review (Optional)'.tr,
                         hintStyle: TextStyle(
                           color: Colors.grey[600],
-                          fontSize: 14,
+                          fontSize: 12,
                         ),
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
@@ -230,6 +246,7 @@ void _openRatingDialog(BuildContext context, int courseId) async {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
+                                  fontSize: 14
                                 ),
                               ),
                     ),
@@ -266,7 +283,13 @@ class StarDisplay extends StatelessWidget {
           icon = Icons.star_border_rounded;
         }
 
-        return Icon(icon, color:value==0?Colors.white: Colors.amber, size: size);
+        return Expanded(
+          child: Icon(
+            icon,
+            color: value == 0 ? Colors.white : Colors.amber,
+            size: size,
+          ),
+        );
       }),
     );
   }

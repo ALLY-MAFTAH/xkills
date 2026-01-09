@@ -7,6 +7,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import '/theme/app_colors.dart';
 import 'constants/auth_user.dart';
+import 'services/translation.dart';
 import 'views/screens/splash.dart';
 
 void main() async {
@@ -42,6 +43,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      translations: TranslationService(),
+        locale: TranslationService().getLocale(),
+        fallbackLocale: const Locale('en', 'US'),
       home: const SplashScreen(),
 
       theme: ThemeData(

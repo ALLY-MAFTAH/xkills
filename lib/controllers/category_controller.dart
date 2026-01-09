@@ -7,17 +7,7 @@ import '../models/sub_category.dart';
 import '../services/http_service.dart';
 
 class CategoryController extends GetxController {
-  // Category? selectedCategory;
-
-  // void selectCategory(int id) {
-  //   if (id == 0) {
-  //     selectedCategory = null;
-  //   } else {
-  //     selectedCategory = categories.firstWhere((category) => category.id == id);
-  //   }
-  //   update();
-  // }
-
+  
   Future<List<Category>>? categoriesFuture;
   List<Category> _categories = [];
   List<Category> get categories => _categories;

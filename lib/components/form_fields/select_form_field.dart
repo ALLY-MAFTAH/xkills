@@ -2,6 +2,7 @@
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../theme/app_colors.dart';
 
@@ -156,7 +157,7 @@ class _SelectFormFieldState extends State<SelectFormField> {
                 horizontal: 8,
                 vertical: 8,
               ),
-              hintText: 'Search ...',
+              hintText: 'Search ...'.tr,
               hintStyle: TextStyle(color: Colors.grey[400]!),
               fillColor: Colors.white,
               filled: true,

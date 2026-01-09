@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import '/components/toasts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,14 +35,14 @@ class _SocialLinksRowState extends State<SocialLinksRow> {
   Future<void> _launchURL(String? urlString) async {
     if (urlString == null || urlString.isEmpty) {
       // Use your custom toast function
-      errorToast("Link not provided.");
+      errorToast("Link Not Provided.".tr);
       return;
     }
 
     final Uri url = Uri.parse(urlString);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       if (mounted) {
-        errorToast("Could not launch $urlString");
+        errorToast("${"Could Not Launch".tr} $urlString");
       }
     }
   }
@@ -113,8 +114,8 @@ class _SocialLinksRowState extends State<SocialLinksRow> {
         child: Row(
           children: [
             // Optional Label
-            const Text(
-              "Social: ",
+             Text(
+              "Social: ".tr,
               style: TextStyle(
                 color: Colors.white70,
                 fontWeight: FontWeight.bold,

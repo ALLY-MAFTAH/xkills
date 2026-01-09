@@ -212,7 +212,7 @@ Widget buildBuyButton(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Buy ',
+                          'Buy '.tr,
                           style: const TextStyle(
                             color: Color(0xFF071B1A),
                             fontSize: 14,
@@ -226,7 +226,7 @@ Widget buildBuyButton(
                                       thisCourse.discountedPrice != null
                                   ? '\$${thisCourse.discountedPrice}'
                                   : '${thisCourse.price}'
-                              : "Free",
+                              : "Free".tr,
                           style: const TextStyle(
                             color: Color(0xFF071B1A),
                             fontSize: 14,
@@ -295,6 +295,7 @@ Widget buildBuyButton(
                   : ElevatedButton.icon(
                     onPressed: onAddToCartPressed,
                     style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.all(10),
                       backgroundColor: AppColors.tertiaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -309,7 +310,7 @@ Widget buildBuyButton(
                           isLoading
                               ? customLoader(color: AppColors.secondaryColor)
                               : Text(
-                                'Add to Cart',
+                                'Add to Cart'.tr,
                                 style: const TextStyle(
                                   color: Color(0xFF071B1A),
                                   fontSize: 14,
@@ -347,7 +348,7 @@ List<Widget> buildCourseSection(
         children: [
           Expanded(
             child: Text(
-              thisCourse.title ?? 'Unknown',
+              thisCourse.title ?? 'Unknown'.tr,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -359,7 +360,6 @@ List<Widget> buildCourseSection(
             padding: const EdgeInsets.only(left: 20),
             child: InkWell(
               onTap: onSavedPressed,
-              
 
               child: Icon(iconData, size: 25, color: color),
             ),
@@ -409,7 +409,7 @@ List<Widget> buildCourseSection(
                 shareWidgetKey.currentContext?.findRenderObject() as RenderBox?;
 
             Share.share(
-              'Check out this course from Skillsbank: ${thisCourse.title}\nBy: ${thisCourse.instructorName}\n\n${thisCourse.shortDescription}\n\nLink: ${thisCourse.shareableLink}',
+              'Check Out This Course From Xkills: ${thisCourse.title}\nBy: ${thisCourse.instructorName}\n\n${thisCourse.shortDescription}\n\nLink: ${thisCourse.shareableLink}',
               sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
             );
           },
@@ -421,7 +421,7 @@ List<Widget> buildCourseSection(
           ),
           icon: Icon(Icons.share_outlined, size: 20, color: Colors.white),
           label: Text(
-            'Share',
+            'Share'.tr,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
@@ -493,7 +493,7 @@ List<Widget> buildCourseSection(
               ),
             ),
             Text(
-              " ${GetUtils.capitalize(thisCourse.expiryPeriod ?? "Lifetime")}",
+              " ${GetUtils.capitalize(thisCourse.expiryPeriod ?? "Lifetime".tr)}",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 10,

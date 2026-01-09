@@ -89,8 +89,7 @@ class SectionController extends GetxController {
     // 1. BLOCK YOUTUBE DOWNLOADS
     // -----------------------------------
     if (url.contains("youtube.com") || url.contains("youtu.be")) {
-      print("⚠️ Cannot download YouTube video: $url");
-      errorToast("This video is hosted on YouTube and cannot be downloaded.");
+      errorToast("This Video Is Hosted On YouTube And Cannot Be Downloaded.".tr);
       isDownloading[lessonId] = false;
       update();
       return;
@@ -164,7 +163,7 @@ class SectionController extends GetxController {
         print("Download canceled for lesson $lessonId");
       } else {
         print("Download error for lesson $lessonId: $e");
-        errorToast("Download failed.");
+        errorToast("Download Failed.".tr);
       }
     } finally {
       isDownloading[lessonId] = false;

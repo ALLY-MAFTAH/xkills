@@ -46,8 +46,7 @@ class _NoVideoUrlState extends State<NoVideoUrl> {
                       pinned: false,
                       backgroundColor: Colors.transparent,
                       automaticallyImplyLeading: false,
-                      flexibleSpace:
-                          Container(), // Empty container to satisfy the requirement
+                      flexibleSpace: Container(),
                     ),
 
                     SliverList(
@@ -66,8 +65,8 @@ class _NoVideoUrlState extends State<NoVideoUrl> {
                                     color: Colors.white54,
                                   ),
                                   const SizedBox(height: 15),
-                                  const Text(
-                                    "Video URL is not available.",
+                                  Text(
+                                    "Video URL Is Not Available.".tr,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white70,

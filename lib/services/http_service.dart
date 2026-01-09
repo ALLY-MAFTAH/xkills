@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import '../constants/endpoints.dart';
 import '../enums/enums.dart';
@@ -16,10 +15,9 @@ class HttpService {
   static Future<dynamic> sendHttpRequest(
     RequestType requestType,
     String url,
-    dynamic body,{
+    dynamic body, {
     bool? isAuthRequest = true,
   }) async {
-    print("URL: $url Request Type: $requestType Body: $body");
     Map<String, String> headers;
     try {
       final storage = GetStorage();
@@ -37,12 +35,8 @@ class HttpService {
             'Authorization': 'Bearer $userToken',
           };
 
-      print("SEEEE THEEEEEESEEEEEEEEE");
-      print(fullUrl);
-      print(headers);
-      print(body);
       if (await hasNoInternet()) {
-        throw "Check Your Internet Connection";
+        throw "Check Your Internet Connection".tr;
       }
 
       if (requestType == RequestType.GET) {
@@ -65,7 +59,6 @@ class HttpService {
       }
 
       if (requestType == RequestType.POST) {
-        print("INAPOST NOW ::::::::::::::::::::::::");
         final response = await http
             .post(Uri.parse(fullUrl), headers: headers, body: jsonEncode(body))
             .timeout(const Duration(seconds: 30));
@@ -98,11 +91,11 @@ class HttpService {
       if (ex is TimeoutException) {
         print("::::::::::::::::::::::::::");
         print(ex.toString());
-        throw "Request timed out, please try again.";
+        throw "Request Timed Out, Please Try Again.".tr;
       }
       if (ex is http.ClientException) {
         print(ex.toString());
-        throw "Server not reached, please try again.";
+        throw "Server Not Reached, Please Try Again.".tr;
       } else {
         print("EXCEPTION:::::::::::::::");
         print(ex.toString());
@@ -112,25 +105,16 @@ class HttpService {
   }
 
   static dynamic _handleResponse(http.Response response) async {
-    print(response.body);
-    print(response.statusCode);
     if (response.statusCode == 401) {
-      print(response.statusCode);
-      print(response);
       final responseData = jsonDecode(response.body);
       String message = responseData['message'];
       throw message;
     } else if (response.statusCode == 200 || response.statusCode == 201) {
-      print("Success Code");
-      print(response.statusCode);
       final responseData = jsonDecode(response.body);
-      print("Hii hapa");
-      print(responseData);
+
       return responseData;
     }
     if (response.statusCode == 500) {
-      print("HAAAAAApA");
-      print(response);
       String message = "Server error";
 
       throw message;
@@ -153,9 +137,6 @@ class HttpService {
       final responseData = jsonDecode(response.body);
       Map<String, dynamic> errors = responseData['errors'];
       for (var entry in errors.entries) {
-        if (kDebugMode) {
-          print(entry.value[0]);
-        }
         throw entry.value[0];
       }
     }
@@ -181,7 +162,7 @@ class HttpService {
             })
             ..fields.addAll(fields);
       if (await hasNoInternet()) {
-        throw "Check Your Internet Connection";
+        throw "Check Your Internet Connection".tr;
       }
       if (file != null) {
         request.files.add(
@@ -200,13 +181,10 @@ class HttpService {
       return _handleResponse(response);
     } catch (ex) {
       if (ex is TimeoutException) {
-        print("::::::::::::::::::::::::::");
-        print(ex.toString());
-        throw "Request timed out, please try again.".tr;
+        throw "Request Timed Out, Please Try Again.".tr;
       }
       if (ex is http.ClientException) {
-        print(ex.toString());
-        throw "Server not reached, please try again.".tr;
+        throw "Server Not Reached, Please Try Again.".tr;
       } else {
         throw ex.toString();
       }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../controllers/auth_controller.dart';
 
@@ -22,7 +23,7 @@ InputDecoration getInputDecoration(
     ),
     filled: true,
     hintStyle: const TextStyle(color: Colors.grey, fontSize: 12),
-    hintText: hintext,
+    hintText: hintext.tr,
     fillColor:
         authController.isSubmitting
             ? Colors.white.withOpacity(.05)

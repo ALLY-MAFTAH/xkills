@@ -12,13 +12,11 @@ Future<void> navigateToVideoPlayer({
   required int courseId,
   required int? lessonId,
 }) async {
-  print("VIDEO DATA::::: $videoUrl");
   if (videoUrl.isEmpty) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NoVideoUrl()),
     );
-    debugPrint("Video URL is null or empty");
     return;
   }
 

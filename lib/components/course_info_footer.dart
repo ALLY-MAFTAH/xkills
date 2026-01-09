@@ -5,21 +5,36 @@ import '../includes/ratings.dart';
 import '../models/course.dart';
 import '/theme/app_colors.dart'; // Ensure this path is correct
 
-class CourseInfoFooter extends StatelessWidget {
+class CourseInfoFooter extends StatefulWidget {
   final Course thisCourse;
-  final VoidCallback onBookmarkPressed;
-
+  // final VoidCallback onSavePressed;
   const CourseInfoFooter({
     super.key,
     required this.thisCourse,
-    required this.onBookmarkPressed,
+    // required this.onSavePressed,
   });
+
+  @override
+  State<CourseInfoFooter> createState() => _CourseInfoFooterState();
+}
+
+class _CourseInfoFooterState extends State<CourseInfoFooter> {
+  final courseController = Get.put(CourseController());
+  bool isSaved = false;
+
+  @override
+  void initState() {
+    isSaved = courseController.savedCourses.any(
+      (course) => course.id == widget.thisCourse.id,
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final courseController = Get.put(CourseController());
     bool hasEnrolled = courseController.myCourses.any(
-      (course) => course.id == thisCourse.id,
+      (course) => course.id == widget.thisCourse.id,
     );
     return Container(
       color: AppColors.secondaryColor,
@@ -51,7 +66,7 @@ class CourseInfoFooter extends StatelessWidget {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: '${thisCourse.title}: ',
+                        text: '${widget.thisCourse.title}: ',
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -60,7 +75,7 @@ class CourseInfoFooter extends StatelessWidget {
                       ),
                       // Course Description (Gray, Not Bolded, Truncated)
                       TextSpan(
-                        text: thisCourse.shortDescription,
+                        text: widget.thisCourse.shortDescription,
                         style: TextStyle(
                           color: Colors.grey[300], // Gray color
                           fontWeight: FontWeight.normal,
@@ -78,24 +93,47 @@ class CourseInfoFooter extends StatelessWidget {
                   children: [
                     buildRatingStars(
                       context,
-                      thisCourse.id!,
+                      widget.thisCourse.id!,
                       hasEnrolled,
-                      thisCourse.averageRating ?? 0.0,
+                      widget.thisCourse.averageRating ?? 0.0,
                     ),
-                    Text(
-                      thisCourse.isPaid!
-                          ? thisCourse.discountFlag! &&
-                                  thisCourse.discountedPrice != null
-                              ? '\$${thisCourse.discountedPrice}'
-                              : '${thisCourse.price}'
-                          : "Free",
-                      style: const TextStyle(
-                        color: Color(0xFFE6C068),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: InkWell(
+                        onTap: () {
+                          print("PREssed SAVE");
+                          isSaved = !isSaved;
+                          courseController.addOrRemoveSavedCourse(
+                            widget.thisCourse.id!,
+                          );
+                          courseController.update();
+                          setState(() {});
+                        },
+
+                        child: Icon(
+                          isSaved
+                              ? Icons.bookmark_rounded
+                              : Icons.bookmark_outline,
+                          size: 17,
+                          color:
+                              isSaved ? AppColors.tertiaryColor : Colors.white,
+                        ),
                       ),
                     ),
                   ],
+                ),
+                Text(
+                  widget.thisCourse.isPaid!
+                      ? widget.thisCourse.discountFlag! &&
+                              widget.thisCourse.discountedPrice != null
+                          ? '\$${widget.thisCourse.discountedPrice}'
+                          : '${widget.thisCourse.price}'
+                      : "Free".tr,
+                  style: const TextStyle(
+                    color: Color(0xFFE6C068),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ],
             ),

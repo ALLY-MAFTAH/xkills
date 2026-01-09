@@ -48,6 +48,21 @@ class AuthController extends GetxController {
   String? temporaryUsername;
   String? phoneForOTP;
 
+// LANGUAGE
+ void changeLanguage(bool value) async {
+    final storage = GetStorage();
+    storage.write('isSwahili', value);
+
+    Locale locale;
+    if (value) {
+      locale = const Locale('sw', 'TZ');
+      storage.write("locale", "sw");
+    } else {
+      locale = const Locale('en', 'US');
+      storage.write("locale", "en");
+    }
+    Get.updateLocale(locale);
+  }
   // LOGIN
   Future<void> signin() async {
     isSubmitting = true;
@@ -422,7 +437,7 @@ class AuthController extends GetxController {
           confirmPasswordController.clear();
 
           Get.back();
-          successToast("Password Changes Successful".tr);
+          successToast("Password Changed Successfully".tr);
         } else {
           errorToast(responseData['message'].toString());
         }

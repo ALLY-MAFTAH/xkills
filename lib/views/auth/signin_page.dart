@@ -63,9 +63,9 @@ class _SigninPageState extends State<SigninPage> {
                   builder: (authController) {
                     return Column(
                       children: [
-                        const Center(
+                         Center(
                           child: Text(
-                            'Sign In',
+                            'Sign In'.tr,
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w500,
@@ -208,21 +208,21 @@ class _SigninPageState extends State<SigninPage> {
                                                     .text
                                                     .isEmpty) {
                                               errorToast(
-                                                "Email & password field cannot be empty",
+                                                "Email & Password Field Cannot Be Empty".tr,
                                               );
                                             } else if (authController
                                                 .emailController
                                                 .text
                                                 .isEmpty) {
                                               errorToast(
-                                                "Email field cannot be empty",
+                                                "Email Field Cannot Be Empty".tr,
                                               );
                                             } else if (authController
                                                 .passwordController
                                                 .text
                                                 .isEmpty) {
                                               errorToast(
-                                                "Password field cannot be empty",
+                                                "Password Field Cannot Be Empty".tr,
                                               );
                                             } else if (!isEmailValid(
                                               authController
@@ -230,7 +230,7 @@ class _SigninPageState extends State<SigninPage> {
                                                   .text
                                                   .trim(),
                                             )) {
-                                              errorToast("Email not valid");
+                                              errorToast("Email Not Valid".tr);
                                             } else {
                                               setState(() {
                                                 authController.signin();
@@ -258,7 +258,7 @@ class _SigninPageState extends State<SigninPage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Sign In',
+                                                'Sign In'.tr,
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.white,
@@ -280,7 +280,7 @@ class _SigninPageState extends State<SigninPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Don't you have an account yet? ",
+                                "Don't You Have An Account Yet? ".tr,
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
@@ -297,7 +297,7 @@ class _SigninPageState extends State<SigninPage> {
                                   );
                                 },
                                 child: Text(
-                                  ' Sign Up',
+                                  ' Sign Up'.tr,
                                   style: TextStyle(
                                     color: AppColors.tertiaryColor,
                                     fontSize: 12,

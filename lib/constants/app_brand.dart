@@ -125,7 +125,7 @@ Widget appBrand({
 }
 
 String appName() {
-  return "SkillsBank";
+  return "Xkills";
 }
 
 Widget appLogo({

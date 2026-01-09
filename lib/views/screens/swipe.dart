@@ -18,14 +18,14 @@ class _SwipeScreenState extends State<SwipeScreen>
 
   // List of PageView content (omitted for brevity)
   final List<String> corouselTitles = [
-    "Learn New Skills",
-    "Connect with Experts",
-    "Trending Courses",
+    "Learn New Skills".tr,
+    "Connect with Experts".tr,
+    "Trending Courses".tr,
   ];
   final List<String> corouselSubtitles = [
-    "Master new skills with top courses and enhance your career opportunities",
-    "Get personalized guidance and insights from industry-leading experts",
-    "Stay ahead in your field by exploring the latest and most trending topics",
+    "Master new skills with top courses and enhance your career opportunities".tr,
+    "Get personalized guidance and insights from industry-leading experts".tr,
+    "Stay ahead in your field by exploring the latest and most trending topics".tr,
   ];
   final int pageCount = 3;
 
@@ -281,12 +281,12 @@ class _SwipeScreenState extends State<SwipeScreen>
                     bottom: screenHeight * 0.02,
                     left: 0,
                     right: 0,
-                    child: const Center(
+                    child:  Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            'SWIPE UP',
+                            'SWIPE UP'.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 8,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import '/theme/app_colors.dart';
 
@@ -41,7 +42,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          padding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
           child: Row(
             children: [
               Expanded(
@@ -69,7 +70,7 @@ class _TabsScreenState extends State<TabsScreen> {
                                 onTap: () => setState(() => _index = 0),
                                 child: _NavItem(
                                   icon: Icons.home_rounded,
-                                  label: "Home",
+                                  label: "Home".tr,
                                   selected: _index == 0,
                                 ),
                               ),
@@ -77,7 +78,7 @@ class _TabsScreenState extends State<TabsScreen> {
                                 onTap: () => setState(() => _index = 1),
                                 child: _NavItem(
                                   icon: Icons.shopify_rounded,
-                                  label: "Shop",
+                                  label: "Shop".tr,
                                   selected: _index == 1,
                                 ),
                               ),
@@ -85,7 +86,7 @@ class _TabsScreenState extends State<TabsScreen> {
                                 onTap: () => setState(() => _index = 2),
                                 child: _NavItem(
                                   icon: Icons.school_rounded,
-                                  label: "My Courses",
+                                  label: "My Courses".tr,
                                   selected: _index == 2,
                                 ),
                               ),

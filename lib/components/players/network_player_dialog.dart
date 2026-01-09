@@ -33,12 +33,10 @@ class _PlayVideoFromAssetState extends State<NetworkVideoPlayerDialog> {
       final videoFile = getVideoWithExtension(widget.videoUrl);
       fullUrl =
           "${Endpoints.baseUrl}/public/uploads/lesson_file/videos/$videoFile";
-      print("LESSON ID: ${widget.lessonId}");
     } else {
       fullUrl = widget.videoUrl;
     }
 
-    print("LESSON ID: ${widget.lessonId}");
     controller = PodPlayerController(
       playVideoFrom: PlayVideoFrom.networkQualityUrls(
         videoUrls: [

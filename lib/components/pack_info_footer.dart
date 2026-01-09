@@ -37,7 +37,6 @@ class PackInfoFooter extends StatelessWidget {
                       fontSize: 13,
                     ),
                   ),
-                  // Course Description (Gray, Not Bolded, Truncated)
                   TextSpan(
                     text: thisPack.shortDescription,
                     style: TextStyle(
@@ -61,7 +60,7 @@ class PackInfoFooter extends StatelessWidget {
                               thisPack.discountedPrice != null
                           ? '\$${thisPack.discountedPrice}'
                           : '${thisPack.price}'
-                      : "Free",
+                      : "Free".tr,
                   style: const TextStyle(
                     color: Color(0xFFE6C068),
                     fontSize: 13,

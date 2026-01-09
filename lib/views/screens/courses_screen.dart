@@ -16,7 +16,7 @@ import '/theme/app_colors.dart';
 
 class CoursesScreen extends StatefulWidget {
   final Category? selectedCategory;
-  const CoursesScreen({super.key,  this.selectedCategory});
+  const CoursesScreen({super.key, this.selectedCategory});
 
   @override
   State<CoursesScreen> createState() => CoursesScreenState();
@@ -28,12 +28,14 @@ class CoursesScreenState extends State<CoursesScreen> {
   final courseController = Get.find<CourseController>();
   final categoryController = Get.find<CategoryController>();
 
-  String categoryTitle = 'All ';
+  String categoryTitle = 'All'.tr;
   String selectedCourseLevel = 'All'.tr;
+  // bool isSaved = false;
 
   @override
   void initState() {
     super.initState();
+
     _loadInitialData();
   }
 
@@ -66,7 +68,8 @@ class CoursesScreenState extends State<CoursesScreen> {
         extendBody: true,
         body: Stack(
           children: [
-            widget.selectedCategory!=null&&widget.selectedCategory!.isGolden!
+            widget.selectedCategory != null &&
+                    widget.selectedCategory!.isGolden!
                 ? Transform.rotate(
                   angle: pi, // 90 degrees in radians
                   child: Image.asset(
@@ -76,16 +79,18 @@ class CoursesScreenState extends State<CoursesScreen> {
                     width: double.infinity,
                   ),
                 )
-                :
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.secondaryColor, AppColors.primaryColor],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
+                : Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.secondaryColor,
+                        AppColors.primaryColor,
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                  ),
                 ),
-              ),
-            ),
 
             SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -102,7 +107,7 @@ class CoursesScreenState extends State<CoursesScreen> {
                     SizedBox(height: Platform.isAndroid ? 90 : 100),
 
                     Text(
-                      "$categoryTitle Courses".tr,
+                      "$categoryTitle ${"Courses".tr}",
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -131,10 +136,13 @@ class CoursesScreenState extends State<CoursesScreen> {
                         if (!snapshot.hasData || snapshot.data!.isEmpty) {
                           return Padding(
                             padding: EdgeInsets.only(top: Get.height / 4),
-                            child: const Center(
+                            child: Center(
                               child: Text(
-                                "No Course",
-                                style: TextStyle(color: Colors.white),
+                                "No Course".tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
                           );
@@ -219,15 +227,15 @@ class CoursesScreenState extends State<CoursesScreen> {
                                     childAspectRatio: .85,
                                   ),
                               itemBuilder: (context, index) {
+                                
                                 return GridCourseCard(
+                                  courseController: courseController,
                                   thisCourse: filteredCourses[index],
                                   isGolden:
-                                      widget.selectedCategory !=
-                                              null
-                                          ? widget
-                                              .selectedCategory!
-                                              .isGolden!
+                                      widget.selectedCategory != null
+                                          ? widget.selectedCategory!.isGolden!
                                           : false,
+                                 
                                 );
                               },
                             ),
@@ -263,7 +271,8 @@ class CoursesScreenState extends State<CoursesScreen> {
               selected
                   ? LinearGradient(
                     colors:
-                       widget.selectedCategory!=null&& widget.selectedCategory!.isGolden!
+                        widget.selectedCategory != null &&
+                                widget.selectedCategory!.isGolden!
                             ? [
                               AppColors.goldenColor,
                               AppColors.goldenColor.withOpacity(.2),
@@ -278,7 +287,8 @@ class CoursesScreenState extends State<CoursesScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             side: BorderSide(
               color:
-                 widget.selectedCategory!=null&& widget.selectedCategory!.isGolden!
+                  widget.selectedCategory != null &&
+                          widget.selectedCategory!.isGolden!
                       ? AppColors.goldenColor
                       : Colors.grey,
               width: 0.5,

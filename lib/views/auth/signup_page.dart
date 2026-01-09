@@ -86,9 +86,9 @@ class _SignupPageState extends State<SignupPage> {
                   builder: (authController) {
                     return Column(
                       children: [
-                        const Center(
+                        Center(
                           child: Text(
-                            'Sign Up',
+                            'Sign Up'.tr,
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w500,
@@ -112,7 +112,11 @@ class _SignupPageState extends State<SignupPage> {
                               fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration(authController,'Full Name', () {}),
+                            decoration: getInputDecoration(
+                              authController,
+                              'Full Name',
+                              () {},
+                            ),
                             cursorColor: Colors.white,
                             controller: authController.nameController,
                             keyboardType: TextInputType.name,
@@ -139,7 +143,11 @@ class _SignupPageState extends State<SignupPage> {
                               fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration(authController,'E-mail', () {}),
+                            decoration: getInputDecoration(
+                              authController,
+                              'E-mail',
+                              () {},
+                            ),
                             cursorColor: Colors.white,
                             controller: authController.emailController,
                             keyboardType: TextInputType.emailAddress,
@@ -176,12 +184,16 @@ class _SignupPageState extends State<SignupPage> {
                               });
                             },
                             obscureText: authController.passwordObscure,
-                            decoration: getInputDecoration(authController,'Password', () {
-                              setState(() {
-                                authController.passwordObscure =
-                                    !authController.passwordObscure;
-                              });
-                            }),
+                            decoration: getInputDecoration(
+                              authController,
+                              'Password',
+                              () {
+                                setState(() {
+                                  authController.passwordObscure =
+                                      !authController.passwordObscure;
+                                });
+                              },
+                            ),
                           ),
                         ),
                         Container(
@@ -210,7 +222,8 @@ class _SignupPageState extends State<SignupPage> {
                               });
                             },
                             obscureText: authController.confirmPasswordObscure,
-                            decoration: getInputDecoration(authController,
+                            decoration: getInputDecoration(
+                              authController,
                               'Confirm Password',
                               () {
                                 setState(() {
@@ -256,14 +269,16 @@ class _SignupPageState extends State<SignupPage> {
                                                 .text
                                                 .isEmpty) {
                                               errorToast(
-                                                "Full name field cannot be empty",
+                                                "Full Name field Cannot Be Empty"
+                                                    .tr,
                                               );
                                             } else if (authController
                                                 .emailController
                                                 .text
                                                 .isEmpty) {
                                               errorToast(
-                                                "Email field cannot be empty",
+                                                "Email Field Cannot Be Empty"
+                                                    .tr,
                                               );
                                             } else if (!isEmailValid(
                                               authController
@@ -271,20 +286,22 @@ class _SignupPageState extends State<SignupPage> {
                                                   .text
                                                   .trim(),
                                             )) {
-                                              errorToast("Email not valid");
+                                              errorToast("Email Not Valid".tr);
                                             } else if (authController
                                                 .passwordController
                                                 .text
                                                 .isEmpty) {
                                               errorToast(
-                                                "Password field cannot be empty",
+                                                "Password Field Cannot Be Empty"
+                                                    .tr,
                                               );
                                             } else if (authController
                                                 .confirmPasswordController
                                                 .text
                                                 .isEmpty) {
                                               errorToast(
-                                                "Confirm password field cannot be empty",
+                                                "Confirm Password Field Cannot Be Empty"
+                                                    .tr,
                                               );
                                             } else if (authController
                                                     .passwordController
@@ -295,7 +312,7 @@ class _SignupPageState extends State<SignupPage> {
                                                     .text
                                                     .trim()) {
                                               errorToast(
-                                                "Passwords do not match",
+                                                "Passwords Do Not Match".tr,
                                               );
                                             } else {
                                               setState(() {
@@ -324,7 +341,7 @@ class _SignupPageState extends State<SignupPage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Sign Up',
+                                                'Sign Up'.tr,
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.white,
@@ -345,7 +362,7 @@ class _SignupPageState extends State<SignupPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Already have an account? ",
+                                "Already have an account? ".tr,
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 12,
@@ -357,7 +374,7 @@ class _SignupPageState extends State<SignupPage> {
                                   Navigator.pop(context);
                                 },
                                 child: Text(
-                                  ' Sign In',
+                                  ' Sign In'.tr,
                                   style: TextStyle(
                                     color: AppColors.tertiaryColor,
                                     fontSize: 12,

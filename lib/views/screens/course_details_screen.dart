@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
 import '/components/slide_animations.dart';
 import 'package:vibration/vibration.dart';
@@ -364,7 +363,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                 widget.thisCourse.id!,
                               );
                             },
-                            isSaved ? AppColors.goldenColor : Colors.white,
+                            isSaved ? AppColors.tertiaryColor : Colors.white,
                             isSaved
                                 ? Icons.bookmark_rounded
                                 : Icons.bookmark_outline,
@@ -945,7 +944,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             ? null
                             : () => Navigator.pop(dialogContext, false),
                     child: Text(
-                      'Cancel',
+                      'Cancel'.tr,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -976,7 +975,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         courseController.isLoading
                             ? customLoader(color: Colors.white)
                             : Text(
-                              'Enroll',
+                              'Enroll'.tr,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -1008,7 +1007,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           print("Download ::::::");
         }
       } else {
-        errorToast("Failed to enroll, please try again".tr);
+        errorToast("Failed To Enroll, Please Try Again".tr);
       }
       setState(() {});
     }

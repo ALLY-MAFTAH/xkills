@@ -88,9 +88,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   builder: (authController) {
                     return Column(
                       children: [
-                        const Center(
+                        Center(
                           child: Text(
-                            'Forgot Password',
+                            'Forgot Password'.tr,
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w500,
@@ -165,7 +165,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                                 .text
                                                 .isEmpty) {
                                               errorToast(
-                                                "Email field cannot be empty",
+                                                "Email Field Cannot Be Empty"
+                                                    .tr,
                                               );
                                             } else if (!isEmailValid(
                                               authController
@@ -173,7 +174,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                                   .text
                                                   .trim(),
                                             )) {
-                                              errorToast("Email not valid");
+                                              errorToast("Email Not Valid".tr);
                                             } else {
                                               setState(() {
                                                 authController.forgotPassword();
@@ -201,7 +202,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Send',
+                                                'Send'.tr,
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.white,
@@ -220,7 +221,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0),
                           child: Text(
-                            "Reset link will be sent to this email.",
+                            "Reset Link Will Be Sent To This Email.".tr,
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 12,

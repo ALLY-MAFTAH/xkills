@@ -201,7 +201,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                                   ),
                                   // Label (Gray Color)
                                   TextSpan(
-                                    text: " Total Lessons",
+                                    text: " Total Lessons".tr,
                                     style: TextStyle(
                                       color: Colors.white.withOpacity(
                                         .7,
@@ -229,7 +229,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                                   ),
                                   // Label (Gray Color)
                                   TextSpan(
-                                    text: " Total Duration",
+                                    text: " Total Duration".tr,
                                     style: TextStyle(
                                       color: Colors.white.withOpacity(
                                         .7,
@@ -411,7 +411,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                                 height: 300,
                                 child: Center(
                                   child: Text(
-                                    'Error loading your courses: ${snapshot.error}',
+                                    'Error: ${snapshot.error}',
                                     style: const TextStyle(
                                       color: Colors.redAccent,
                                     ),

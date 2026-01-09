@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '/components/course_info_footer.dart';
 import '../controllers/course_controller.dart';
 import '../models/course.dart';
@@ -9,13 +8,17 @@ import '../views/screens/course_details_screen.dart';
 import 'custom_loader.dart';
 
 class GridCourseCard extends StatefulWidget {
+  final CourseController courseController;
   final Course thisCourse;
   final bool isGolden;
+  // final VoidCallback onSavePressed;
 
   const GridCourseCard({
     super.key,
     required this.thisCourse,
     required this.isGolden,
+    // required this.onSavePressed,
+    required this.courseController,
   });
 
   @override
@@ -23,7 +26,6 @@ class GridCourseCard extends StatefulWidget {
 }
 
 class _GridCourseCardState extends State<GridCourseCard> {
-  final courseController = Get.put(CourseController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class _GridCourseCardState extends State<GridCourseCard> {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return CourseDetailsScreen(thisCourse: widget.thisCourse,);
+              return CourseDetailsScreen(thisCourse: widget.thisCourse);
             },
           ),
         );
@@ -112,7 +114,7 @@ class _GridCourseCardState extends State<GridCourseCard> {
                 bottom: 0,
                 child: CourseInfoFooter(
                   thisCourse: widget.thisCourse,
-                  onBookmarkPressed: () {},
+                 
                 ),
               ),
             ],

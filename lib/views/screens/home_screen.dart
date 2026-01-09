@@ -42,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen>
   bool _isPaused = false;
   final Duration _slideDuration = const Duration(seconds: 5);
   List<String> slides = [];
-
   @override
   void initState() {
     super.initState();
@@ -336,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   left: 10,
                                   right: 10,
                                   child: Text(
-                                    "Hello, ${Auth().user!.name!.split(' ').first}",
+                                    "${"Hello, ".tr} ${Auth().user!.name!.split(' ').first}",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 9,
@@ -449,7 +448,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 vertical: 5,
                               ),
                               child: Text(
-                                'Browse Categories',
+                                'Browse Categories'.tr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
@@ -479,8 +478,11 @@ class _HomeScreenState extends State<HomeScreen>
                                       asyncSnapshot.data!.isEmpty) {
                                     return Center(
                                       child: Text(
-                                        'No category yet',
-                                        style: TextStyle(color: Colors.white),
+                                        'No category yet'.tr,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     );
                                   } else {
@@ -584,8 +586,8 @@ class _HomeScreenState extends State<HomeScreen>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
-                                    'Top Courses',
+                                  Text(
+                                    'Top Courses'.tr,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,
@@ -638,9 +640,9 @@ class _HomeScreenState extends State<HomeScreen>
                                             vertical: 6,
                                           ),
                                           child: Row(
-                                            children: const [
+                                            children: [
                                               Text(
-                                                "All Courses",
+                                                "All Courses".tr,
                                                 style: TextStyle(
                                                   color:
                                                       AppColors.tertiaryColor,
@@ -705,10 +707,10 @@ class _HomeScreenState extends State<HomeScreen>
                                               _refreshData();
                                             },
                                             child: Text(
-                                              "Reload",
+                                              "Reload".tr,
                                               style: TextStyle(
                                                 color: const Color(0xFFE6C068),
-                                                fontSize: 16,
+                                                fontSize: 14,
                                               ),
                                             ),
                                           ),
@@ -739,9 +741,12 @@ class _HomeScreenState extends State<HomeScreen>
                                           ),
                                       itemBuilder: (context, index) {
                                         final course = courses[index];
+
                                         return GridCourseCard(
+                                          courseController: courseController,
                                           thisCourse: course,
                                           isGolden: false,
+                                          
                                         );
                                       },
                                     );
@@ -846,9 +851,9 @@ class _ScrollHintArrowState extends State<_ScrollHintArrow>
                         vertical: 6,
                       ),
                       child: Row(
-                        children: const [
+                        children: [
                           Text(
-                            "Scroll",
+                            "Scroll".tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 10,

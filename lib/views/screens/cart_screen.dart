@@ -163,7 +163,7 @@ class _CartScreenState extends State<CartScreen> {
                                 thisCourse.discountedPrice != null
                             ? '${thisCourse.discountedPrice}'
                             : '${thisCourse.price}'
-                        : "Free",
+                        : "Free".tr,
 
                     style: const TextStyle(
                       color: Color(0xFFE6C068),
@@ -286,7 +286,7 @@ class _CartScreenState extends State<CartScreen> {
                               height: Get.height/3,
                               child: Center(
                                 child: Text(
-                                  'Error loading cart: ${snapshot.error}',
+                                  'Error: ${snapshot.error}',
                                   style: const TextStyle(
                                     color: Colors.redAccent,
                                   ),
@@ -370,9 +370,9 @@ class _CartScreenState extends State<CartScreen> {
                     top: Platform.isAndroid ? topPadding + 45 : topPadding + 30,
                     left: 0,
                     right: 0,
-                    child: const Center(
+                    child:  Center(
                       child: Text(
-                        "My Cart",
+                        "My Cart".tr,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 22,
@@ -434,7 +434,7 @@ class _CartScreenState extends State<CartScreen> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
-                                          'Proceed to Checkout',
+                                          'Proceed to Checkout'.tr,
                                           style: const TextStyle(
                                             color: Color(0xFF071B1A),
                                             fontSize: 14,

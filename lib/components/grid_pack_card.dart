@@ -146,8 +146,6 @@ class _GridPackCardState extends State<GridPackCard> {
                                             ),
                                           ),
                                           SizedBox(width: 10),
-
-                                          // PAUSE / RESUME BUTTON
                                           IconButton(
                                             onPressed: () {
                                               isPaused
@@ -167,8 +165,6 @@ class _GridPackCardState extends State<GridPackCard> {
                                               color: Colors.white,
                                             ),
                                           ),
-
-                                          // CANCEL BUTTON
                                           IconButton(
                                             onPressed: () {
                                               courseController.cancelDownload(
@@ -253,7 +249,6 @@ class _GridPackCardState extends State<GridPackCard> {
           child: Container(
             height: Get.height / 4,
             width: Get.width / 4,
-            // clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(color: Colors.transparent),
             child:
                 widget.thisPack.thumbnail!.isNotEmpty
@@ -283,7 +278,7 @@ class _GridPackCardState extends State<GridPackCard> {
                 backgroundColor: Colors.white.withOpacity(0.1),
                 shape: CircleBorder(),
               ),
-              tooltip: "Preview",
+              tooltip: "Preview".tr,
               icon: Icon(
                 size: 50,
                 Icons.play_arrow_rounded,
@@ -331,8 +326,8 @@ class _GridPackCardState extends State<GridPackCard> {
                               color: Colors.white54,
                             ),
                             const SizedBox(height: 15),
-                            const Text(
-                              "Video URL is not available.",
+                            Text(
+                              "Video URL Is Not Available.".tr,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white70,
@@ -380,14 +375,15 @@ class _GridPackCardState extends State<GridPackCard> {
                           ),
                         )
                         : AlertDialog(
-                          title: Text("No Preview Available"),
+                          title: Text("No Preview Available".tr),
                           content: Text(
-                            "Sorry, there is no preview video available for this product.",
+                            "Sorry, There Is No Preview Video Available For This Product."
+                                .tr,
                           ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child: Text("OK"),
+                              child: Text("OK".tr),
                             ),
                           ],
                         );
@@ -473,8 +469,8 @@ class _GridPackCardState extends State<GridPackCard> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: const Text(
-          'Buy Now',
+        child:  Text(
+          'Buy Now'.tr,
           style: TextStyle(
             color: Colors.black,
             fontSize: 12,

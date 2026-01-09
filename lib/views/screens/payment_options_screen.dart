@@ -84,7 +84,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Choose Payment Method",
+                            "Choose Payment Method".tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -103,7 +103,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                               isSelected:
                                   paymentController.selectedMethod ==
                                   PaymentMethod.MOBILE,
-                              title: "Mobile Payment",
+                              title: "Mobile Payment".tr,
                               alignment: MainAxisAlignment.spaceBetween,
                               options: [
                                 ServiceProvider(
@@ -199,69 +199,65 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                           ),
 
                           const SizedBox(height: 20),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Phone Number ${paymentController.selectedMethod == PaymentMethod.MOBILE ? "For Payment" : ""}",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                  ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${"Phone Number".tr} ${paymentController.selectedMethod == PaymentMethod.MOBILE ? "For Payment".tr : ""}",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
                                 ),
-                                const SizedBox(height: 10),
-                                BottomTopSlide(
-                                  child: SizedBox(
-                                    height: 60,
+                              ),
+                              const SizedBox(height: 10),
+                              BottomTopSlide(
+                                child: SizedBox(
+                                  height: 60,
 
-                                    child: TextFormField(
-                                      enabled: !paymentController.isLoading,
-                                      cursorColor: Colors.white,
-                                      maxLength: 9,
-                                      maxLengthEnforcement:
-                                          MaxLengthEnforcement.enforced,
-                                      controller:
-                                          paymentController.phoneController,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        TZPhoneValidator(),
-                                        FilteringTextInputFormatter.digitsOnly,
-                                      ],
-                                      style: TextStyle(
+                                  child: TextFormField(
+                                    enabled: !paymentController.isLoading,
+                                    cursorColor: Colors.white,
+                                    maxLength: 9,
+                                    maxLengthEnforcement:
+                                        MaxLengthEnforcement.enforced,
+                                    controller:
+                                        paymentController.phoneController,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      TZPhoneValidator(),
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                    style: TextStyle(
+                                      color:
+                                          paymentController.isLoading
+                                              ? Colors.grey[700]
+                                              : Colors.white,
+                                    ),
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.all(5),
+                                      prefixText: "🇹🇿 +255 ",
+                                      prefixStyle: TextStyle(
                                         color:
                                             paymentController.isLoading
                                                 ? Colors.grey[700]
                                                 : Colors.white,
+                                        fontSize: 16,
                                       ),
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.all(5),
-                                        prefixText: "🇹🇿 +255 ",
-                                        prefixStyle: TextStyle(
-                                          color:
-                                              paymentController.isLoading
-                                                  ? Colors.grey[700]
-                                                  : Colors.white,
-                                          fontSize: 16,
-                                        ),
-                                        filled: true,
-                                        fillColor: Colors.white.withOpacity(
-                                          0.1,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                        counterStyle: TextStyle(
-                                          color: Colors.grey,
-                                        ),
+                                      filled: true,
+                                      fillColor: Colors.white.withOpacity(0.1),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      counterStyle: TextStyle(
+                                        color: Colors.grey,
                                       ),
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
+                          ),
 
                           SizedBox(width: 20),
                           if (paymentController.selectedMethod !=
@@ -303,7 +299,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                       paymentController.isLoading
                                           ? customLoader()
                                           : Text(
-                                            "Pay ${getMoneyFormat(widget.totalAmount)}",
+                                            "${"Pay".tr} ${getMoneyFormat(widget.totalAmount)}",
                                             style: const TextStyle(
                                               color: Color(0xFF071B1A),
                                               fontSize: 14,

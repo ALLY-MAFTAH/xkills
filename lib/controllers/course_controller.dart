@@ -67,7 +67,7 @@ class CourseController extends GetxController {
   Future<Course> getPackById(int id) async {
     return allPacks.firstWhere(
       (pack) => pack.id == id,
-      orElse: () => throw Exception('Pack not found.'),
+      orElse: () => throw Exception('Pack Not Found.'.tr),
     );
   }
 
@@ -82,7 +82,7 @@ class CourseController extends GetxController {
 
       final List fetchedPacks = responseData;
 
-        _allPacks = [];
+      _allPacks = [];
       if (fetchedPacks.isNotEmpty) {
         for (var pack in fetchedPacks) {
           final calledDataSet = Course.fromJson(pack);
@@ -109,7 +109,7 @@ class CourseController extends GetxController {
 
       final List fetchedPacks = responseData;
 
-        _myPacks = [];
+      _myPacks = [];
       if (fetchedPacks.isNotEmpty) {
         for (var pack in fetchedPacks) {
           final calledDataSet = MyCourse.fromJson(pack);
@@ -143,14 +143,13 @@ class CourseController extends GetxController {
 
       final List fetchedCourses = responseData;
 
-        _allCourses = [];
+      _allCourses = [];
       if (fetchedCourses.isNotEmpty) {
         for (var course in fetchedCourses) {
           final calledDataSet = Course.fromJson(course);
           _allCourses.add(calledDataSet);
         }
       }
-      print(allCourses);
       return allCourses;
     } catch (e) {
       print(e.toString());
@@ -170,14 +169,13 @@ class CourseController extends GetxController {
 
       final List fetchedCourses = responseData;
 
-        _topCourses = [];
+      _topCourses = [];
       if (fetchedCourses.isNotEmpty) {
         for (var course in fetchedCourses) {
           final calledDataSet = Course.fromJson(course);
           _topCourses.add(calledDataSet);
         }
       }
-      print(topCourses);
       return topCourses;
     } catch (e) {
       print(e.toString());
@@ -229,7 +227,7 @@ class CourseController extends GetxController {
       if (responseData == null) return _instructorCourses;
 
       final List fetchedInstructorCourses = responseData;
-        _instructorCourses = [];
+      _instructorCourses = [];
       if (fetchedInstructorCourses.isNotEmpty) {
         for (var course in fetchedInstructorCourses) {
           final calledDataSet = Course.fromJson(course);
@@ -238,7 +236,6 @@ class CourseController extends GetxController {
           }
         }
       }
-      print(instructorCourses);
       return instructorCourses;
     } catch (e) {
       print(e.toString());
@@ -277,7 +274,6 @@ class CourseController extends GetxController {
   }
 
   Future<bool> freeCourseEnroll(int courseId) async {
-    print("Reached here");
     isLoading = true;
     update();
     try {
@@ -287,12 +283,8 @@ class CourseController extends GetxController {
         {},
       );
       if (responseData == null) return false;
-      print(responseData);
-      print("IS CHECKING");
-      if (responseData == []) {
-        print("IS EMPTY");
-        return false;
-      }
+      if (responseData == []) return false;
+
       bool status = responseData['status'];
       String message = responseData['message'];
 
@@ -539,13 +531,13 @@ class CourseController extends GetxController {
 
       await for (var chunk in stream) {
         if (cancelTokens[courseId]?.isCancelled ?? false) {
-          throw Exception("Download canceled");
+          throw Exception("Download Canceled".tr);
         }
 
         while (isPaused[courseId] == true) {
           await Future.delayed(Duration(milliseconds: 200));
           if (cancelTokens[courseId]?.isCancelled ?? false) {
-            throw Exception("Download canceled");
+            throw Exception("Download Canceled".tr);
           }
         }
 
@@ -560,7 +552,6 @@ class CourseController extends GetxController {
     } catch (e) {
       raf.closeSync();
       if (e is DioException && CancelToken.isCancel(e)) {
-        print("Download canceled: $savePath");
         if (file.existsSync()) file.deleteSync(); // optional
       } else {
         print("Download error: $e");

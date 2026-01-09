@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:get/get.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:flutter/material.dart';
 import '../../constants/app_brand.dart';
@@ -34,12 +35,10 @@ class _PlayVideoFromAssetState extends State<NetworkVideoPlayerFull> {
       final videoFile = getVideoWithExtension(widget.videoUrl);
       fullUrl =
           "${Endpoints.baseUrl}/public/uploads/lesson_file/videos/$videoFile";
-      print("LESSON ID: ${widget.lessonId}");
     } else {
       fullUrl = widget.videoUrl;
     }
 
-    print("LESSON ID: ${widget.lessonId}");
     controller = PodPlayerController(
       playVideoFrom: PlayVideoFrom.networkQualityUrls(
         videoUrls: [
@@ -135,19 +134,19 @@ class _PlayVideoFromAssetState extends State<NetworkVideoPlayerFull> {
               child: PodVideoPlayer(
                 controller: controller,
                 podPlayerLabels: PodPlayerLabels(
-                  play: "Play",
-                  pause: "Pause",
-                  mute: "Mute",
-                  unmute: "Unmute",
-                  settings: 'Settings',
-                  fullscreen: "Full Screen",
-                  exitFullScreen: "Exit Full Screen",
-                  loopVideo: 'Loop Video',
-                  playbackSpeed: 'Playback speed',
-                  error: 'Error while playing video',
-                  quality: 'Quality',
-                  optionEnabled: 'on',
-                  optionDisabled: 'off',
+                  play: "Play".tr,
+                  pause: "Pause".tr,
+                  mute: "Mute".tr,
+                  unmute: "Unmute".tr,
+                  settings: 'Settings'.tr,
+                  fullscreen: "Full Screen".tr,
+                  exitFullScreen: "Exit Full Screen".tr,
+                  loopVideo: 'Loop Video'.tr,
+                  playbackSpeed: 'Playback Speed'.tr,
+                  error: 'Error While Playing Video'.tr,
+                  quality: 'Quality'.tr,
+                  optionEnabled: 'On'.tr,
+                  optionDisabled: 'Off'.tr,
                 ),
                 podProgressBarConfig: const PodProgressBarConfig(
                   playingBarColor: Colors.white,

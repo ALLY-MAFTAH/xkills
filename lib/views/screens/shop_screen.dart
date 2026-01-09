@@ -307,12 +307,12 @@ class _ShopScreenState extends State<ShopScreen> {
                                               .then((status) {
                                                 if (status == "added") {
                                                   successToast(
-                                                    "Pack added to cart".tr,
+                                                    "Pack Added To Cart".tr,
                                                   );
                                                 } else if (status ==
                                                     "removed") {
                                                   successToast(
-                                                    "Pack removed from cart".tr,
+                                                    "Pack Removed From Cart".tr,
                                                   );
                                                 }
                                               });

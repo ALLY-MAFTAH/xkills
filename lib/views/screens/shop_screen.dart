@@ -271,7 +271,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               height: minContentHeight * 0.6,
                               child: Center(
                                 child: Text(
-                                  'No Packs in this category'.tr,
+                                  'No Packs In This Category'.tr,
                                   style: const TextStyle(color: Colors.white),
                                 ),
                               ),

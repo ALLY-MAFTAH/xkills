@@ -17,13 +17,14 @@ Widget sectionTitle(String title) {
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             Text(
               title,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
                 color: AppColors.secondaryColor,
+                overflow: TextOverflow.ellipsis
               ),
             ),
           ],

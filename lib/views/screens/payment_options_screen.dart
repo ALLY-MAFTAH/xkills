@@ -199,65 +199,71 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                           ),
 
                           const SizedBox(height: 20),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${"Phone Number".tr} ${paymentController.selectedMethod == PaymentMethod.MOBILE ? "For Payment".tr : ""}",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
+                          if (paymentController.selectedMethod !=
+                              PaymentMethod.NONE)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${"Phone Number".tr} ${paymentController.selectedMethod == PaymentMethod.MOBILE ? "For Payment".tr : ""}",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              BottomTopSlide(
-                                child: SizedBox(
-                                  height: 60,
+                                const SizedBox(height: 10),
+                                BottomTopSlide(
+                                  child: SizedBox(
+                                    height: 60,
 
-                                  child: TextFormField(
-                                    enabled: !paymentController.isLoading,
-                                    cursorColor: Colors.white,
-                                    maxLength: 9,
-                                    maxLengthEnforcement:
-                                        MaxLengthEnforcement.enforced,
-                                    controller:
-                                        paymentController.phoneController,
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [
-                                      TZPhoneValidator(),
-                                      FilteringTextInputFormatter.digitsOnly,
-                                    ],
-                                    style: TextStyle(
-                                      color:
-                                          paymentController.isLoading
-                                              ? Colors.grey[700]
-                                              : Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.all(5),
-                                      prefixText: "🇹🇿 +255 ",
-                                      prefixStyle: TextStyle(
+                                    child: TextFormField(
+                                      enabled: !paymentController.isLoading,
+                                      cursorColor: Colors.white,
+                                      maxLength: 9,
+                                      maxLengthEnforcement:
+                                          MaxLengthEnforcement.enforced,
+                                      controller:
+                                          paymentController.phoneController,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        TZPhoneValidator(),
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      style: TextStyle(
                                         color:
                                             paymentController.isLoading
                                                 ? Colors.grey[700]
                                                 : Colors.white,
-                                        fontSize: 16,
                                       ),
-                                      filled: true,
-                                      fillColor: Colors.white.withOpacity(0.1),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      counterStyle: TextStyle(
-                                        color: Colors.grey,
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(5),
+                                        prefixText: "🇹🇿 +255 ",
+                                        prefixStyle: TextStyle(
+                                          color:
+                                              paymentController.isLoading
+                                                  ? Colors.grey[700]
+                                                  : Colors.white,
+                                          fontSize: 16,
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white.withOpacity(
+                                          0.1,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        counterStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
 
                           SizedBox(width: 20),
                           if (paymentController.selectedMethod !=

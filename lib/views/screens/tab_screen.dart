@@ -62,7 +62,7 @@ class _TabsScreenState extends State<TabsScreen> {
                         shape: LiquidRoundedSuperellipse(borderRadius: 40),
                         child: Container(
                           height: 50,
-                          padding: const EdgeInsets.all(6),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -122,9 +122,7 @@ class _TabsScreenState extends State<TabsScreen> {
                         child: Icon(
                           Icons.account_circle_outlined,
                           color:
-                              _index == 3
-                                  ? AppColors.brainColor 
-                                  : Colors.white,
+                              _index == 3 ? AppColors.brainColor : Colors.white,
                           size: 26,
                         ),
                       ),
@@ -153,40 +151,44 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 280),
-      curve: Curves.easeOut,
-      padding: EdgeInsets.symmetric(
-        horizontal: selected ? 16 : 12,
-        vertical: 5,
-      ),
-      decoration: BoxDecoration(
-        color:
-            selected
-                ? AppColors.brainColor
-                : Colors.transparent,
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: selected ? 22 : 30,
-            color: selected ? Colors.black : Colors.white,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double screenWidth = MediaQuery.of(context).size.width;
+        final bool showLabel = screenWidth > 300;
+
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOut,
+          padding: EdgeInsets.symmetric(
+            horizontal: selected ? 16 : 12,
+            vertical: 5,
           ),
-          if (selected) ...[
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 10,
+          decoration: BoxDecoration(
+            color: selected ? AppColors.brainColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: selected ? 22 : 30,
+                color: selected ? Colors.black : Colors.white,
               ),
-            ),
-          ],
-        ],
-      ),
+              if (selected && showLabel) ...[
+                const SizedBox(width: 5),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
     );
   }
 }

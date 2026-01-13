@@ -205,7 +205,7 @@ class _GridPackCardState extends State<GridPackCard> {
                         } else {
                           return LayoutBuilder(
                             builder: (context, constraints) {
-                              final isSmall = constraints.maxWidth < 120;
+                              final isSmall = constraints.maxWidth < 200;
 
                               return isSmall
                                   ? Column(

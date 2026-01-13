@@ -745,7 +745,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         return GridCourseCard(
                                           courseController: courseController,
                                           thisCourse: course,
-                                          isGolden: false,
+                                          isGolden: false, reloadPage: () {  },
                                           
                                         );
                                       },

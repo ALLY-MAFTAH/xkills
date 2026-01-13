@@ -185,35 +185,37 @@ class _CartScreenState extends State<CartScreen> {
     return SizedBox(
                               height: Get.height/2,
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.shopping_cart_outlined,
-              size: 80,
-              color: Colors.white54,
-            ),
-            const SizedBox(height: 15),
-             Text(
-              "Your Cart Is Empty.".tr,
-              style: TextStyle(color: Colors.white70, fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CoursesScreen(selectedCategory: null),
-                  ),
-                );
-              },
-              child: Text(
-                "Browse Courses".tr,
-                style: TextStyle(color: const Color(0xFFE6C068), fontSize: 14),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.shopping_cart_outlined,
+                size: 80,
+                color: Colors.white54,
               ),
-            ),
-          ],
+              const SizedBox(height: 15),
+               Text(
+                "Your Cart Is Empty.".tr,
+                style: TextStyle(color: Colors.white70, fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CoursesScreen(selectedCategory: null),
+                    ),
+                  );
+                },
+                child: Text(
+                  "Browse Courses".tr,
+                  style: TextStyle(color: const Color(0xFFE6C068), fontSize: 14),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

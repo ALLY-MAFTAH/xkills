@@ -11,14 +11,14 @@ class GridCourseCard extends StatefulWidget {
   final CourseController courseController;
   final Course thisCourse;
   final bool isGolden;
-  // final VoidCallback onSavePressed;
+  final VoidCallback reloadPage;
 
   const GridCourseCard({
     super.key,
     required this.thisCourse,
     required this.isGolden,
-    // required this.onSavePressed,
     required this.courseController,
+    required this.reloadPage,
   });
 
   @override
@@ -26,10 +26,9 @@ class GridCourseCard extends StatefulWidget {
 }
 
 class _GridCourseCardState extends State<GridCourseCard> {
-
   @override
   Widget build(BuildContext context) {
-    const double footerHeight = 85.0;
+    const double footerHeight = 100;
 
     return InkWell(
       onTap: () {
@@ -43,36 +42,26 @@ class _GridCourseCardState extends State<GridCourseCard> {
         );
       },
       child: Container(
-        decoration:
-            widget.isGolden
-                ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: BoxBorder.all(
-                    color: AppColors.tertiaryColor,
-                    width: 1,
-                  ),
-                )
-                : null,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border:
+              widget.isGolden
+                  ? BoxBorder.all(color: AppColors.tertiaryColor, width: 1)
+                  : null,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primaryColor.withOpacity(0.4),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
 
           child: Stack(
             children: [
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.primaryColor,
-                        const Color.fromARGB(255, 8, 65, 66),
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
               Positioned(
                 top: 0,
                 left: 0,
@@ -114,7 +103,8 @@ class _GridCourseCardState extends State<GridCourseCard> {
                 bottom: 0,
                 child: CourseInfoFooter(
                   thisCourse: widget.thisCourse,
-                 
+                  isGolden: widget.isGolden,
+                  reloadPage: widget.reloadPage,
                 ),
               ),
             ],

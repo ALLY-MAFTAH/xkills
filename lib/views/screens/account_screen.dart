@@ -14,6 +14,8 @@ import '/models/user.dart';
 import '/components/custom_loader.dart';
 import '/constants/app_brand.dart';
 import '/theme/app_colors.dart';
+import 'payment_history_screen.dart';
+import 'saved_courses_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -465,6 +467,9 @@ class _AccountScreenState extends State<AccountScreen> {
                                     picker: _picker,
                                     phoneFocusNode: phoneFocusNode,
                                     isInEditMode: isInEditMode,
+                                    onEditModeChanged: (val) {
+                                      isInEditMode = val;
+                                    },
                                     setState: (void Function() fn) {
                                       setState(() {});
                                     },
@@ -500,7 +505,18 @@ class _AccountScreenState extends State<AccountScreen> {
                                   buildActionCard(
                                     title: 'Payment History'.tr,
                                     icon: Icons.history,
-                                    onTap: () {},
+                                    onTap: () {
+                                       Navigator.push(context, MaterialPageRoute(builder: (_)=>
+                                          PaymentHistoryScreen()));
+                                    },
+                                  ),
+                                  buildActionCard(
+                                    title: 'Saved Courses'.tr,
+                                    icon: Icons.school_rounded,
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (_)=>
+                                          SavedCoursesScreen()));
+                                    },
                                   ),
                                   buildActionCard(
                                     title: 'Change Password'.tr,
@@ -550,7 +566,9 @@ class _AccountScreenState extends State<AccountScreen> {
                                     ),
                                   ),
 
-                                   SizedBox(height:Platform.isAndroid?70: 50),
+                                  SizedBox(
+                                    height: Platform.isAndroid ? 70 : 50,
+                                  ),
                                 ],
                               );
                             },

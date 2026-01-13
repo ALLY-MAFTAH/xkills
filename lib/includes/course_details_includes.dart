@@ -192,22 +192,28 @@ Widget buildBuyButton(
           final isLoading = courseController.loadingCartIds.contains(
             thisCourse.id,
           );
-          return Row(
-            spacing: 10,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: onBuyPressed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.tertiaryColor,
-                    surfaceTintColor: AppColors.tertiaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              // choose breakpoint
+              final bool isNarrow = constraints.maxWidth < 350;
+
+              final buttons = <Widget>[
+                // BUY BUTTON
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: onBuyPressed,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.tertiaryColor,
+                      surfaceTintColor: AppColors.tertiaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 2,
+                        horizontal: 4,
+                      ),
                     ),
-                    padding: EdgeInsets.all(2),
-                  ),
-                  child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -241,9 +247,7 @@ Widget buildBuyButton(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Colors.black,
-                              decoration:
-                                  TextDecoration
-                                      .lineThrough, // The strikethrough effect
+                              decoration: TextDecoration.lineThrough,
                               decorationColor: Colors.grey.withOpacity(0.9),
                               decorationThickness: 2,
                             ),
@@ -252,18 +256,25 @@ Widget buildBuyButton(
                     ),
                   ),
                 ),
-              ),
-              courseController.cartList.any((item) => item.id == thisCourse.id)
-                  ? ElevatedButton(
-                    onPressed: onViewCartPressed,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
-                      padding: EdgeInsets.all(0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+
+                const SizedBox(width: 10, height: 10),
+
+                // CART BUTTON
+                courseController.cartList.any(
+                      (item) => item.id == thisCourse.id,
+                    )
+                    ? ElevatedButton(
+                      onPressed: onViewCartPressed,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 2,
+                          horizontal: 4,
+                        ),
                       ),
-                    ),
-                    child: Center(
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
@@ -290,27 +301,25 @@ Widget buildBuyButton(
                           ),
                         ],
                       ),
-                    ),
-                  )
-                  : ElevatedButton.icon(
-                    onPressed: onAddToCartPressed,
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(10),
-                      backgroundColor: AppColors.tertiaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    )
+                    : ElevatedButton.icon(
+                      onPressed: onAddToCartPressed,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        backgroundColor: AppColors.tertiaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                    ),
-                    icon:
-                        isLoading
-                            ? null
-                            : Icon(Icons.add_shopping_cart_rounded),
-                    label: Center(
-                      child:
+                      icon:
+                          isLoading
+                              ? null
+                              : const Icon(Icons.add_shopping_cart),
+                      label:
                           isLoading
                               ? customLoader(color: AppColors.secondaryColor)
                               : Text(
-                                'Add to Cart'.tr,
+                                'Add To Cart'.tr,
                                 style: const TextStyle(
                                   color: Color(0xFF071B1A),
                                   fontSize: 14,
@@ -318,8 +327,25 @@ Widget buildBuyButton(
                                 ),
                               ),
                     ),
-                  ),
-            ],
+              ];
+
+              // 🔁 SWITCH LAYOUT
+              return isNarrow
+                  ? SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children:
+                          buttons.map((w) {
+                            if (w is Expanded) return w.child;
+                            return w;
+                          }).toList(),
+                    ),
+                  )
+                  : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: buttons,
+                  );
+            },
           );
         },
       ),
@@ -409,7 +435,7 @@ List<Widget> buildCourseSection(
                 shareWidgetKey.currentContext?.findRenderObject() as RenderBox?;
 
             Share.share(
-              'Check Out This Course From Xkills: ${thisCourse.title}\nBy: ${thisCourse.instructorName}\n\n${thisCourse.shortDescription}\n\nLink: ${thisCourse.shareableLink}',
+              "${'Check Out This Course From Xkills:'.tr} ${thisCourse.title}\n\n${thisCourse.shortDescription}\n\n${'Link:'.tr} ${thisCourse.shareableLink}",
               sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
             );
           },

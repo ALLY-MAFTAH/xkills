@@ -234,7 +234,7 @@ class CoursesScreenState extends State<CoursesScreen> {
                                   isGolden:
                                       widget.selectedCategory != null
                                           ? widget.selectedCategory!.isGolden!
-                                          : false,
+                                          : false, reloadPage: () {  },
                                  
                                 );
                               },

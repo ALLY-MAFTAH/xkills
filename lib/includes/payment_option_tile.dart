@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../models/mno.dart';
 import '../theme/app_colors.dart';
@@ -51,10 +52,11 @@ Widget paymentOptionTile({
         Row(
           mainAxisAlignment: alignment,
           children:
+                  
               options
                   .map(
                     (option) => Padding(
-                      padding: const EdgeInsets.only(top: 10,),
+                      padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 2),
                       child: Container(
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
@@ -63,7 +65,7 @@ Widget paymentOptionTile({
                         ),
                         child: Image.asset(
                           option.logo!,
-                          width: 65,
+                          width: (Get.width/4)-26,
                           height: 27,
                           color: option.foreColor,
                         ),

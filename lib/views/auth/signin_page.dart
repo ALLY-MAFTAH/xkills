@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '/views/auth/forgot_password_page.dart';
 import '../../includes/auth_inputs_decoration.dart';
 import '/components/toasts.dart';
@@ -22,12 +23,14 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
-  // final scaffoldKey = GlobalKey<ScaffoldState>();
-
   final authController = Get.put(AuthController());
+  bool isSwahili = false;
+  final storage = GetStorage();
 
   @override
   void initState() {
+    isSwahili = storage.read('isSwahili') ?? false;
+
     super.initState();
   }
 
@@ -63,7 +66,7 @@ class _SigninPageState extends State<SigninPage> {
                   builder: (authController) {
                     return Column(
                       children: [
-                         Center(
+                        Center(
                           child: Text(
                             'Sign In'.tr,
                             style: TextStyle(
@@ -89,7 +92,11 @@ class _SigninPageState extends State<SigninPage> {
                               fontSize: 12,
                             ),
                             enabled: !authController.isSubmitting,
-                            decoration: getInputDecoration(authController,'E-mail', () {}),
+                            decoration: getInputDecoration(
+                              authController,
+                              'E-mail',
+                              () {},
+                            ),
                             cursorColor: Colors.white,
                             controller: authController.emailController,
                             keyboardType: TextInputType.emailAddress,
@@ -126,12 +133,16 @@ class _SigninPageState extends State<SigninPage> {
                               });
                             },
                             obscureText: authController.passwordObscure,
-                            decoration: getInputDecoration(authController,'Password', () {
-                               setState(() {
-                                authController.passwordObscure =
-                                    !authController.passwordObscure;
-                              });
-                            }),
+                            decoration: getInputDecoration(
+                              authController,
+                              'Password',
+                              () {
+                                setState(() {
+                                  authController.passwordObscure =
+                                      !authController.passwordObscure;
+                                });
+                              },
+                            ),
                           ),
                         ),
                         Padding(
@@ -208,21 +219,24 @@ class _SigninPageState extends State<SigninPage> {
                                                     .text
                                                     .isEmpty) {
                                               errorToast(
-                                                "Email & Password Field Cannot Be Empty".tr,
+                                                "Email & Password Field Cannot Be Empty"
+                                                    .tr,
                                               );
                                             } else if (authController
                                                 .emailController
                                                 .text
                                                 .isEmpty) {
                                               errorToast(
-                                                "Email Field Cannot Be Empty".tr,
+                                                "Email Field Cannot Be Empty"
+                                                    .tr,
                                               );
                                             } else if (authController
                                                 .passwordController
                                                 .text
                                                 .isEmpty) {
                                               errorToast(
-                                                "Password Field Cannot Be Empty".tr,
+                                                "Password Field Cannot Be Empty"
+                                                    .tr,
                                               );
                                             } else if (!isEmailValid(
                                               authController
@@ -309,6 +323,89 @@ class _SigninPageState extends State<SigninPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${"Language".tr}: ",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isSwahili = false;
+                                  });
+                                  authController.changeLanguage(false);
+                                },
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Text(
+                                      '🇬🇧 ${"EN".tr}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.none,
+                                        color:
+                                            !isSwahili
+                                                ? Colors.white
+                                                : Colors.grey,
+                                      ),
+                                    ),
+                                    if (!isSwahili)
+                                      Positioned(
+                                        bottom: -3,
+                                        left: 0,
+                                        right: 0,
+                                        child: Container(
+                                          height: 4,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 10, child: Text("|")),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isSwahili = true;
+                                  });
+                                  authController.changeLanguage(true);
+                                },
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Text(
+                                      '🇹🇿 ${"SW".tr}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.none,
+                                        color:
+                                            isSwahili
+                                                ? Colors.white
+                                                : Colors.grey,
+                                      ),
+                                    ),
+                                    if (isSwahili)
+                                      Positioned(
+                                        bottom: -3,
+                                        left: 0,
+                                        right: 0,
+                                        child: Container(
+                                          height: 4,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     );
                   },

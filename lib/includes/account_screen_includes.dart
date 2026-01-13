@@ -228,9 +228,11 @@ Widget buildProfileCard({
   required ImagePicker picker,
   required FocusNode phoneFocusNode,
   required bool isInEditMode,
+  required void Function(bool) onEditModeChanged,
   required void Function(void Function() fn) setState,
 }) {
   final authController = Get.put(AuthController());
+
   return Stack(
     alignment: Alignment.topCenter,
     children: [
@@ -370,8 +372,7 @@ Widget buildProfileCard({
                         onTap: () {
                           showImageSourceOptions(
                             onCameraTapped: () async {
-                              authController
-                                  .selectedProfileImage = await picker
+                              authController.selectedProfileImage = await picker
                                   .pickImage(source: ImageSource.camera);
                               if (authController.selectedProfileImage != null) {
                                 await authController.updateProfilePhoto();
@@ -379,8 +380,7 @@ Widget buildProfileCard({
                               }
                             },
                             onGalleryTap: () async {
-                              authController
-                                  .selectedProfileImage = await picker
+                              authController.selectedProfileImage = await picker
                                   .pickImage(source: ImageSource.gallery);
                               if (authController.selectedProfileImage != null) {
                                 await authController.updateProfilePhoto();
@@ -388,7 +388,7 @@ Widget buildProfileCard({
                               }
                             },
                           );
-                          isInEditMode = false;
+                          onEditModeChanged(false);
                         },
                         shape: ShapeBorder.lerp(
                           RoundedRectangleBorder(
@@ -453,8 +453,7 @@ Widget buildProfileCard({
                                           .addressEditController
                                           .text = thisUser?.address ?? '';
                                       authController.update();
-                                      isInEditMode = false;
-                                      setState(() {});
+                                      onEditModeChanged(false);
                                     },
                             shape: ShapeBorder.lerp(
                               RoundedRectangleBorder(
@@ -510,8 +509,7 @@ Widget buildProfileCard({
                                 await authController.updateProfile();
                                 loadInitialData();
                               }
-                              isInEditMode = !isInEditMode;
-                              print(isInEditMode);
+                              onEditModeChanged(!isInEditMode);
                               setState(() {});
                             },
                     shape: ShapeBorder.lerp(

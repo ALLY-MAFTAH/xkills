@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../includes/checkout_webview.dart';
+import '../models/payment.dart';
 import '/constants/auth_user.dart';
 import '/constants/endpoints.dart';
 
@@ -13,8 +14,15 @@ import '../enums/enums.dart';
 class PaymentController extends GetxController {
   bool isLoading = false;
   TextEditingController phoneController = TextEditingController();
-
+  Future<List<Payment>>? paymentsFuture;
+  List<Payment> _payments = [];
+  List<Payment> get payments => _payments;
   PaymentMethod? selectedMethod = PaymentMethod.NONE;
+
+  Future<List<Payment>> getPaymentHistory() async {
+    // Implement your logic to fetch payment history here
+    return [];
+  }
 
   Future<String?> submitCardPayment(
     List<int> courseIds,
@@ -65,13 +73,16 @@ class PaymentController extends GetxController {
       print(response);
       print(response.statusCode);
       print(response.data);
-      if (response.statusCode == 200||response.statusCode == 201 && response.data['payment_link'] != null) {
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 && response.data['payment_link'] != null) {
         String paymentLink = response.data['payment_link'];
         print("payment link iSS ::::::::");
         print(paymentLink);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => CompletePaymentWebView(url: paymentLink)),
+          MaterialPageRoute(
+            builder: (_) => CompletePaymentWebView(url: paymentLink),
+          ),
         );
         return orderId.toString();
       }

@@ -79,7 +79,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           gradient: LinearGradient(
             begin: Alignment(-0.95, -0.32),
             end: Alignment(0.95, 0.32),
-            colors: [AppColors.secondaryColor, AppColors.primaryColor],
+            colors: [AppColors.primaryColor, AppColors.primaryColor],
             stops: const [0.1093, 0.6261],
           ),
         ),

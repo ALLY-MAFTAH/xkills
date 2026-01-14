@@ -15,7 +15,7 @@ class PaymentController extends GetxController {
   bool isLoading = false;
   TextEditingController phoneController = TextEditingController();
   Future<List<Payment>>? paymentsFuture;
-  List<Payment> _payments = [];
+  final List<Payment> _payments = [];
   List<Payment> get payments => _payments;
   PaymentMethod? selectedMethod = PaymentMethod.NONE;
 

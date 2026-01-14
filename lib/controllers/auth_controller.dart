@@ -186,7 +186,7 @@ class AuthController extends GetxController {
         RequestType.POST,
         Endpoints.getUserData,
         {},
-        isAuthRequest: true,
+        isAuthRequest: false,
       );
       if (responseData == null) return;
       User authUser = User.fromJson(responseData['user']);

@@ -506,16 +506,25 @@ class _AccountScreenState extends State<AccountScreen> {
                                     title: 'Payment History'.tr,
                                     icon: Icons.history,
                                     onTap: () {
-                                       Navigator.push(context, MaterialPageRoute(builder: (_)=>
-                                          PaymentHistoryScreen()));
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (_) => PaymentHistoryScreen(),
+                                        ),
+                                      );
                                     },
                                   ),
                                   buildActionCard(
                                     title: 'Saved Courses'.tr,
                                     icon: Icons.school_rounded,
                                     onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (_)=>
-                                          SavedCoursesScreen()));
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => SavedCoursesScreen(),
+                                        ),
+                                      );
                                     },
                                   ),
                                   buildActionCard(
@@ -567,7 +576,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   ),
 
                                   SizedBox(
-                                    height: Platform.isAndroid ? 70 : 50,
+                                    height: Platform.isAndroid ? 70 : 110,
                                   ),
                                 ],
                               );

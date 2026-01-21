@@ -67,17 +67,14 @@ class MainApp extends StatelessWidget {
           displayLarge: TextStyle(
             fontSize: 34,
             fontWeight: FontWeight.w800,
-            letterSpacing: -0.4,
           ),
           displayMedium: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w700,
-            letterSpacing: -0.3,
           ),
           headlineLarge: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w700,
-            letterSpacing: -0.2,
           ),
           headlineMedium: TextStyle(
             fontSize: 20,

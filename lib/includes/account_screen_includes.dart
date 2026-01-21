@@ -164,7 +164,6 @@ Widget inlineEditableField({
                       color: Colors.white,
                       fontSize: fontSize,
                       fontWeight: fontWeight,
-                      letterSpacing: 1,
                     ),
                     autofocus: true,
                     decoration: InputDecoration(
@@ -185,7 +184,6 @@ Widget inlineEditableField({
                       fontSize: fontSize,
                       fontWeight: fontWeight,
                       height: 1.2,
-                      letterSpacing: 1,
                     ),
                   ),
                 ),

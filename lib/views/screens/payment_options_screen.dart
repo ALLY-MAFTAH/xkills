@@ -108,7 +108,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                               options: [
                                 ServiceProvider(
                                   name: ServiceProviderName.MIXX,
-                                  logo: "assets/images/mixx.png",
+                                  logo: "assets/images/mobile_payments/mixx.png",
                                   backColor: const Color.fromARGB(
                                     255,
                                     4,
@@ -119,7 +119,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                 ),
                                 ServiceProvider(
                                   name: ServiceProviderName.MPESA,
-                                  logo: "assets/images/mpesa.png",
+                                  logo: "assets/images/mobile_payments/mpesa.png",
                                   backColor: const Color.fromARGB(
                                     255,
                                     235,
@@ -130,7 +130,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                 ),
                                 ServiceProvider(
                                   name: ServiceProviderName.AIRTEL_MONEY,
-                                  logo: "assets/images/airtelmoney.png",
+                                  logo: "assets/images/mobile_payments/airtelmoney.png",
                                   backColor: const Color.fromARGB(
                                     255,
                                     172,
@@ -141,7 +141,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                                 ),
                                 ServiceProvider(
                                   name: ServiceProviderName.HALOPESA,
-                                  logo: "assets/images/halopesa.png",
+                                  logo: "assets/images/mobile_payments/halopesa.png",
                                   backColor: const Color.fromARGB(
                                     255,
                                     255,
@@ -172,25 +172,25 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                               options: [
                                 ServiceProvider(
                                   name: ServiceProviderName.VISA,
-                                  logo: "assets/images/visa.png",
+                                  logo: "assets/images/card_payments/visa.png",
                                   backColor: Colors.white,
                                   foreColor: null,
                                 ),
                                 ServiceProvider(
                                   name: ServiceProviderName.MASTERCARD,
-                                  logo: "assets/images/mastercard.png",
+                                  logo: "assets/images/card_payments/mastercard.png",
                                   backColor: Colors.white,
                                   foreColor: null,
                                 ),
                                 ServiceProvider(
                                   name: ServiceProviderName.DINERS,
-                                  logo: "assets/images/diners.png",
+                                  logo: "assets/images/card_payments/diners.png",
                                   backColor: Colors.white,
                                   foreColor: null,
                                 ),
                                 ServiceProvider(
                                   name: ServiceProviderName.PCI,
-                                  logo: "assets/images/pci.png",
+                                  logo: "assets/images/card_payments/pci.png",
                                   backColor: Colors.white,
                                   foreColor: null,
                                 ),

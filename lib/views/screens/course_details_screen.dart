@@ -331,7 +331,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                         fontWeight: FontWeight.w600,
                                         fontSize: 12,
                                         color: Colors.white,
-                                        letterSpacing: 0.32,
                                       ),
                                     ),
                                   ],

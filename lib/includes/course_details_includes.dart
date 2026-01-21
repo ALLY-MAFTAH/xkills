@@ -402,7 +402,6 @@ List<Widget> buildCourseSection(
         fontWeight: FontWeight.bold,
         fontSize: 12,
         color: Colors.grey,
-        letterSpacing: 0.24,
       ),
     ),
     SizedBox(height: 10),

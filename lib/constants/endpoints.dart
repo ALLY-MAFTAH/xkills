@@ -34,4 +34,7 @@ class Endpoints {
   static String addOrRemoveCart = dotenv.env['TOGGLE_CART_ITEMS']!;
   static String storeCourseRate = dotenv.env['STORE_COURSE_RATE']!;
   static String updateWatchHistory = dotenv.env['UPDATE_WATCH_HISTORY']!;
+  static String checkPaymentStatus = dotenv.env['CHECK_PAYMENT_STATUS']!;
+  static String zenoWebhook = dotenv.env['ZENO_WEBHOOK']!;
+  static String recordPayment = dotenv.env['RECORD_PAYMENT']!;
 }

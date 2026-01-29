@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
       final GetStorage storage = GetStorage();
       final userToken = storage.read("userToken");
       try {
-        if (userToken == null) {
+        if (userToken != null) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const SwipeScreen()),
           );

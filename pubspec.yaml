@@ -68,6 +68,7 @@ flutter:
   assets:
     - assets/images/mobile_payments/
     - assets/images/card_payments/
+    - assets/images/welcome/
     - assets/images/
     - assets/videos/
     - assets/fonts/

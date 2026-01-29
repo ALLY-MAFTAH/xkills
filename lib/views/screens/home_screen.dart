@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen>
                             return Stack(
                               children: [
                                 Image.asset(
-                                  'assets/images/logo.png',
+                                  'assets/images/placeholder.png',
                                   fit: BoxFit.cover,
                                 ),
                                 Positioned(

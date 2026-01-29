@@ -72,9 +72,9 @@ flutter:
     - assets/images/card_payments/
     - assets/images/welcome/
     - assets/lotties/
-    - assets/audios/
     - assets/images/
     - assets/videos/
+    - assets/audios/
     - assets/fonts/
     - .env
 

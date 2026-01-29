@@ -230,7 +230,7 @@ void _openRatingDialog(BuildContext context, int courseId) async {
                           courseController.isLoading
                               ? null
                               : () async {
-                                await courseController.storeCourseRate(
+                                await courseController.rateCourse(
                                   courseId,
                                   rating,
                                   reviewController.text,

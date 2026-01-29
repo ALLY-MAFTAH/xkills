@@ -225,6 +225,8 @@ class PaymentController extends GetxController {
   Future<String?> checkPaymentStatus(String orderId) async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+                        "CHECK PAYMENT STATUS ENDPOINT :::",
+
         RequestType.GET,
         "${Endpoints.checkPaymentStatus}/$orderId",
         {},

@@ -6,7 +6,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import '/theme/app_colors.dart';
-import 'constants/auth_user.dart';
 import 'services/translation.dart';
 import 'views/screens/splash.dart';
 
@@ -19,7 +18,6 @@ void main() async {
   await initializeDateFormatting('en', null);
   await initializeDateFormatting('sw', null);
 
-  await Auth().loadAuthUser();
 
   // 🔔 Notification permission (Android 13+)
   if (await Permission.notification.isDenied) {

@@ -74,6 +74,8 @@ class CourseController extends GetxController {
   Future<List<Course>> getAllPacks() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET ALL PACKS ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.getAllPacks,
         {},
@@ -101,6 +103,7 @@ class CourseController extends GetxController {
   Future<List<MyCourse>> getMyPacks() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET MY PACKS ENDPOINT :::",
         RequestType.GET,
         Endpoints.getMyPacks,
         {},
@@ -135,6 +138,8 @@ class CourseController extends GetxController {
   Future<List<Course>> getAllCourses() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET ALL COURSES ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.getOtherCourses,
         {},
@@ -161,6 +166,8 @@ class CourseController extends GetxController {
   Future<List<Course>> getTopCourses() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET TOP COURSES ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.getTopCourses,
         {},
@@ -187,6 +194,8 @@ class CourseController extends GetxController {
   Future<List<MyCourse>> getMyCourses() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET MY COURSES ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.getMyCourses,
         {},
@@ -220,6 +229,7 @@ class CourseController extends GetxController {
   Future<List<Course>> getCoursesByInstructor(int id) async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET COURSES BY INSTRUCTOR ENDPOINT :::",
         RequestType.GET,
         Endpoints.getCoursesByInstructor,
         {"instructor_id": id},
@@ -247,6 +257,8 @@ class CourseController extends GetxController {
   Future<List<Course>> getCartList() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET CART LIST ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.getCartList,
         {},
@@ -278,6 +290,8 @@ class CourseController extends GetxController {
     update();
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "FREE COURSE ENROL ENDPOINT :::",
+
         RequestType.GET,
         "${Endpoints.freeCourseEnroll}/$courseId",
         {},
@@ -311,6 +325,8 @@ class CourseController extends GetxController {
 
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "ADD OR REMOVE CART ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.addOrRemoveCart,
         {"course_id": courseId},
@@ -336,16 +352,14 @@ class CourseController extends GetxController {
     return "";
   }
 
-  Future<void> storeCourseRate(
-    int courseId,
-    double rating,
-    String review,
-  ) async {
+  Future<void> rateCourse(int courseId, double rating, String review) async {
     isLoading = true;
     update();
 
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "RATE COURSE ENDPOINT :::",
+
         RequestType.POST,
         Endpoints.storeCourseRate,
         {
@@ -381,6 +395,8 @@ class CourseController extends GetxController {
 
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "ADD OR REMOVE SAVED COURSE ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.addOrRemoveSavedCourse,
         {"course_id": courseId},
@@ -409,6 +425,8 @@ class CourseController extends GetxController {
   Future<List<Course>> getSavedCourses() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET SAVED COURSES ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.getSavedCourses,
         {},

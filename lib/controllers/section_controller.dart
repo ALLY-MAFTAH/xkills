@@ -28,6 +28,8 @@ class SectionController extends GetxController {
   Future<List<Section>> getSections(int courseId) async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+                        "GET SECTIONS ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.getSections,
         {"course_id": courseId},

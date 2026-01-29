@@ -13,12 +13,15 @@ import 'connectivity.dart';
 
 class HttpService {
   static Future<dynamic> sendHttpRequest(
+    String endpointName,
     RequestType requestType,
     String url,
     dynamic body, {
     bool? isAuthRequest = true,
   }) async {
     Map<String, String> headers;
+    print("Endpoint Name: ");
+    print(endpointName);
     try {
       final storage = GetStorage();
       final userToken = storage.read("userToken");
@@ -115,6 +118,8 @@ class HttpService {
       return responseData;
     }
     if (response.statusCode == 500) {
+      print(response.statusCode);
+      print(response.body);
       String message = "Server error";
 
       throw message;

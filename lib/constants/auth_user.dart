@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import '/controllers/auth_controller.dart';
 import '../models/user.dart';
 
 class Auth {
@@ -18,9 +16,7 @@ class Auth {
   User? get user => _user;
 
   Future<void> loadAuthUser() async {
-    final authController = Get.put(AuthController());
-    await authController.getUserData();
-    final fetchedAuth = _storage.read("authUser");
+   final fetchedAuth = _storage.read("authUser");
     if (fetchedAuth != null) {
       _user = User.fromJson(jsonDecode(fetchedAuth));
     }

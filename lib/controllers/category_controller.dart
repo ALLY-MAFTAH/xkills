@@ -7,7 +7,6 @@ import '../models/sub_category.dart';
 import '../services/http_service.dart';
 
 class CategoryController extends GetxController {
-  
   Future<List<Category>>? categoriesFuture;
   List<Category> _categories = [];
   List<Category> get categories => _categories;
@@ -20,6 +19,8 @@ class CategoryController extends GetxController {
   Future<List<Category>> getCategories() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET CATEGORIES ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.getCategories,
         {},
@@ -28,7 +29,7 @@ class CategoryController extends GetxController {
 
       final List fetchedCategories = responseData;
 
-        _categories = [];
+      _categories = [];
       if (fetchedCategories.isNotEmpty) {
         _subCategories = [];
         for (var category in fetchedCategories) {
@@ -48,6 +49,8 @@ class CategoryController extends GetxController {
   Future<List<SubCategory>> getSubCategories() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET SUB CATEGORIES ENDPOINT :::",
+
         RequestType.GET,
         Endpoints.getSubCategories,
         {},
@@ -56,7 +59,7 @@ class CategoryController extends GetxController {
 
       final List fetchedSubCategories = responseData;
 
-        _subCategories = [];
+      _subCategories = [];
       if (fetchedSubCategories.isNotEmpty) {
         for (var subCategory in fetchedSubCategories) {
           final calledDataSet = SubCategory.fromJson(subCategory);

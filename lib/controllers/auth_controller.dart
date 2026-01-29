@@ -48,8 +48,8 @@ class AuthController extends GetxController {
   String? temporaryUsername;
   String? phoneForOTP;
 
-// LANGUAGE
- void changeLanguage(bool value) async {
+  // LANGUAGE
+  void changeLanguage(bool value) async {
     final storage = GetStorage();
     storage.write('isSwahili', value);
 
@@ -63,6 +63,7 @@ class AuthController extends GetxController {
     }
     Get.updateLocale(locale);
   }
+
   // LOGIN
   Future<void> signin() async {
     isSubmitting = true;
@@ -72,6 +73,7 @@ class AuthController extends GetxController {
       String password = passwordController.text.trim();
 
       final responseData = await HttpService.sendHttpRequest(
+        "SIGN IN ENDPOINT :::",
         RequestType.POST,
         Endpoints.login,
         {"email": convertToInternationalFormat(email), "password": password},
@@ -113,6 +115,8 @@ class AuthController extends GetxController {
       String confirmPassword = confirmPasswordController.text.trim();
 
       final responseData = await HttpService.sendHttpRequest(
+        "SIGN UP ENDPOINT :::",
+
         RequestType.POST,
         Endpoints.signup,
         {
@@ -154,6 +158,7 @@ class AuthController extends GetxController {
       String email = emailController.text.trim();
 
       final responseData = await HttpService.sendHttpRequest(
+        "FORGOT PASSWORD ENDPOINT :::",
         RequestType.POST,
         Endpoints.forgotPassword,
         {"email": email},
@@ -183,9 +188,11 @@ class AuthController extends GetxController {
   Future<void> getUserData() async {
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "GET USER DATA ENDPOINT :::",
+
         RequestType.POST,
         Endpoints.getUserData,
-        {},
+        {"user_id": Auth().user!.id},
         isAuthRequest: false,
       );
       if (responseData == null) return;
@@ -210,6 +217,8 @@ class AuthController extends GetxController {
     }
     try {
       final responseData = await HttpService.sendHttpRequest(
+        "UPDATE PROFILE ENDPOINT :::",
+
         RequestType.POST,
         Endpoints.updateProfile,
         {
@@ -423,6 +432,8 @@ class AuthController extends GetxController {
         await Future.delayed(Duration(seconds: 1));
 
         final responseData = await HttpService.sendHttpRequest(
+          "CHANGE PASSWORD ENDPOINT :::",
+
           RequestType.POST,
           Endpoints.changePassword,
           {

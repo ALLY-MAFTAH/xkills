@@ -1,7 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import '../../constants/auth_user.dart';
+import '../../controllers/auth_controller.dart';
 import '/components/toasts.dart';
 import '/views/screens/tab_screen.dart';
 import '/theme/app_colors.dart';
@@ -32,6 +35,10 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(builder: (context) => const SwipeScreen()),
           );
         } else {
+          final authController = Get.put(AuthController());
+          await authController.getUserData();
+          await Auth().loadAuthUser();
+
           navigator.pushReplacement(
             MaterialPageRoute(builder: (context) => const TabsScreen()),
           );
@@ -57,7 +64,9 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ),
-          Center(child: Image.asset('assets/images/horizontal_logo.png', height: 45)),
+          Center(
+            child: Image.asset('assets/images/horizontal_logo.png', height: 45),
+          ),
         ],
       ),
     );

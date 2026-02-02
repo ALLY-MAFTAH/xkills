@@ -1,4 +1,4 @@
-name: skillsbank
+name: xkills
 description: "A new Flutter project."
 publish_to: "none"
 version: 0.1.0
@@ -73,7 +73,6 @@ flutter:
     - assets/images/welcome/
     - assets/lotties/
     - assets/images/
-    - assets/videos/
     - assets/audios/
     - assets/fonts/
     - .env

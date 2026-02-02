@@ -134,7 +134,7 @@ class PaymentController extends GetxController {
         "webhook_url": "${Endpoints.baseUrl}/${Endpoints.zenoWebhook}",
         "metadata": {
           "product_id": productId,
-          "custom_notes": "Paid via SkillsBank App",
+          "custom_notes": "Paid via Xkills App",
         },
       };
       print("DATA IS :::::::::::");
@@ -152,7 +152,7 @@ class PaymentController extends GetxController {
             orderId: orderId,
             metadata: {
               "product_id": productId,
-              "custom_notes": "Paid via SkillsBank App",
+              "custom_notes": "Paid via Xkills App",
             },
           ),
         );

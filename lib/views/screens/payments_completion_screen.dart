@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skillsbank/components/custom_loader.dart';
-import 'package:skillsbank/views/screens/tab_screen.dart';
+import 'package:xkills/components/custom_loader.dart';
+import 'package:xkills/views/screens/tab_screen.dart';
 import '../../controllers/course_controller.dart';
 import '/controllers/payment_controller.dart';
 import '/theme/app_metrices.dart';

@@ -5,26 +5,26 @@ import 'package:get/get.dart';
 import '/components/custom_search.dart';
 import '/components/slide_animations.dart';
 import '/models/sub_category.dart';
-import '../../components/grid_pack_card.dart';
-import '../../components/toasts.dart';
-import '../../controllers/category_controller.dart';
-import '../../theme/app_metrices.dart';
+import '/components/grid_pack_card.dart';
+import '/components/toasts.dart';
+import '/controllers/category_controller.dart';
+import '/theme/app_metrices.dart';
 import '/controllers/course_controller.dart';
 import '/models/course.dart';
-import '../../components/shimmer_widgets/pack_grid_shimmer.dart';
+import '/components/shimmer_widgets/pack_grid_shimmer.dart';
 import '/theme/app_colors.dart';
 import '/constants/app_brand.dart';
 import 'dart:io';
 import 'payment_options_screen.dart';
 
-class ShopScreen extends StatefulWidget {
-  const ShopScreen({super.key});
+class PacksScreen extends StatefulWidget {
+  const PacksScreen({super.key});
 
   @override
-  State<ShopScreen> createState() => _ShopScreenState();
+  State<PacksScreen> createState() => _PacksScreenState();
 }
 
-class _ShopScreenState extends State<ShopScreen> {
+class _PacksScreenState extends State<PacksScreen> {
   final TextEditingController searchController = TextEditingController();
   final categoryController = Get.put(CategoryController());
   final courseController = Get.put(CourseController());
@@ -66,14 +66,25 @@ class _ShopScreenState extends State<ShopScreen> {
         body: Stack(
           children: [
             // 1. Background Gradient
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.secondaryColor, AppColors.primaryColor],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
+            // Container(
+            //   decoration: const BoxDecoration(
+            //     gradient: LinearGradient(
+            //       colors: [AppColors.secondaryColor, AppColors.primaryColor],
+            //       begin: Alignment.centerLeft,
+            //       end: Alignment.centerRight,
+            //     ),
+            //   ),
+            // ),
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/pack_background.webp',
+                fit: BoxFit.cover,
               ),
+            ),
+
+            // optional dark overlay
+            Positioned.fill(
+              child: Container(color: Colors.black.withOpacity(0.35)),
             ),
             // 2. Main Content
             SingleChildScrollView(

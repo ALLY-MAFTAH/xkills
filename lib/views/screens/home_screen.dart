@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+import '/views/screens/golden_screen.dart';
 import '/constants/auth_user.dart';
 import '/theme/app_metrices.dart';
 import '../../components/custom_loader.dart';
@@ -545,18 +546,31 @@ class _HomeScreenState extends State<HomeScreen>
                                                         "${Endpoints.baseUrl}/public/${item.categoryLogo}",
                                                     isGolden: item.isGolden!,
                                                     onTap: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder:
-                                                              (
-                                                                _,
-                                                              ) => CoursesScreen(
-                                                                selectedCategory:
-                                                                    item,
-                                                              ),
-                                                        ),
-                                                      );
+                                                      item.isGolden!
+                                                          ? Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (
+                                                                    _,
+                                                                  ) => GoldenScreen(
+                                                                    selectedCategory:
+                                                                        item,
+                                                                  ),
+                                                            ),
+                                                          )
+                                                          : Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (
+                                                                    _,
+                                                                  ) => CoursesScreen(
+                                                                    selectedCategory:
+                                                                        item,
+                                                                  ),
+                                                            ),
+                                                          );
                                                     },
                                                   );
                                                 },
@@ -745,8 +759,8 @@ class _HomeScreenState extends State<HomeScreen>
                                         return GridCourseCard(
                                           courseController: courseController,
                                           thisCourse: course,
-                                          isGolden: false, reloadPage: () {  },
-                                          
+                                          isGolden: false,
+                                          reloadPage: () {},
                                         );
                                       },
                                     );

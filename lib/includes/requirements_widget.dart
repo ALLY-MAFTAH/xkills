@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:xkills/theme/app_colors.dart';
+import '/theme/app_colors.dart';
 import '/includes/section_title.dart';
 
 class RequirementsWidget extends StatelessWidget {

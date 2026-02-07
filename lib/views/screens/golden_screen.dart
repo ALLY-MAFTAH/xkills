@@ -13,15 +13,15 @@ import '/controllers/course_controller.dart';
 import '/models/course.dart';
 import '/theme/app_colors.dart';
 
-class CoursesScreen extends StatefulWidget {
+class GoldenScreen extends StatefulWidget {
   final Category? selectedCategory;
-  const CoursesScreen({super.key, this.selectedCategory});
+  const GoldenScreen({super.key, this.selectedCategory});
 
   @override
-  State<CoursesScreen> createState() => CoursesScreenState();
+  State<GoldenScreen> createState() => GoldenScreenState();
 }
 
-class CoursesScreenState extends State<CoursesScreen> {
+class GoldenScreenState extends State<GoldenScreen> {
   final TextEditingController searchController = TextEditingController();
 
   final courseController = Get.find<CourseController>();
@@ -66,19 +66,13 @@ class CoursesScreenState extends State<CoursesScreen> {
         extendBodyBehindAppBar: true,
         extendBody: true,
         body: Stack(
-          children: [Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.secondaryColor,
-                        AppColors.primaryColor,
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                  ),
-                ),
-
+          children: [
+            Image.asset(
+              'assets/images/golden_background.webp',
+              fit: BoxFit.fill,
+              height: double.infinity,
+              width: double.infinity,
+            ),
             SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
@@ -214,15 +208,14 @@ class CoursesScreenState extends State<CoursesScreen> {
                                     childAspectRatio: .85,
                                   ),
                               itemBuilder: (context, index) {
-                                
                                 return GridCourseCard(
                                   courseController: courseController,
                                   thisCourse: filteredCourses[index],
                                   isGolden:
                                       widget.selectedCategory != null
                                           ? widget.selectedCategory!.isGolden!
-                                          : false, reloadPage: () {  },
-                                 
+                                          : false,
+                                  reloadPage: () {},
                                 );
                               },
                             ),

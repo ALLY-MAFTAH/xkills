@@ -5,7 +5,7 @@ import '/theme/app_colors.dart';
 
 import 'home_screen.dart';
 import 'my_courses_screen.dart';
-import 'shop_screen.dart';
+import 'packs_screen.dart';
 import 'account_screen.dart';
 
 class TabsScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
   final pages = const [
     HomeScreen(),
-    ShopScreen(),
+    PacksScreen(),
     MyCoursesScreen(),
     AccountScreen(),
   ];
@@ -78,7 +78,7 @@ class _TabsScreenState extends State<TabsScreen> {
                                 onTap: () => setState(() => _index = 1),
                                 child: _NavItem(
                                   icon: Icons.shopify_rounded,
-                                  label: "Shop".tr,
+                                  label: "Packs".tr,
                                   selected: _index == 1,
                                 ),
                               ),

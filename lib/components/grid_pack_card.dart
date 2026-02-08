@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:xkills/components/slide_animations.dart';
 import '../controllers/course_controller.dart';
 import '/models/course.dart';
 import '../theme/app_colors.dart';
@@ -30,6 +30,9 @@ class _GridPackCardState extends State<GridPackCard> {
 
   @override
   Widget build(BuildContext context) {
+    courseController.calculateCourseSize(widget.thisPack.id!);
+
+    final bytes = courseController.courseSizes[widget.thisPack.id] ?? 0;
     return Stack(
       children: [
         Padding(
@@ -45,6 +48,7 @@ class _GridPackCardState extends State<GridPackCard> {
             child: Padding(
               padding: EdgeInsets.only(left: (Get.width / 4) + 20),
               child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,187 +59,7 @@ class _GridPackCardState extends State<GridPackCard> {
                       onBookmarkPressed: () {},
                     ),
                     SizedBox(height: 10),
-                    GetBuilder<CourseController>(
-                      builder: (courseController) {
-                        bool hasEnrolled = courseController.myPacks.any(
-                          (course) => course.id == widget.thisPack.id,
-                        );
-                        if (hasEnrolled) {
-                          final isDownloading =
-                              courseController.isDownloading[widget
-                                  .thisPack
-                                  .id] ??
-                              false;
-                          final progress =
-                              courseController.downloadProgress[widget
-                                  .thisPack
-                                  .id] ??
-                              0;
-                          final isPaused =
-                              courseController.isPaused[widget.thisPack.id] ??
-                              false;
-
-                          return gradientButtonWrapper(
-                            radius: 10,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (!isDownloading) {
-                                  courseController.downloadCourse(
-                                    widget.thisPack.id!,
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              child:
-                                  isDownloading
-                                      ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                TweenAnimationBuilder<double>(
-                                                  tween: Tween<double>(
-                                                    begin: 0,
-                                                    end: progress,
-                                                  ),
-                                                  duration: Duration(
-                                                    milliseconds: 400,
-                                                  ),
-                                                  curve: Curves.easeOut,
-                                                  builder: (
-                                                    context,
-                                                    value,
-                                                    child,
-                                                  ) {
-                                                    return ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            10,
-                                                          ),
-                                                      child: LinearProgressIndicator(
-                                                        value: value,
-                                                        minHeight: 10,
-                                                        backgroundColor: Colors
-                                                            .white
-                                                            .withOpacity(0.3),
-                                                        color:
-                                                            AppColors
-                                                                .tertiaryColor,
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                                Text(
-                                                  "${(progress * 100).toStringAsFixed(0)}%",
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 10,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                            onPressed: () {
-                                              isPaused
-                                                  ? courseController
-                                                      .resumeDownload(
-                                                        widget.thisPack.id!,
-                                                      )
-                                                  : courseController
-                                                      .pauseDownload(
-                                                        widget.thisPack.id!,
-                                                      );
-                                            },
-                                            icon: Icon(
-                                              isPaused
-                                                  ? Icons.play_arrow_rounded
-                                                  : Icons.pause_rounded,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              courseController.cancelDownload(
-                                                widget.thisPack.id!,
-                                              );
-                                            },
-                                            icon: Icon(
-                                              Icons.close_rounded,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                      : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.download_rounded,
-                                            color: Colors.black,
-                                            size: 16,
-                                          ),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            "Download".tr,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                            ),
-                          );
-                        } else {
-                          return LayoutBuilder(
-                            builder: (context, constraints) {
-                              final isSmall = constraints.maxWidth < 200;
-
-                              return isSmall
-                                  ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      _buildBuyButton(),
-                                      const SizedBox(height: 8),
-                                      _buildCartButton(),
-                                    ],
-                                  )
-                                  : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width: 100,
-                                        child: _buildBuyButton(),
-                                      ),
-                                      SizedBox(
-                                        width: 100,
-                                        child: _buildCartButton(),
-                                      ),
-                                    ],
-                                  );
-                            },
-                          );
-                        }
-                      },
-                    ),
+                    actionWidget(),
                   ],
                 ),
               ),
@@ -297,22 +121,22 @@ class _GridPackCardState extends State<GridPackCard> {
                 final isOgg = RegExp(r"\.ogg(\?|$)").hasMatch(videoUrl);
                 final isMkv = RegExp(r"\.mkv(\?|$)").hasMatch(videoUrl);
                 // -----------------------
-                Widget nextPage;
+                Widget videoWidget;
 
                 if (isYouTube) {
-                  nextPage = YoutubeVideoPlayerDialog(
+                  videoWidget = YoutubeVideoPlayerDialog(
                     showControls: false,
                     courseId: courseId,
                     videoUrl: videoUrl,
                   );
                 } else if (isMp4 || isOgg || isWebm || isMkv) {
-                  nextPage = NetworkVideoPlayerDialog(
+                  videoWidget = NetworkVideoPlayerDialog(
                     showControls: false,
                     courseId: courseId,
                     videoUrl: videoUrl,
                   );
                 } else {
-                  nextPage = Container(
+                  videoWidget = Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height * 0.7,
@@ -348,29 +172,121 @@ class _GridPackCardState extends State<GridPackCard> {
                   builder: (BuildContext context) {
                     return widget.thisPack.preview != null
                         ? AlertDialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
                           ),
-                          titlePadding: EdgeInsets.zero,
-                          insetPadding: EdgeInsets.zero,
                           contentPadding: EdgeInsets.zero,
-
-                          content: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: [
-                                  HexColor('#046181'),
-                                  HexColor('#7BC792'),
+                          content: SizedBox(
+                            // Force the dialog to have a width based on the screen size
+                            width: MediaQuery.of(context).size.width,
+                            child: SingleChildScrollView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              child: Column(
+                                mainAxisSize:
+                                    MainAxisSize.min, // Height remains dynamic
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  // Video Section
+                                  TopBottomSlide(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.white54),
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.grey[800]!.withOpacity(.7),
+                                      ),
+                                      padding: const EdgeInsets.all(5),
+                                      child: Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 5,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Preview".tr,
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                IconButton(
+                                                  onPressed:
+                                                      () =>
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pop(),
+                                                  icon: Icon(
+                                                    Icons.close_rounded,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                            child: AspectRatio(
+                                              aspectRatio: 16 / 9,
+                                              child: videoWidget,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15),
+                                  // Text Section
+                                  BottomTopSlide(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[800]!.withOpacity(
+                                          .7,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Colors.white54,
+                                        ),
+                                      ),
+                                      child: SingleChildScrollView(
+                                        physics: AlwaysScrollableScrollPhysics(),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.thisPack.description ??
+                                                  widget
+                                                      .thisPack
+                                                      .shortDescription!,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            SizedBox(height: 5),
+                                            Text(
+                                              "${"File Size:".tr} ${courseController.formatBytes(bytes)}",
+                                              style: TextStyle(
+                                                color: AppColors.tertiaryColor,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            actionWidget(),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(3),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: nextPage,
                             ),
                           ),
                         )
@@ -394,6 +310,153 @@ class _GridPackCardState extends State<GridPackCard> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget actionWidget() {
+    return GetBuilder<CourseController>(
+      builder: (courseController) {
+        bool hasEnrolled = courseController.myPacks.any(
+          (course) => course.id == widget.thisPack.id,
+        );
+        if (hasEnrolled) {
+          final isDownloading =
+              courseController.isDownloading[widget.thisPack.id] ?? false;
+          final progress =
+              courseController.downloadProgress[widget.thisPack.id] ?? 0;
+          final isPaused =
+              courseController.isPaused[widget.thisPack.id] ?? false;
+
+          return gradientButtonWrapper(
+            radius: 10,
+            child: ElevatedButton(
+              onPressed: () {
+                if (!isDownloading) {
+                  courseController.downloadCourse(widget.thisPack.id!);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child:
+                  isDownloading
+                      ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(begin: 0, end: progress),
+                                  duration: Duration(milliseconds: 400),
+                                  curve: Curves.easeOut,
+                                  builder: (context, value, child) {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: LinearProgressIndicator(
+                                        value: value,
+                                        minHeight: 10,
+                                        backgroundColor: Colors.white
+                                            .withOpacity(0.3),
+                                        color: AppColors.tertiaryColor,
+                                      ),
+                                    );
+                                  },
+                                ),
+                                Text(
+                                  "${(progress * 100).toStringAsFixed(0)}%",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          IconButton(
+                            onPressed: () {
+                              isPaused
+                                  ? courseController.resumeDownload(
+                                    widget.thisPack.id!,
+                                  )
+                                  : courseController.pauseDownload(
+                                    widget.thisPack.id!,
+                                  );
+                            },
+                            icon: Icon(
+                              isPaused
+                                  ? Icons.play_arrow_rounded
+                                  : Icons.pause_rounded,
+                              color: Colors.white,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              courseController.cancelDownload(
+                                widget.thisPack.id!,
+                              );
+                            },
+                            icon: Icon(
+                              Icons.close_rounded,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      )
+                      : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.download_rounded,
+                            color: Colors.black,
+                            size: 16,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            "Download".tr,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+            ),
+          );
+        } else {
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isSmall = constraints.maxWidth < 200;
+
+              return isSmall
+                  ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildBuyButton(),
+                      const SizedBox(height: 8),
+                      _buildCartButton(),
+                    ],
+                  )
+                  : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(width: 100, child: _buildBuyButton()),
+                      SizedBox(width: 100, child: _buildCartButton()),
+                    ],
+                  );
+            },
+          );
+        }
+      },
     );
   }
 
@@ -469,7 +532,7 @@ class _GridPackCardState extends State<GridPackCard> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child:  Text(
+        child: Text(
           'Buy Now'.tr,
           style: TextStyle(
             color: Colors.black,

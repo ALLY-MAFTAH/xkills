@@ -61,6 +61,8 @@ class CourseController extends GetxController {
   Map<int, bool> isPaused = {};
   final Map<int, CancelToken> cancelTokens = {};
 
+Map<int, int> courseSizes = {}; // bytes per course
+
   //
   //
 
@@ -614,9 +616,49 @@ class CourseController extends GetxController {
 
     return directory.path;
   }
+  Future<int> getFileSizeFromUrl(String url) async {
+  try {
+    final request = await HttpClient().headUrl(Uri.parse(url));
+    final response = await request.close();
+
+    final length = response.headers.value(HttpHeaders.contentLengthHeader);
+
+    return int.tryParse(length ?? "0") ?? 0;
+  } catch (_) {
+    return 0;
+  }
+}
+
+Future<void> calculateCourseSize(int courseId) async {
+  final sectionController = Get.put(SectionController());
+  await sectionController.getSections(courseId);
+
+  int totalBytes = 0;
+
+  for (var section in sectionController.sections) {
+    for (var lesson in section.lessons ?? []) {
+      final url = lesson.attachmentUrl;
+      if (url == null || url.isEmpty) continue;
+
+      totalBytes += await getFileSizeFromUrl(url);
+    }
+  }
+
+  courseSizes[courseId] = totalBytes;
+  update();
+}
 
   Future<bool> requestStoragePermission() async {
     var status = await Permission.storage.request();
     return status.isGranted;
   }
+  String formatBytes(int bytes) {
+  if (bytes <= 0) return "0 B";
+
+  const suffixes = ["B", "KB", "MB", "GB"];
+  int i = (bytes.bitLength - 1) ~/ 10;
+
+  return "${(bytes / (1 << (i * 10))).toStringAsFixed(1)} ${suffixes[i]}";
+}
+
 }

@@ -121,9 +121,8 @@ class PaymentController extends GetxController {
       final String productId =
           courseIds.length == 1 ? courseIds[0].toString() : courseIds.join(",");
 
-      // ✅ order_id as STRING
-      final String orderId =
-          "${Auth().user!.id}-${DateTime.now().millisecondsSinceEpoch}";
+     final String orderId =
+  "${Auth().user!.id}${DateTime.now().millisecondsSinceEpoch}";
 
       Map<String, dynamic> data = {
         "order_id": orderId,

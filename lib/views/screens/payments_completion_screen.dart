@@ -38,32 +38,40 @@ class PaymentCompletionScreenState extends State<PaymentCompletionScreen> {
     _startPolling();
   }
 
+  @override
+void dispose() {
+  _stopPolling = true;
+  super.dispose();
+}
+
+
   void _startPolling() async {
-    for (int i = 0; i < 10; i++) {
-      if (_stopPolling) break;
+  for (int i = 0; i < 10; i++) {
+    if (_stopPolling || !mounted) break;
 
-      await Future.delayed(const Duration(seconds: 6));
+    await Future.delayed(const Duration(seconds: 6));
 
-      print("Checking payment from Zeno...");
+    final completed = await paymentController.checkPaymentStatusZeno(
+      widget.orderId,
+      widget.metadata,
+    );
 
-      final completed = await paymentController.checkPaymentStatusZeno(
-        widget.orderId,
-        widget.metadata,
-      );
+    if (!mounted) return;
 
-      if (completed == true) {
-        setState(() {
-          uiState = PaymentUIState.success;
-          _stopPolling = true;
-        });
-        return;
-      }
-    }
-
-    if (!_stopPolling) {
-      setState(() => uiState = PaymentUIState.failed);
+    if (completed == true) {
+      setState(() {
+        uiState = PaymentUIState.success;
+        _stopPolling = true;
+      });
+      return;
     }
   }
+
+  if (!_stopPolling && mounted) {
+    setState(() => uiState = PaymentUIState.failed);
+  }
+}
+
 
   Widget _buildContent() {
     switch (uiState) {

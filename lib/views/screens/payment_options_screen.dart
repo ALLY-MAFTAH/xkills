@@ -91,7 +91,51 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 15),
+                           const SizedBox(height: 15),
+
+                          // OPTION 2: Card Payment
+                          GestureDetector(
+                            onTap:
+                                () => setState(
+                                  () =>
+                                      paymentController.selectedMethod =
+                                          PaymentMethod.CARD,
+                                ),
+                            child: paymentOptionTile(
+                              isSelected:
+                                  paymentController.selectedMethod ==
+                                  PaymentMethod.CARD,
+                              title: "Pay by Card".tr,
+                              alignment: MainAxisAlignment.spaceBetween,
+                              options: [
+                                ServiceProvider(
+                                  name: ServiceProviderName.VISA,
+                                  logo: "assets/images/card_payments/visa.png",
+                                  backColor: Colors.white,
+                                  foreColor: null,
+                                ),
+                                ServiceProvider(
+                                  name: ServiceProviderName.MASTERCARD,
+                                  logo: "assets/images/card_payments/mastercard.png",
+                                  backColor: Colors.white,
+                                  foreColor: null,
+                                ),
+                                ServiceProvider(
+                                  name: ServiceProviderName.DINERS,
+                                  logo: "assets/images/card_payments/diners.png",
+                                  backColor: Colors.white,
+                                  foreColor: null,
+                                ),
+                                ServiceProvider(
+                                  name: ServiceProviderName.PCI,
+                                  logo: "assets/images/card_payments/pci.png",
+                                  backColor: Colors.white,
+                                  foreColor: null,
+                                ),
+                              ],
+                            ),
+                          ),
+const SizedBox(height: 15),
                           GestureDetector(
                             onTap:
                                 () => setState(
@@ -153,51 +197,7 @@ class _PaymentOptionsScreenState extends State<PaymentOptionsScreen> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 15),
-
-                          // OPTION 2: Card Payment
-                          GestureDetector(
-                            onTap:
-                                () => setState(
-                                  () =>
-                                      paymentController.selectedMethod =
-                                          PaymentMethod.CARD,
-                                ),
-                            child: paymentOptionTile(
-                              isSelected:
-                                  paymentController.selectedMethod ==
-                                  PaymentMethod.CARD,
-                              title: "Pay by Card".tr,
-                              alignment: MainAxisAlignment.spaceBetween,
-                              options: [
-                                ServiceProvider(
-                                  name: ServiceProviderName.VISA,
-                                  logo: "assets/images/card_payments/visa.png",
-                                  backColor: Colors.white,
-                                  foreColor: null,
-                                ),
-                                ServiceProvider(
-                                  name: ServiceProviderName.MASTERCARD,
-                                  logo: "assets/images/card_payments/mastercard.png",
-                                  backColor: Colors.white,
-                                  foreColor: null,
-                                ),
-                                ServiceProvider(
-                                  name: ServiceProviderName.DINERS,
-                                  logo: "assets/images/card_payments/diners.png",
-                                  backColor: Colors.white,
-                                  foreColor: null,
-                                ),
-                                ServiceProvider(
-                                  name: ServiceProviderName.PCI,
-                                  logo: "assets/images/card_payments/pci.png",
-                                  backColor: Colors.white,
-                                  foreColor: null,
-                                ),
-                              ],
-                            ),
-                          ),
-
+                         
                           const SizedBox(height: 20),
                           if (paymentController.selectedMethod !=
                               PaymentMethod.NONE)

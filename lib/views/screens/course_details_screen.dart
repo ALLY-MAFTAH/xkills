@@ -182,7 +182,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             ),
                           ),
                         Positioned(
-                          top:Platform.isAndroid? screenHeight / 3.42:screenHeight / 3.85,
+                          top:
+                              Platform.isAndroid
+                                  ? screenHeight / 3.42
+                                  : screenHeight / 3.85,
                           left: 10,
                           right: 10,
                           child: SizedBox(
@@ -425,7 +428,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                 return Center(
                                   child: Text(
                                     'No Lessons Yet'.tr,
-                                    style: TextStyle(color: Colors.white, fontSize: 12),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 );
                               } else {
@@ -835,67 +841,69 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                 ),
               ],
             ),
-            FutureBuilder(
-              future: courseController.cartListFuture,
-              builder: (context, cartSnapshot) {
-                if (cartSnapshot.connectionState == ConnectionState.waiting) {
-                  return Container();
-                } else if (courseController.myCourses.any(
-                  (myCourse) => myCourse.id == widget.thisCourse.id,
-                )) {
-                  return Container();
-                } else if (!widget.thisCourse.isPaid!) {
-                  return Container();
-                } else {
-                  return GetBuilder<CourseController>(
-                    builder: (courseController) {
-                      return Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: ShakeWidget(
-                          shake: _shakePayment,
-                          child: buildBuyButton(
-                            widget.thisCourse,
-                            () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (_) => PaymentOptionsScreen(
-                                      courseIds: [widget.thisCourse.id!],
-                                      totalAmount:
-                                          widget.thisCourse.priceForPayment!,
-                                    ),
-                              ),
-                            ),
-                            () {
-                              if (!courseController.isLoading) {
-                                courseController
-                                    .addOrRemoveCart(widget.thisCourse.id!)
-                                    .then((status) {
-                                      if (status == "added") {
-                                        successToast("Course added to cart".tr);
-                                      } else if (status == "removed") {
-                                        successToast(
-                                          "Course removed from cart".tr,
-                                        );
-                                      }
-                                    });
-                              }
-                            },
-                            () {
-                              Navigator.push(
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: SafeArea(
+                child: FutureBuilder(
+                  future: courseController.cartListFuture,
+                  builder: (context, cartSnapshot) {
+                    if (cartSnapshot.connectionState == ConnectionState.waiting) {
+                      return Container();
+                    } else if (courseController.myCourses.any(
+                      (myCourse) => myCourse.id == widget.thisCourse.id,
+                    )) {
+                      return Container();
+                    } else if (!widget.thisCourse.isPaid!) {
+                      return Container();
+                    } else {
+                      return GetBuilder<CourseController>(
+                        builder: (courseController) {
+                          return ShakeWidget(
+                            shake: _shakePayment,
+                            child: buildBuyButton(
+                              widget.thisCourse,
+                              () => Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => CartScreen()),
-                              );
-                            },
-                          ),
-                        ),
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => PaymentOptionsScreen(
+                                        courseIds: [widget.thisCourse.id!],
+                                        totalAmount:
+                                            widget.thisCourse.priceForPayment!,
+                                      ),
+                                ),
+                              ),
+                              () {
+                                if (!courseController.isLoading) {
+                                  courseController
+                                      .addOrRemoveCart(widget.thisCourse.id!)
+                                      .then((status) {
+                                        if (status == "added") {
+                                          successToast("Course added to cart".tr);
+                                        } else if (status == "removed") {
+                                          successToast(
+                                            "Course removed from cart".tr,
+                                          );
+                                        }
+                                      });
+                                }
+                              },
+                              () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => CartScreen()),
+                                );
+                              },
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
-                }
-              },
+                    }
+                  },
+                ),
+              ),
             ),
           ],
         ),

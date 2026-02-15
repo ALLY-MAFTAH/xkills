@@ -87,262 +87,271 @@ class _PacksScreenState extends State<PacksScreen> {
               child: Container(color: Colors.black.withOpacity(0.35)),
             ),
             // 2. Main Content
-            SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: AppMetrices.horizontalPadding,
-                  right: AppMetrices.horizontalPadding,
-                  bottom: AppMetrices.verticalPadding + 25,
-                  top: AppMetrices.verticalPadding,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    SizedBox(height: Platform.isAndroid ? 90 : 100),
-
-                    Text(
-                      'Xkills Packs'.tr,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: AppMetrices.horizontalPadding,
+                        right: AppMetrices.horizontalPadding,
+                        bottom: AppMetrices.verticalPadding + 25,
+                        top: AppMetrices.verticalPadding,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          SizedBox(height: Platform.isAndroid ? 90 : 100),
+                                    
+                          Text(
+                            'Xkills Packs'.tr,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          CustomSearch(
+                            searchController: searchController,
+                            onSearch: () {},
+                          ),
+                          SizedBox(height: 20),
+                          FutureBuilder(
+                            future: categoryController.subCategoriesFuture,
+                            builder: (context, asyncSnapshot) {
+                              if (asyncSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container();
+                              } else if (asyncSnapshot.hasError) {
+                                // *** FIX 2: Ensure error message takes up space ***
+                                return SizedBox(
+                                  height: minContentHeight * 0.5,
+                                  child: Center(
+                                    child: Text(
+                                      'Error: ${asyncSnapshot.error}',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                );
+                              } else if (asyncSnapshot.data == null ||
+                                  asyncSnapshot.data!.isEmpty) {
+                                return Container();
+                              } else {
+                                final List<SubCategory> subCategories =
+                                    asyncSnapshot.data!;
+                                    
+                                return Wrap(
+                                  runSpacing: 10,
+                                  spacing: 10,
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        gradient:
+                                            selectedSubCategoryId == 0
+                                                ? LinearGradient(
+                                                  colors: [
+                                                    AppColors.brainColor,
+                                                    AppColors.primaryColor,
+                                                  ],
+                                                )
+                                                : null,
+                                      ),
+                                      child: OutlinedButton(
+                                        onPressed: () {
+                                          selectedSubCategoryId = 0;
+                                          setState(() {});
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                          ),
+                                          side: BorderSide(
+                                            color: Colors.grey,
+                                            width: 0.5,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "All".tr,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    
+                                    ...subCategories.map((subCategory) {
+                                      return Container(
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(30),
+                                          gradient:
+                                              selectedSubCategoryId == subCategory.id
+                                                  ? LinearGradient(
+                                                    colors: [
+                                                      AppColors.brainColor,
+                                                      AppColors.primaryColor,
+                                                    ],
+                                                  )
+                                                  : null,
+                                        ),
+                                        child: OutlinedButton(
+                                          onPressed: () {
+                                            selectedSubCategoryId = subCategory.id!;
+                                            setState(() {});
+                                          },
+                                          style: OutlinedButton.styleFrom(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                            ),
+                                            side: BorderSide(
+                                              color: Colors.grey,
+                                              width: 0.5,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            "${subCategory.title}".tr,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                  ],
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          FutureBuilder(
+                            future: courseController.allPacksFuture,
+                            builder: (context, asyncSnapshot) {
+                              if (asyncSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const PackGridShimmer();
+                              } else if (asyncSnapshot.hasError) {
+                                // *** FIX 2: Ensure error message takes up space ***
+                                return SizedBox(
+                                  height: minContentHeight * 0.5,
+                                  child: Center(
+                                    child: Text(
+                                      'Error: ${asyncSnapshot.error}',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                );
+                              } else if (asyncSnapshot.data == null ||
+                                  asyncSnapshot.data!.isEmpty) {
+                                return SizedBox(
+                                  height:
+                                      minContentHeight *
+                                      0.7, // Take up a large part of the screen
+                                  child: Center(
+                                    child: Text(
+                                      'No Packs'.tr,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                final List<Course> allPacks = asyncSnapshot.data!;
+                                    
+                                final List<Course> filteredPacks =
+                                    selectedSubCategoryId == 0
+                                        ? allPacks
+                                        : allPacks
+                                            .where(
+                                              (pack) =>
+                                                  pack.categoryId ==
+                                                  selectedSubCategoryId,
+                                            )
+                                            .toList();
+                                    
+                                if (filteredPacks.isEmpty) {
+                                  return SizedBox(
+                                    height: minContentHeight * 0.6,
+                                    child: Center(
+                                      child: Text(
+                                        'No Packs In This Category'.tr,
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                    
+                                return Column(
+                                  children: [
+                                    ...filteredPacks.map((pack) {
+                                      final amount = pack.priceForPayment ?? 0.0;
+                                    
+                                      return BottomTopSlide(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(bottom: 1),
+                                          child: GridPackCard(
+                                            thisPack: pack,
+                                            onBuyPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (_) => PaymentOptionsScreen(
+                                                        courseIds: [pack.id!],
+                                                        totalAmount: amount,
+                                                      ),
+                                                ),
+                                              );
+                                            },
+                                            onAddToCartPressed: () {
+                                              if (!courseController.isLoading) {
+                                                courseController
+                                                    .addOrRemoveCart(pack.id!)
+                                                    .then((status) {
+                                                      if (status == "added") {
+                                                        successToast(
+                                                          "Pack Added To Cart".tr,
+                                                        );
+                                                      } else if (status ==
+                                                          "removed") {
+                                                        successToast(
+                                                          "Pack Removed From Cart".tr,
+                                                        );
+                                                      }
+                                                    });
+                                              }
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                    SizedBox(height: Platform.isAndroid ? 30 : 60),
+                                  ],
+                                );
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 10),
-                    CustomSearch(
-                      searchController: searchController,
-                      onSearch: () {},
-                    ),
-                    SizedBox(height: 20),
-                    FutureBuilder(
-                      future: categoryController.subCategoriesFuture,
-                      builder: (context, asyncSnapshot) {
-                        if (asyncSnapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Container();
-                        } else if (asyncSnapshot.hasError) {
-                          // *** FIX 2: Ensure error message takes up space ***
-                          return SizedBox(
-                            height: minContentHeight * 0.5,
-                            child: Center(
-                              child: Text(
-                                'Error: ${asyncSnapshot.error}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          );
-                        } else if (asyncSnapshot.data == null ||
-                            asyncSnapshot.data!.isEmpty) {
-                          return Container();
-                        } else {
-                          final List<SubCategory> subCategories =
-                              asyncSnapshot.data!;
-
-                          return Wrap(
-                            runSpacing: 10,
-                            spacing: 10,
-                            children: [
-                              Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  gradient:
-                                      selectedSubCategoryId == 0
-                                          ? LinearGradient(
-                                            colors: [
-                                              AppColors.brainColor,
-                                              AppColors.primaryColor,
-                                            ],
-                                          )
-                                          : null,
-                                ),
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    selectedSubCategoryId = 0;
-                                    setState(() {});
-                                  },
-                                  style: OutlinedButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                    ),
-                                    side: BorderSide(
-                                      color: Colors.grey,
-                                      width: 0.5,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "All".tr,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              ...subCategories.map((subCategory) {
-                                return Container(
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    gradient:
-                                        selectedSubCategoryId == subCategory.id
-                                            ? LinearGradient(
-                                              colors: [
-                                                AppColors.brainColor,
-                                                AppColors.primaryColor,
-                                              ],
-                                            )
-                                            : null,
-                                  ),
-                                  child: OutlinedButton(
-                                    onPressed: () {
-                                      selectedSubCategoryId = subCategory.id!;
-                                      setState(() {});
-                                    },
-                                    style: OutlinedButton.styleFrom(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                      ),
-                                      side: BorderSide(
-                                        color: Colors.grey,
-                                        width: 0.5,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "${subCategory.title}".tr,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ],
-                          );
-                        }
-                      },
-                    ),
-                    SizedBox(height: 10),
-                    FutureBuilder(
-                      future: courseController.allPacksFuture,
-                      builder: (context, asyncSnapshot) {
-                        if (asyncSnapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const PackGridShimmer();
-                        } else if (asyncSnapshot.hasError) {
-                          // *** FIX 2: Ensure error message takes up space ***
-                          return SizedBox(
-                            height: minContentHeight * 0.5,
-                            child: Center(
-                              child: Text(
-                                'Error: ${asyncSnapshot.error}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          );
-                        } else if (asyncSnapshot.data == null ||
-                            asyncSnapshot.data!.isEmpty) {
-                          return SizedBox(
-                            height:
-                                minContentHeight *
-                                0.7, // Take up a large part of the screen
-                            child: Center(
-                              child: Text(
-                                'No Packs'.tr,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          );
-                        } else {
-                          final List<Course> allPacks = asyncSnapshot.data!;
-
-                          final List<Course> filteredPacks =
-                              selectedSubCategoryId == 0
-                                  ? allPacks
-                                  : allPacks
-                                      .where(
-                                        (pack) =>
-                                            pack.categoryId ==
-                                            selectedSubCategoryId,
-                                      )
-                                      .toList();
-
-                          if (filteredPacks.isEmpty) {
-                            return SizedBox(
-                              height: minContentHeight * 0.6,
-                              child: Center(
-                                child: Text(
-                                  'No Packs In This Category'.tr,
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            );
-                          }
-
-                          return Column(
-                            children: [
-                              ...filteredPacks.map((pack) {
-                                final amount = pack.priceForPayment ?? 0.0;
-
-                                return BottomTopSlide(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 1),
-                                    child: GridPackCard(
-                                      thisPack: pack,
-                                      onBuyPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (_) => PaymentOptionsScreen(
-                                                  courseIds: [pack.id!],
-                                                  totalAmount: amount,
-                                                ),
-                                          ),
-                                        );
-                                      },
-                                      onAddToCartPressed: () {
-                                        if (!courseController.isLoading) {
-                                          courseController
-                                              .addOrRemoveCart(pack.id!)
-                                              .then((status) {
-                                                if (status == "added") {
-                                                  successToast(
-                                                    "Pack Added To Cart".tr,
-                                                  );
-                                                } else if (status ==
-                                                    "removed") {
-                                                  successToast(
-                                                    "Pack Removed From Cart".tr,
-                                                  );
-                                                }
-                                              });
-                                        }
-                                        setState(() {});
-                                      },
-                                    ),
-                                  ),
-                                );
-                              }),
-                              SizedBox(height: Platform.isAndroid ? 30 : 60),
-                            ],
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              }
             ),
             appBrand(context: context),
           ],

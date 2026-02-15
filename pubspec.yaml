@@ -83,7 +83,10 @@ flutter:
         - asset: assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf
 
 flutter_launcher_icons:
-  android: "ic_launcher"
+  android: "launcher_icon"
   ios: true
-  image_path: "assets/images/logo.jpg"
+  image_path: "assets/images/logo.png" 
+  
+  adaptive_icon_background: "#094849"
+  adaptive_icon_foreground: "assets/images/logo-removebg-preview.png" 
   min_sdk_android: 21

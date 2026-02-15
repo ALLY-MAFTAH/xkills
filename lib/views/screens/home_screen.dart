@@ -134,9 +134,12 @@ class _HomeScreenState extends State<HomeScreen>
                               ConnectionState.waiting) {
                             return Stack(
                               children: [
-                                Image.asset(
-                                  'assets/images/placeholder.png',
-                                  fit: BoxFit.cover,
+                                SizedBox(height: screenHeight / 2,
+                                    width: double.infinity,
+                                  child: Image.asset(
+                                    'assets/images/placeholder.png',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                                 Positioned(
                                   // bottom: 0,
@@ -222,7 +225,6 @@ class _HomeScreenState extends State<HomeScreen>
                                           AppColors.primaryColor,
                                           AppColors.primaryColor,
                                         ],
-                                        // stops: const [0.1, 1,1,1],
                                       ),
                                     ),
                                   ),
@@ -280,6 +282,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   },
                                   child: SizedBox(
                                     height: screenHeight / 2,
+                                    width: double.infinity,
                                     key: ValueKey(_currentIndex),
                                     child: CachedNetworkImage(
                                       imageUrl: slides[_currentIndex],

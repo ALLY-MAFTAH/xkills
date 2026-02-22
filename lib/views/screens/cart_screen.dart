@@ -389,68 +389,70 @@ class _CartScreenState extends State<CartScreen> {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    child: Container(
-                      height: Platform.isAndroid ? 85 : 100,
-
-                      padding: EdgeInsets.only(
-                        top: 25,
-                        left: 12,
-                        right: 12,
-                        bottom: Platform.isAndroid ? 15 : 25,
-                      ),
-
-                      child: GetBuilder<CourseController>(
-                        builder: (courseController) {
-                          return Row(
-                            spacing: 10,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (_) => PaymentOptionsScreen(
-                                              courseIds:
-                                                  cartItems
-                                                      .map(
-                                                        (course) => course.id!,
-                                                      )
-                                                      .toList(),
-                                              totalAmount: _totalPrice,
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.tertiaryColor,
-                                    surfaceTintColor: AppColors.tertiaryColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          'Proceed to Checkout'.tr,
-                                          style: const TextStyle(
-                                            color: Color(0xFF071B1A),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w800,
-                                          ),
+                    child: SafeArea(
+                      child: Container(
+                        height: Platform.isAndroid ? 85 : 100,
+                      
+                        padding: EdgeInsets.only(
+                          top: 25,
+                          left: 12,
+                          right: 12,
+                          bottom: Platform.isAndroid ? 15 : 25,
+                        ),
+                      
+                        child: GetBuilder<CourseController>(
+                          builder: (courseController) {
+                            return Row(
+                              spacing: 10,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (_) => PaymentOptionsScreen(
+                                                courseIds:
+                                                    cartItems
+                                                        .map(
+                                                          (course) => course.id!,
+                                                        )
+                                                        .toList(),
+                                                totalAmount: _totalPrice,
+                                              ),
                                         ),
-                                      ],
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.tertiaryColor,
+                                      surfaceTintColor: AppColors.tertiaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            'Proceed to Checkout'.tr,
+                                            style: const TextStyle(
+                                              color: Color(0xFF071B1A),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          );
-                        },
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),

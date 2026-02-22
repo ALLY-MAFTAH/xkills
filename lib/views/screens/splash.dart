@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   Future<void> _playSplashSound() async {
     try {
       // Replace with your actual audio path
-      await _audioPlayer.play(AssetSource('audios/startup.mp3'));
+      await _audioPlayer.play(AssetSource('audios/intro_sound.wav'));
     } catch (e) {
       print("Error playing audio: $e");
     }
@@ -91,7 +91,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         ),
         child: Center(
           child: Lottie.asset(
-            'assets/lotties/golden_tips_anima.json', 
+            'assets/lotties/simple_anima.json', 
             controller: _controller,
             onLoaded: (composition) {
               // Configure the controller duration to match the Lottie file

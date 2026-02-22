@@ -91,7 +91,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         ),
         child: Center(
           child: Lottie.asset(
-            'assets/lotties/simple_anima.json', 
+            'assets/lotties/renew_xkills.json', 
             controller: _controller,
             onLoaded: (composition) {
               // Configure the controller duration to match the Lottie file

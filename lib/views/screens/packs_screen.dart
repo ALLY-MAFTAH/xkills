@@ -66,21 +66,21 @@ class _PacksScreenState extends State<PacksScreen> {
         body: Stack(
           children: [
             // 1. Background Gradient
-            // Container(
-            //   decoration: const BoxDecoration(
-            //     gradient: LinearGradient(
-            //       colors: [AppColors.secondaryColor, AppColors.primaryColor],
-            //       begin: Alignment.centerLeft,
-            //       end: Alignment.centerRight,
-            //     ),
-            //   ),
-            // ),
-            Positioned.fill(
-              child: Image.asset(
-                'assets/images/pack_background.webp',
-                fit: BoxFit.cover,
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColors.secondaryColor, AppColors.primaryColor],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
               ),
             ),
+            // Positioned.fill(
+            //   child: Image.asset(
+            //     'assets/images/pack_background.webp',
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
 
             // optional dark overlay
             Positioned.fill(

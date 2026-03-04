@@ -32,7 +32,7 @@ class _PlayVideoFromAssetState extends State<NetworkVideoPlayerDialog> {
     if (widget.lessonId != null) {
       final videoFile = getVideoWithExtension(widget.videoUrl);
       fullUrl =
-          "${Endpoints.baseUrl}/public/uploads/lesson_file/videos/$videoFile";
+          "${Endpoints.baseUrl}/uploads/lesson_file/videos/$videoFile";
     } else {
       fullUrl = widget.videoUrl;
     }

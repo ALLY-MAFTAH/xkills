@@ -134,8 +134,9 @@ class _HomeScreenState extends State<HomeScreen>
                               ConnectionState.waiting) {
                             return Stack(
                               children: [
-                                SizedBox(height: screenHeight / 2,
-                                    width: double.infinity,
+                                SizedBox(
+                                  height: screenHeight / 2,
+                                  width: double.infinity,
                                   child: Image.asset(
                                     'assets/images/placeholder.png',
                                     fit: BoxFit.cover,
@@ -170,7 +171,6 @@ class _HomeScreenState extends State<HomeScreen>
                                           AppColors.primaryColor,
                                           AppColors.primaryColor,
                                         ],
-                                        // stops: const [0.1, 1,1,1],
                                       ),
                                     ),
                                   ),
@@ -204,7 +204,6 @@ class _HomeScreenState extends State<HomeScreen>
                                   height: screenHeight / 2.8,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      // color: Colors.red,
                                       gradient: LinearGradient(
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
@@ -237,7 +236,6 @@ class _HomeScreenState extends State<HomeScreen>
                                   .where((cat) => cat.thumbnail != null)
                                   .map((cat) => cat.thumbnail!)
                                   .toList();
-
                           _startAutoPlay();
                           return GestureDetector(
                             onHorizontalDragEnd: (details) {
@@ -546,7 +544,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                         item.keywords ?? "",
                                                     title: item.title ?? "",
                                                     thumbnail:
-                                                        "${Endpoints.baseUrl}/public/${item.categoryLogo}",
+                                                        "${Endpoints.baseUrl}/${item.categoryLogo}",
                                                     isGolden: item.isGolden!,
                                                     onTap: () {
                                                       item.isGolden!

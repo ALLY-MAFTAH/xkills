@@ -92,7 +92,7 @@ Map<String, String> enUS = {
   "Full Name": "Full Name",
   "E-mail": "E-mail",
   "Password": "Password",
-  "Full Name field Cannot Be Empty": "Full Name field Cannot Be Empty",
+  "Full Name Field Cannot Be Empty": "Full Name Field Cannot Be Empty",
   "Email Field Cannot Be Empty": "Email Field Cannot Be Empty",
   "Email Not Valid": "Email Not Valid",
   "Password Field Cannot Be Empty": "Password Field Cannot Be Empty",
@@ -203,4 +203,5 @@ Map<String, String> enUS = {
   "No Payment": "No Payments",
   "No Payments": "No Payments",
   "Payments History": "Payments History",
+  "Continue With Google":"Continue With Google"
 };

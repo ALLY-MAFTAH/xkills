@@ -286,7 +286,35 @@ class _SigninPageState extends State<SigninPage> {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 10),
 
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: OutlinedButton.icon(
+                            onPressed:
+                                authController.isSubmitting
+                                    ? null
+                                    : () {
+                                      authController.signInWithGoogle();
+                                    },
+                            icon: Image.asset(
+                              'assets/images/google_logo.png',
+                              height: 20,
+                            ),
+                            label: Text(
+                              "Continue With Google".tr,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.white, width: 1),
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 10),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0),

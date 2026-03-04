@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-import 'form_fields/date_form_field.dart';
-
 bool isEmailValid(String value) {
   String pattern = r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)*(\.[a-zA-Z]{2,4})$';
   RegExp regex = RegExp(pattern);
@@ -42,27 +40,6 @@ String convertToLocalFormat(String internationalNumber) {
   return internationalNumber;
 }
 
-String getFormattedSelectedDate(
-  GlobalKey<DateFormFieldState> dateFormFieldKey,
-) {
-  DateTime? selectedDate = dateFormFieldKey.currentState?.getSelectedDate();
-
-  if (selectedDate != null) {
-    DateTime withTime = DateTime(
-      selectedDate.year,
-      selectedDate.month,
-      selectedDate.day,
-      DateTime.now().hour,
-      DateTime.now().minute,
-      DateTime.now().second,
-      DateTime.now().millisecond,
-    );
-
-    return withTime.toUtc().toIso8601String();
-  }
-
-  return "";
-}
 
 String getFormattedDateTime(DateTime selectedDate) {
   DateTime withTime = DateTime(

@@ -269,7 +269,7 @@ class _SignupPageState extends State<SignupPage> {
                                                 .text
                                                 .isEmpty) {
                                               errorToast(
-                                                "Full Name field Cannot Be Empty"
+                                                "Full Name Field Cannot Be Empty"
                                                     .tr,
                                               );
                                             } else if (authController

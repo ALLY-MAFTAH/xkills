@@ -7,6 +7,7 @@ class Endpoints {
   // Auth
   static String login = dotenv.env['LOGIN']!;
   static String signup = dotenv.env['SIGNUP']!;
+  static String googleLogin = dotenv.env['GOOGLE_LOGIN']!;
   static String changePassword = dotenv.env['CHANGE_PASSWORD']!;
   static String forgotPassword = dotenv.env['FORGOT_PASSWORD']!;
   static String getUserData = dotenv.env['GET_USER_DATA']!;

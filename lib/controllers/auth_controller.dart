@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import '/views/auth/signin_page.dart';
 import '/views/screens/tab_screen.dart';
@@ -47,6 +50,70 @@ class AuthController extends GetxController {
   String? temporaryUserToken;
   String? temporaryUsername;
   String? phoneForOTP;
+  late GoogleSignIn _googleSignIn;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _initializeGoogleSignIn();
+  }
+
+  Future<void> _initializeGoogleSignIn() async {
+    _googleSignIn = GoogleSignIn.instance;
+
+    await _googleSignIn.initialize(
+      clientId: dotenv.env["GOOGLE_CLIENT_ID"],
+      serverClientId: dotenv.env['GOOGLE_SERVER_CLIENT_ID'],
+    );
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      isSubmitting = true;
+      update();
+
+      // Use nullable type
+      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
+
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+
+      final String? idToken = googleAuth.idToken;
+      if (idToken == null) {
+        errorToast("Google authentication failed");
+        return;
+      }
+
+      // Send ID token to backend
+      final responseData = await HttpService.sendHttpRequest(
+        "GOOGLE SIGN IN ENDPOINT :::",
+        RequestType.POST,
+        Endpoints.googleLogin,
+        {"token": idToken},
+        isAuthRequest: false,
+      );
+
+      if (responseData == null) return;
+
+      String userToken = responseData['token'];
+      User authUser = User.fromJson(responseData['user']);
+
+      storage.write("userToken", userToken);
+      Auth().saveAuthUser(authUser);
+
+      clearFields();
+      Get.offAll(() => TabsScreen());
+    } on GoogleSignInException catch (e) {
+      print("GoogleSignInException: $e");
+      errorToast("Google Sign-In Failed");
+    } catch (e) {
+      print("EXCEPTION::::: Google Sign-In Failed");
+      print(e.toString());
+      errorToast("Google Sign-In Failed");
+    } finally {
+      isSubmitting = false;
+      update();
+    }
+  }
 
   // LANGUAGE
   void changeLanguage(bool value) async {
@@ -103,12 +170,11 @@ class AuthController extends GetxController {
     }
   }
 
-  // SIGNUP
   Future<void> signup() async {
     isSubmitting = true;
     update();
+
     try {
-      await Future.delayed(Duration(seconds: 1));
       String name = nameController.text.trim();
       String email = emailController.text.trim();
       String password = passwordController.text.trim();
@@ -116,34 +182,37 @@ class AuthController extends GetxController {
 
       final responseData = await HttpService.sendHttpRequest(
         "SIGN UP ENDPOINT :::",
-
         RequestType.POST,
         Endpoints.signup,
         {
           "name": name,
           "email": email,
           "password": password,
-          'password_confirmation': confirmPassword,
+          "password_confirmation": confirmPassword,
         },
         isAuthRequest: false,
       );
-      if (responseData == null) return;
 
-      String message = responseData['message'];
-      bool succeeded = responseData['success'];
-      print(message);
-      if (succeeded) {
-        await signin();
+      if (responseData == null) {
+        errorToast("Signup failed");
+        return;
       }
+      if (responseData.containsKey('token')) {
+        String userToken = responseData['token'];
+        User authUser = User.fromJson(responseData['user']);
+
+        storage.write("userToken", userToken);
+        Auth().saveAuthUser(authUser);
       clearFields();
-      update();
+
+        Get.offAll(() => TabsScreen());
+      } else {
+        errorToast(responseData['message'] ?? "Signup failed");
+      }
     } catch (ex) {
-      update();
       print(ex.toString());
       errorToast(ex.toString());
     } finally {
-      passwordController.clear();
-      confirmPasswordController.clear();
       isSubmitting = false;
       update();
     }
@@ -195,6 +264,7 @@ class AuthController extends GetxController {
         {"user_id": Auth().user!.id},
         isAuthRequest: false,
       );
+      print(responseData);
       if (responseData == null) return;
       User authUser = User.fromJson(responseData['user']);
       Auth().saveAuthUser(authUser);
@@ -272,150 +342,6 @@ class AuthController extends GetxController {
       update();
     }
   }
-
-  // Future<void> requestResetCode() async {
-  //   isSubmitting = true;
-  //   update();
-  //   try {
-  //     await Future.delayed(Duration(seconds: 1));
-  //     String email = emailController.text.trim();
-
-  //     final responseData = await HttpService.sendHttpRequest(
-  //       RequestType.POST,
-  //       Endpoints.requestResetCode,
-  //       {"phoneNumber": convertToInternationalFormat(email)},
-  //       false,
-  //       isAuthRequest: false,
-  //     );
-  //     if (responseData == null) return;
-
-  //     if (responseData['success'] == true) {
-  //       String resetCode = responseData['data']['otp'];
-  //       phoneForOTP = responseData['data']['phone'];
-  //       temporaryUserId = responseData['data']['userId'];
-  //       String reference = SmsService().generateReference(
-  //         "${temporaryUserId}_$temporaryUserId",
-  //       );
-  //       final appSignature = await SmsAutoFill().getAppSignature;
-
-  //       SmsService().sendSms(
-  //         to: phoneForOTP!,
-  //         message: "<#> Your reset code is: $resetCode \n$appSignature",
-  //         reference: reference,
-  //       );
-
-  //       isSubmitting = false;
-  //       emailController.clear();
-  //       update();
-
-  //       Get.offAll(() => ResetCodeScreen());
-  //       successToast("reset_code_sent".tr);
-  //     } else if (responseData['message'] == "Phone does not exist" ||
-  //         responseData['message'] == "Incorrect Phone or Password") {
-  //       isSubmitting = false;
-  //       update();
-  //       errorToast("phone_not_exist".tr);
-  //     } else {
-  //       isSubmitting = false;
-  //       update();
-  //       errorToast(responseData['message'].toString());
-  //     }
-  //   } catch (ex) {
-  //     isSubmitting = false;
-  //     update();
-  //     print(ex.toString());
-  //     errorToast(ex.toString());
-  //   } finally {
-  //     update();
-  //   }
-  // }
-
-  // Future<void> changeDefaultPassword() async {
-  //   isSubmitting = true;
-  //   update();
-  //   try {
-  //     if (confirmPasswordController.text != newPasswordController.text) {
-  //       confirmPasswordHasError = true;
-  //       isSubmitting = false;
-  //       update();
-  //       errorToast("passwords_not_match".tr);
-  //     } else {
-  //       confirmPasswordHasError = false;
-  //       await Future.delayed(Duration(seconds: 1));
-  //       String newPassword = newPasswordController.text.trim();
-  //       final responseData = await HttpService.sendHttpRequest(
-  //         RequestType.POST,
-  //         Endpoints.changeDefaultPassword,
-  //         {"userId": temporaryUserId, "newPassword": newPassword},
-  //         true,
-  //       );
-  //       if (responseData == null) return;
-
-  //       if (responseData['success'] == true) {
-  //         print(responseData['data']);
-  //         clearFields();
-  //         isSubmitting = false;
-  //         isFirstLogin = false;
-  //         temporaryUserToken = "";
-  //         temporaryUsername = "";
-  //         temporaryUserId = 0;
-  //         successToast("pass_change_success".tr);
-  //         isForgotPassword=false;
-  //         Get.offAll(() => const LoginScreen(), predicate: (route) => false);
-  //       } else {
-  //         isSubmitting = false;
-  //         update();
-  //         errorToast(responseData['message'].toString());
-  //       }
-  //     }
-  //   } catch (ex) {
-  //     isSubmitting = false;
-  //     update();
-  //     print(ex.toString());
-  //     errorToast(ex.toString());
-  //   } finally {
-  //     isSubmitting = false;
-  //     update();
-  //   }
-  // }
-
-  // Future<void> verifyResetCode() async {
-  //   isSubmitting = true;
-  //   update();
-  //   try {
-  //     await Future.delayed(Duration(seconds: 1));
-  //     final responseData = await HttpService.sendHttpRequest(
-  //       RequestType.POST,
-  //       Endpoints.verifyResetCode,
-  //       {"phoneNumber": phoneForOTP!, "otp": resetCodeController.text.trim()},
-  //       true,
-  //     );
-  //     if (responseData == null) return;
-
-  //     if (responseData['success'] == true) {
-  //       print(responseData['data']);
-  //       // clearFields();
-  //       isSubmitting = false;
-  //       update();
-  //       successToast("otp_verified".tr);
-  //       isFirstLogin = true;
-  //       update();
-  //       Get.offAll(() => const ChangePasswordPage());
-  //     } else {
-  //       isSubmitting = false;
-  //       update();
-  //       errorToast(responseData['message'].toString());
-  //     }
-  //   } catch (ex) {
-  //     isSubmitting = false;
-  //     update();
-  //     print(ex.toString());
-  //     errorToast(ex.toString());
-  //   } finally {
-  //     isSubmitting = false;
-  //     update();
-  //   }
-  // }
 
   Future<void> changePassword() async {
     isLoading = true;

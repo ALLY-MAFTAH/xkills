@@ -140,9 +140,13 @@ class HttpService {
       throw title;
     } else {
       final responseData = jsonDecode(response.body);
-      Map<String, dynamic> errors = responseData['errors'];
-      for (var entry in errors.entries) {
-        throw entry.value[0];
+      Map<String, dynamic>? errors =
+          responseData['errors'] ?? responseData['validationError'];
+
+      if (errors != null) {
+        for (var entry in errors.entries) {
+          throw entry.value[0];
+        }
       }
     }
   }

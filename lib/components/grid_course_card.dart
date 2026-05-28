@@ -29,8 +29,6 @@ class GridCourseCard extends StatefulWidget {
 class _GridCourseCardState extends State<GridCourseCard> {
   @override
   Widget build(BuildContext context) {
-    const double footerHeight = 100;
-
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -60,21 +58,30 @@ class _GridCourseCardState extends State<GridCourseCard> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
-
-          child: Stack(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: footerHeight,
-                child:
-                    widget.thisCourse.thumbnail!.isNotEmpty
+              Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 271 / 339,
+                    child: widget.thisCourse.thumbnail!.isNotEmpty
                         ? CachedNetworkImage(
-                          imageUrl: fixImageUrl(widget.thisCourse.thumbnail!),
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => customLoader(),
-                          errorWidget: (context, url, error) => Container(
+                            imageUrl: fixImageUrl(widget.thisCourse.thumbnail!),
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => customLoader(),
+                            errorWidget: (context, url, error) => Container(
+                              color: AppColors.primaryColor.withOpacity(0.8),
+                              child: Center(
+                                child: Icon(
+                                  Icons.play_circle_outline,
+                                  size: 50,
+                                  color: Colors.white.withOpacity(0.4),
+                                ),
+                              ),
+                            ),
+                          )
+                        : Container(
                             color: AppColors.primaryColor.withOpacity(0.8),
                             child: Center(
                               child: Icon(
@@ -84,37 +91,24 @@ class _GridCourseCardState extends State<GridCourseCard> {
                               ),
                             ),
                           ),
-                        )
-                        : Container(
-                          color: AppColors.primaryColor.withOpacity(0.8),
-                          child: Center(
-                            child: Icon(
-                              Icons.play_circle_outline,
-                              size: 50,
-                              color: Colors.white.withOpacity(0.4),
-                            ),
-                          ),
-                        ),
-              ),
-              if (widget.thisCourse.isBest!)
-                Positioned(
-                  top: 5,
-                  right: 5,
-                  child: CircleAvatar(
-                    backgroundColor: AppColors.primaryColor,
-                    radius: 12,
-                    child: Icon(
-                      Icons.star,
-                      size: 18,
-                      color: AppColors.tertiaryColor,
-                    ),
                   ),
-                ),
-
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
+                  if (widget.thisCourse.isBest!)
+                    Positioned(
+                      top: 5,
+                      right: 5,
+                      child: CircleAvatar(
+                        backgroundColor: AppColors.primaryColor,
+                        radius: 12,
+                        child: Icon(
+                          Icons.star,
+                          size: 18,
+                          color: AppColors.tertiaryColor,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              Expanded(
                 child: CourseInfoFooter(
                   thisCourse: widget.thisCourse,
                   isGolden: widget.isGolden,

@@ -205,7 +205,7 @@ class GoldenScreenState extends State<GoldenScreen> {
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10,
-                                    childAspectRatio: .85,
+                                    childAspectRatio: 0.55,
                                   ),
                               itemBuilder: (context, index) {
                                 return GridCourseCard(

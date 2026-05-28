@@ -27,7 +27,7 @@ class CourseShimmerGrid extends StatelessWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
-          childAspectRatio: .66,
+          childAspectRatio: 0.55,
         ),
         itemBuilder: (context, index) {
           // Placeholder card structure

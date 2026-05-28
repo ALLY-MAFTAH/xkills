@@ -762,7 +762,7 @@ class _HomeScreenState extends State<HomeScreen>
                                             crossAxisCount: 2,
                                             crossAxisSpacing: 10,
                                             mainAxisSpacing: 10,
-                                            childAspectRatio: .85,
+                                            childAspectRatio: 0.55,
                                           ),
                                       itemBuilder: (context, index) {
                                         final course = courses[index];

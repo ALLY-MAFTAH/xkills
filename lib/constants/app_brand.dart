@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
-import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+import '../components/liquid_glass_replacement.dart';
 import '/theme/app_colors.dart';
 import '/views/screens/cart_screen.dart';
 

@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../utils/image_url.dart';
 import 'package:get/get.dart';
-import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+import '../../components/liquid_glass_replacement.dart';
 import '/views/screens/golden_screen.dart';
 import '/constants/auth_user.dart';
 import '/theme/app_metrices.dart';

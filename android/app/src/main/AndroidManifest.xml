@@ -3,26 +3,8 @@
     <!-- Internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <!-- Storage permissions -->
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"/>
-
-    <!-- Android 13+ media access -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"/>
-
     <!-- All queries must be inside ONE block -->
     <queries>
-        <!-- Needed to open "All Files Access" settings screen -->
-        <intent>
-            <action android:name="android.settings.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION"/>
-        </intent>
-
         <!-- Required by Flutter ProcessTextPlugin -->
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
@@ -34,7 +16,7 @@
         android:label="Xkills"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
-        android:requestLegacyExternalStorage="true">
+        >
 
         <activity
             android:name=".MainActivity"

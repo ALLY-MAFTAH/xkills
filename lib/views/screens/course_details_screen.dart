@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import '../../utils/image_url.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shimmer/shimmer.dart';
@@ -24,8 +25,7 @@ import '../../models/section.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/time_conversion.dart';
 import '../../utils/video_player_utils.dart';
-import 'cart_screen.dart';
-import 'payment_options_screen.dart';
+import '../../utils/web_store.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final Course thisCourse;
@@ -106,7 +106,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                           widget.thisCourse.thumbnail!.isNotEmpty
                               ? BottomTopSlide(
                                 child: CachedNetworkImage(
-                                  imageUrl: widget.thisCourse.thumbnail!,
+                                  imageUrl: fixImageUrl(widget.thisCourse.thumbnail!),
                                   height: screenHeight / 4.4,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) => customLoader(),
@@ -155,31 +155,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             hasBackButton: true,
                             context: context,
                             showCartButton: false,
-                          ),
-                        if (!widget.thisCourse.isPaid!)
-                          Positioned(
-                            top:
-                                Platform.isAndroid
-                                    ? MediaQuery.of(context).padding.top + 15
-                                    : MediaQuery.of(context).padding.top,
-                            right: 10,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: AppColors.primaryColor,
-                              ),
-                              child: Text(
-                                "Free".tr,
-                                style: TextStyle(
-                                  color: AppColors.tertiaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
                           ),
                         Positioned(
                           top:
@@ -567,8 +542,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                       .thisCourse
                                                       .isPaid!) {
                                                     errorToast(
-                                                      "This is a paid course. Please buy to access the lessons."
-                                                          .tr,
+                                                      'paid_course_web_only'.tr,
                                                     );
                                                     Vibration.vibrate(
                                                       duration: 100,
@@ -601,8 +575,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                 downloadUrl: lesson.videoUrl!,
                                                 unlockPressed: () {
                                                   errorToast(
-                                                    "This is a paid course. Please buy to access the lessons."
-                                                        .tr,
+                                                    'paid_course_web_only'.tr,
                                                   );
                                                   Vibration.vibrate(
                                                     duration: 100,
@@ -756,7 +729,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                   .thisCourse
                                                                   .isPaid!) {
                                                                 errorToast(
-                                                                  "This is a paid course. Please buy to access the lessons."
+                                                                  'paid_course_web_only'
                                                                       .tr,
                                                                 );
                                                                 Vibration.vibrate(
@@ -794,7 +767,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                                                     .videoUrl!,
                                                             unlockPressed: () {
                                                               errorToast(
-                                                                "This is a paid course. Please buy to access the lessons."
+                                                                'paid_course_web_only'
                                                                     .tr,
                                                               );
                                                               Vibration.vibrate(
@@ -862,40 +835,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         builder: (courseController) {
                           return ShakeWidget(
                             shake: _shakePayment,
-                            child: buildBuyButton(
-                              widget.thisCourse,
-                              () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) => PaymentOptionsScreen(
-                                        courseIds: [widget.thisCourse.id!],
-                                        totalAmount:
-                                            widget.thisCourse.priceForPayment!,
-                                      ),
-                                ),
-                              ),
-                              () {
-                                if (!courseController.isLoading) {
-                                  courseController
-                                      .addOrRemoveCart(widget.thisCourse.id!)
-                                      .then((status) {
-                                        if (status == "added") {
-                                          successToast("Course added to cart".tr);
-                                        } else if (status == "removed") {
-                                          successToast(
-                                            "Course removed from cart".tr,
-                                          );
-                                        }
-                                      });
-                                }
-                              },
-                              () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => CartScreen()),
-                                );
-                              },
+                            child: buildPaidCourseWebsiteCta(
+                              onOpenWebsite: () =>
+                                  openWebCoursePage(widget.thisCourse),
                             ),
                           );
                         },

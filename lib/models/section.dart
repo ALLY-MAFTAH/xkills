@@ -41,19 +41,19 @@ class Section {
                 .toList()
             : [];
     return Section(
-      id: json['id'] as int,
-      userId: json['user_id'] as int,
-      courseId: json['course_id'] as int,
-      title: json['title'] as String,
-      sort: json['sort'] as int,
-      createdAt: json['created_at'] as String,
-      updatedAt: json['updated_at'] as String,
+      id: json['id'] as int?,
+      userId: json['user_id'] as int?,
+      courseId: json['course_id'] as int?,
+      title: json['title'] as String?,
+      sort: json['sort'] as int?,
+      createdAt: json['created_at'] as String?,
+      updatedAt: json['updated_at'] as String?,
       lessons: parsedLessons,
-      totalDuration: json['total_duration'] as String,
-      lessonCounterStarts: json['lesson_counter_starts'] as int,
-      lessonCounterEnds: json['lesson_counter_ends'] as int,
-      completedLessonNumber: json['completed_lesson_number'] as int,
-      userValidity: json['user_validity'] as bool,
+      totalDuration: json['total_duration']?.toString(),
+      lessonCounterStarts: json['lesson_counter_starts'] as int?,
+      lessonCounterEnds: json['lesson_counter_ends'] as int?,
+      completedLessonNumber: json['completed_lesson_number'] as int?,
+      userValidity: json['user_validity'] as bool?,
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import '../utils/image_url.dart';
 import 'package:get/get.dart';
 import 'package:xkills/components/slide_animations.dart';
 import '../controllers/course_controller.dart';
@@ -12,13 +13,12 @@ import 'players/youtube_player_dialog.dart';
 
 class GridPackCard extends StatefulWidget {
   final Course thisPack;
-  final VoidCallback onBuyPressed;
-  final VoidCallback onAddToCartPressed;
+  /// Opens this pack on the public website (no in-app purchase).
+  final VoidCallback onOpenWebsite;
   const GridPackCard({
     super.key,
     required this.thisPack,
-    required this.onBuyPressed,
-    required this.onAddToCartPressed,
+    required this.onOpenWebsite,
   });
 
   @override
@@ -79,8 +79,7 @@ class _GridPackCardState extends State<GridPackCard> {
                     ? ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: CachedNetworkImage(
-                        // imageUrl:  "https://i.ebayimg.com/images/g/xRQAAOSwotJmRTJl/s-l1600.webp",
-                        imageUrl: "${widget.thisPack.thumbnail}",
+                        imageUrl: fixImageUrl("${widget.thisPack.thumbnail}"),
                         fit: BoxFit.cover,
                         placeholder: (context, url) => customLoader(),
                         errorWidget:
@@ -440,17 +439,11 @@ class _GridPackCardState extends State<GridPackCard> {
               return isSmall
                   ? Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildBuyButton(),
-                      const SizedBox(height: 8),
-                      _buildCartButton(),
-                    ],
+                    children: [_buildWebsiteButton()],
                   )
                   : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(width: 100, child: _buildBuyButton()),
-                      SizedBox(width: 100, child: _buildCartButton()),
+                      Expanded(child: _buildWebsiteButton()),
                     ],
                   );
             },
@@ -474,57 +467,11 @@ class _GridPackCardState extends State<GridPackCard> {
     );
   }
 
-  Widget _buildCartButton() {
-    final isInCart = courseController.cartList.any(
-      (item) => item.id == widget.thisPack.id,
-    );
-
-    final isLoading = courseController.loadingCartIds.contains(
-      widget.thisPack.id,
-    );
-
-    return gradientButtonWrapper(
-      radius: 10,
-      child:
-          isLoading
-              ? customLoader(color: Colors.white)
-              : ElevatedButton(
-                onPressed: () => widget.onAddToCartPressed(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  padding: EdgeInsets.zero,
-                ),
-
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      isInCart
-                          ? Icons.remove_shopping_cart_outlined
-                          : Icons.add_shopping_cart_rounded,
-                      color: isInCart ? Colors.red : Colors.black,
-                    ),
-                    SizedBox(width: 5),
-                    Text(
-                      isInCart ? 'Remove'.tr : "Add".tr,
-                      style: TextStyle(
-                        color: isInCart ? Colors.red : Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-    );
-  }
-
-  Widget _buildBuyButton() {
+  Widget _buildWebsiteButton() {
     return gradientButtonWrapper(
       radius: 10,
       child: ElevatedButton(
-        onPressed: widget.onBuyPressed,
+        onPressed: widget.onOpenWebsite,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
@@ -532,13 +479,20 @@ class _GridPackCardState extends State<GridPackCard> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Text(
-          'Buy Now'.tr,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 12,
-            fontWeight: FontWeight.w800,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.open_in_new_rounded, color: Colors.black, size: 16),
+            SizedBox(width: 6),
+            Text(
+              'View on website'.tr,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
         ),
       ),
     );

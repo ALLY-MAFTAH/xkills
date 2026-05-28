@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import '../../utils/image_url.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import '/views/screens/golden_screen.dart';
@@ -85,6 +86,15 @@ class _HomeScreenState extends State<HomeScreen>
     _stopAutoPlay();
 
     super.dispose();
+  }
+
+  String _helloGreeting() {
+    final name = Auth().user?.name;
+    if (name == null || name.trim().isEmpty) {
+      return "Hello".tr;
+    }
+    final first = name.trim().split(RegExp(r'\s+')).first;
+    return "${"Hello, ".tr}$first";
   }
 
   @override
@@ -283,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen>
                                     width: double.infinity,
                                     key: ValueKey(_currentIndex),
                                     child: CachedNetworkImage(
-                                      imageUrl: slides[_currentIndex],
+                                      imageUrl: fixImageUrl(slides[_currentIndex]),
 
                                       fit: BoxFit.cover,
                                       placeholder:
@@ -337,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   left: 10,
                                   right: 10,
                                   child: Text(
-                                    "${"Hello, ".tr} ${Auth().user!.name!.split(' ').first}",
+                                    _helloGreeting(),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 9,

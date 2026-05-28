@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -9,8 +11,22 @@ import '/theme/app_colors.dart';
 import 'services/translation.dart';
 import 'views/screens/splash.dart';
 
+/// Bypasses SSL certificate verification for the dev/staging server
+/// which uses a self-signed certificate.
+class _DevHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Allow self-signed certs on the dev/staging server.
+  HttpOverrides.global = _DevHttpOverrides();
 
   await dotenv.load(fileName: ".env");
   await GetStorage.init();

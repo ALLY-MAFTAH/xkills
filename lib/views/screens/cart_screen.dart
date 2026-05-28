@@ -2,16 +2,17 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '/components/validations.dart';
+import '../../utils/image_url.dart';
+import '/components/toasts.dart';
 import '/components/shimmer_widgets/cart_items_shimmer.dart';
 import '../../components/custom_loader.dart';
 import '../../constants/app_brand.dart';
 import '../../controllers/course_controller.dart';
 import '../../models/course.dart';
 import '../../theme/app_colors.dart';
+import '../../utils/web_store.dart';
 import 'course_details_screen.dart';
 import 'courses_screen.dart';
-import 'payment_options_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -22,20 +23,12 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   final courseController = Get.put(CourseController());
-  double _totalPrice = 0.0;
   List<Course> cartItems = [];
 
   @override
   void initState() {
     super.initState();
     courseController.cartListFuture = courseController.getCartList();
-  }
-
-  void _calculateTotal(List<Course> cartItems) {
-    _totalPrice = cartItems.fold(0.0, (sum, item) {
-      final price = item.priceForPayment ?? 0.0;
-      return sum + price;
-    });
   }
 
   Widget _buildCartItem(Course thisCourse) {
@@ -72,7 +65,7 @@ class _CartScreenState extends State<CartScreen> {
                         ? ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: CachedNetworkImage(
-                            imageUrl: thisCourse.thumbnail!,
+                            imageUrl: fixImageUrl(thisCourse.thumbnail!),
                             fit: BoxFit.cover,
                             placeholder: (context, url) => customLoader(),
                             errorWidget:
@@ -142,35 +135,7 @@ class _CartScreenState extends State<CartScreen> {
                               color: Colors.redAccent,
                             ),
                   ),
-                  SizedBox(height: thisCourse.discountFlag! ? 8 : 25),
-                  if (thisCourse.isPaid! && thisCourse.discountFlag!)
-                    Text(
-                      '${thisCourse.price}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                        decoration:
-                            TextDecoration
-                                .lineThrough, // The strikethrough effect
-                        decorationColor: Colors.grey.withOpacity(0.9),
-                        decorationThickness: 2,
-                      ),
-                    ),
-                  Text(
-                    thisCourse.isPaid!
-                        ? thisCourse.discountFlag! &&
-                                thisCourse.discountedPrice != null
-                            ? '${thisCourse.discountedPrice}'
-                            : '${thisCourse.price}'
-                        : "Free".tr,
-
-                    style: const TextStyle(
-                      color: Color(0xFFE6C068),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
+                  const SizedBox(height: 25),
                 ],
               ),
             ],
@@ -300,7 +265,6 @@ class _CartScreenState extends State<CartScreen> {
 
                         cartItems = snapshot.data ?? [];
                         final bool isEmpty = cartItems.isEmpty;
-                        _calculateTotal(cartItems);
 
                         return SliverList(
                           delegate: SliverChildListDelegate([
@@ -317,39 +281,7 @@ class _CartScreenState extends State<CartScreen> {
                                         children: [
                                           ...cartItems.map(_buildCartItem),
                                           const SizedBox(height: 20),
-                                          Divider(
-                                            color: Colors.white30,
-                                            thickness: 1,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 10,
-                                              bottom: 100,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  'Total:'.tr,
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  getMoneyFormat(_totalPrice),
-                                                  style: const TextStyle(
-                                                    color: Color(0xFFE6C068),
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w900,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                          const SizedBox(height: 100),
                                         ],
                                       ),
                             ),
@@ -408,21 +340,10 @@ class _CartScreenState extends State<CartScreen> {
                               children: [
                                 Expanded(
                                   child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (_) => PaymentOptionsScreen(
-                                                courseIds:
-                                                    cartItems
-                                                        .map(
-                                                          (course) => course.id!,
-                                                        )
-                                                        .toList(),
-                                                totalAmount: _totalPrice,
-                                              ),
-                                        ),
+                                    onPressed: () async {
+                                      await openWebStorePath('/cart');
+                                      successToast(
+                                        'Opening the Xkills website in your browser.'.tr,
                                       );
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -437,7 +358,7 @@ class _CartScreenState extends State<CartScreen> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            'Proceed to Checkout'.tr,
+                                            'View cart on website'.tr,
                                             style: const TextStyle(
                                               color: Color(0xFF071B1A),
                                               fontSize: 14,

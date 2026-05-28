@@ -71,6 +71,19 @@ Map<String, String> enUS = {
   "Total:": "Total:",
   "My Cart": "My Cart",
   "Proceed to Checkout": "Proceed to Checkout",
+  "Complete purchase on website": "Complete purchase on website",
+  "View cart on website": "View cart on website",
+  "View on website": "View on website",
+  "Opening the Xkills website in your browser.":
+      "Opening the Xkills website in your browser.",
+  "Orders on website": "Orders on website",
+  "paid_course_web_only":
+      "Full access is available on the Xkills website. Use the same account there.",
+  "Sign in on the website with the same account to pay.":
+      "Sign in on the website with the same account to pay.",
+  "Complete your purchase on the website with the same account.":
+      "Complete your purchase on the website with the same account.",
+  "Could not open browser": "Could not open browser",
   "Account Profile": "Account Profile",
   "Account Settings": "Account Settings",
   "Change Language": "Change Language",
@@ -203,5 +216,27 @@ Map<String, String> enUS = {
   "No Payment": "No Payments",
   "No Payments": "No Payments",
   "Payments History": "Payments History",
-  "Continue With Google":"Continue With Google"
+  "Continue With Google": "Continue With Google",
+  "Account deleted successfully": "Your account was deleted successfully.",
+
+  "delete_account_row_title": "Delete account",
+  "delete_account_row_subtitle":
+      "Remove your profile and data from Xkills (required by App Store guidelines).",
+  "delete_account_title": "Delete your account?",
+  "delete_account_intro":
+      "This removes your Xkills account from our servers. You will lose access to purchased content in the app unless you create a new account.",
+  "delete_account_bullet_profile": "Profile and login will be removed.",
+  "delete_account_bullet_enrollments":
+      "Course enrollments and progress tied to this account will be removed.",
+  "delete_account_bullet_cart_wishlist": "Cart and saved (wishlist) items will be cleared.",
+  "delete_account_bullet_reviews": "Reviews you wrote will be removed.",
+  "delete_account_bullet_irreversible": "This cannot be undone.",
+  "delete_account_help_website": "Contact & help on website",
+  "delete_account_checkbox": "I understand my account and data will be permanently deleted.",
+  "delete_account_type_label": "To confirm, type DELETE in capital letters:",
+  "delete_account_type_hint": "DELETE",
+  "delete_account_cancel": "Cancel",
+  "delete_account_confirm_button": "Delete my account",
+  "session_expired_sign_in_again":
+      "Your session has expired. Please sign in again.",
 };

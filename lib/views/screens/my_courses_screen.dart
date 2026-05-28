@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../utils/image_url.dart';
 import '../../theme/app_metrices.dart';
 import '/includes/ratings.dart';
 import '/models/course.dart';
@@ -120,7 +121,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                                   ? ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: CachedNetworkImage(
-                                      imageUrl: myCourse.thumbnail!,
+                                      imageUrl: fixImageUrl(myCourse.thumbnail!),
                                       fit: BoxFit.cover,
                                       placeholder:
                                           (context, url) => customLoader(),
@@ -257,45 +258,6 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
               ),
             ),
 
-            Positioned(
-              right: 0,
-              top: 0,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 4,
-                    width: 5,
-                    child: CustomPaint(painter: TrianglePainter()),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 120, 105, 76),
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                      ),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            myCourse.isPaid! ? "Purchased".tr : "Free".tr,
-                            style: const TextStyle(
-                              color: Color(0xFFE6C068),
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
@@ -446,25 +408,5 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
         );
       },
     );
-  }
-}
-
-class TrianglePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint =
-        Paint()
-          ..color = Colors.grey
-          ..strokeWidth = 2.0;
-    Path path = Path();
-    path.moveTo(0.0, size.height);
-    path.lineTo(size.width, 0.0);
-    path.lineTo(size.width, size.height);
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }

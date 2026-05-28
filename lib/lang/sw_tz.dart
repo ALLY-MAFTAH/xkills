@@ -70,6 +70,19 @@ Map<String, String> swTZ = {
   "Total:": "Jumla:",
   "My Cart": "Kikapu Changu",
   "Proceed to Checkout": "Endelea Kulipa",
+  "Complete purchase on website": "Kamilisha ununuzi kwenye tovuti",
+  "View cart on website": "Tazama kikapu kwenye tovuti",
+  "View on website": "Tazama kwenye tovuti",
+  "Opening the Xkills website in your browser.":
+      "Inafungua tovuti ya Xkills kwenye kivinjari chako.",
+  "Orders on website": "Maagizo kwenye tovuti",
+  "paid_course_web_only":
+      "Ufikiaji kamili unapatikana kwenye tovuti ya Xkills. Tumia akaunti hiyo hiyo huko.",
+  "Sign in on the website with the same account to pay.":
+      "Ingia kwenye tovuti kwa akaunti hiyo hiyo ili kulipa.",
+  "Complete your purchase on the website with the same account.":
+      "Kamilisha ununuzi wako kwenye tovuti kwa akaunti hiyo hiyo.",
+  "Could not open browser": "Imeshindikana kufungua kivinjari",
   "Account Profile": "Wasifu wa Akaunti",
   "Account Settings": "Mipangilio ya Akaunti",
   "Change Language": "Badilisha Lugha",
@@ -205,4 +218,29 @@ Map<String, String> swTZ = {
   "No Payments": "Hakuna Malipo",
   "Payments History": "Historia Ya Malipo",
   "Continue With Google": "Endelea Kwa Google",
+  "Account deleted successfully": "Akaunti yako imefutwa kwa mafanikio.",
+
+  "delete_account_row_title": "Futa akaunti",
+  "delete_account_row_subtitle":
+      "Ondoa wasifu na data yako kwenye Xkills (inahitajika na kanuni za App Store).",
+  "delete_account_title": "Ungependa kufuta akaunti yako?",
+  "delete_account_intro":
+      "Hii inaondoa akaunti yako ya Xkills kwenye seva zetu. Hutapata tena mfululizo wa maudhui uliyonunua kwenye programu isipokuwa uanzishe akaunti mpya.",
+  "delete_account_bullet_profile": "Wasifu na kuingia kutaondolewa.",
+  "delete_account_bullet_enrollments":
+      "Usajili wa kozi na maendeleo yako yataondolewa.",
+  "delete_account_bullet_cart_wishlist":
+      "Vitu kwenye kikapu na orodha ya matakwa vitaondolewa.",
+  "delete_account_bullet_reviews": "Mapitio uliyoandika yataondolewa.",
+  "delete_account_bullet_irreversible": "Haiwezi kutenduliwa.",
+  "delete_account_help_website": "Mawasiliano na msaada kwenye tovuti",
+  "delete_account_checkbox":
+      "Naelewa akaunti na data yangu zitafutwa kabisa.",
+  "delete_account_type_label":
+      "Thibitisha kwa kuandika DELETE kwa herufi kubwa:",
+  "delete_account_type_hint": "DELETE",
+  "delete_account_cancel": "Ghairi",
+  "delete_account_confirm_button": "Futa akaunti yangu",
+  "session_expired_sign_in_again":
+      "Kikao chako kimeisha. Tafadhali ingia tena.",
 };

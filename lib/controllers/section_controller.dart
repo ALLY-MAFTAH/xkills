@@ -25,34 +25,59 @@ class SectionController extends GetxController {
   Map<int, bool> isPaused = {}; // lessonId -> bool
   Map<int, CancelToken> cancelTokens = {}; // lessonId -> CancelToken
 
+  // Cache sections per courseId to avoid redundant API calls
+  final Map<int, List<Section>> _cache = {};
+  // Track in-flight requests to avoid duplicate concurrent fetches
+  final Map<int, Future<List<Section>>> _inflight = {};
+
   Future<List<Section>> getSections(int courseId) async {
+    // Return cached result if available
+    if (_cache.containsKey(courseId)) {
+      _sections = _cache[courseId]!;
+      return _sections;
+    }
+
+    // If already fetching this course, wait for the same future
+    if (_inflight.containsKey(courseId)) {
+      return _inflight[courseId]!;
+    }
+
+    final future = _fetchSections(courseId);
+    _inflight[courseId] = future;
+    try {
+      return await future;
+    } finally {
+      _inflight.remove(courseId);
+    }
+  }
+
+  Future<List<Section>> _fetchSections(int courseId) async {
     try {
       final responseData = await HttpService.sendHttpRequest(
-                        "GET SECTIONS ENDPOINT :::",
-
+        "GET SECTIONS ENDPOINT :::",
         RequestType.GET,
         Endpoints.getSections,
         {"course_id": courseId},
       );
-      if (responseData == null) return sections;
+      if (responseData == null) return _sections;
 
       final List fetchedSections = responseData;
-        _sections = [];
-      if (fetchedSections.isNotEmpty) {
-        for (var section in fetchedSections) {
-          final calledDataSet = Section.fromJson(section);
-
-          _sections.add(calledDataSet);
-          print(_sections);
-        }
+      final List<Section> result = [];
+      for (var section in fetchedSections) {
+        result.add(Section.fromJson(section));
       }
-      return sections;
+      // Store in cache
+      _cache[courseId] = result;
+      _sections = result;
+      return result;
     } catch (e) {
       print(e.toString());
       errorToast(e.toString());
     }
-    return sections;
+    return _sections;
   }
+
+  void clearCache() => _cache.clear();
 
   Future<bool> requestStoragePermission() async {
     var status = await Permission.storage.request();

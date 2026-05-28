@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '/views/auth/forgot_password_page.dart';
 import '../../includes/auth_inputs_decoration.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '/components/toasts.dart';
 import '/components/validations.dart';
 import '/components/custom_loader.dart';
@@ -315,6 +316,36 @@ class _SigninPageState extends State<SigninPage> {
                             ),
                           ),
                         ),
+                        if (Platform.isIOS) ...[
+                          const SizedBox(height: 10),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: OutlinedButton.icon(
+                              onPressed: authController.isSubmitting
+                                  ? null
+                                  : () {
+                                      authController.signInWithApple();
+                                    },
+                              icon: const FaIcon(
+                                FontAwesomeIcons.apple,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                              label: Text(
+                                "Continue With Apple".tr,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(color: Colors.white, width: 1),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 10),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0),

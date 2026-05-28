@@ -54,19 +54,8 @@ class PackInfoFooter extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  thisPack.isPaid!
-                      ? thisPack.discountFlag! &&
-                              thisPack.discountedPrice != null
-                          ? '\$${thisPack.discountedPrice}'
-                          : '${thisPack.price}'
-                      : "Free".tr,
-                  style: const TextStyle(
-                    color: Color(0xFFE6C068),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
+                // App Store: no in-app pricing or "Free" labels.
+                const SizedBox.shrink(),
                 buildRatingStars(
                   context,
                   thisPack.id!,

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '/components/toasts.dart';
 import '/components/validations.dart';
 import '../../components/custom_loader.dart';
@@ -355,6 +356,76 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 16),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Row(
+                            children: [
+                              Expanded(child: Divider(color: Colors.white30)),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  "or".tr,
+                                  style: const TextStyle(color: Colors.white60, fontSize: 12),
+                                ),
+                              ),
+                              Expanded(child: Divider(color: Colors.white30)),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: OutlinedButton.icon(
+                            onPressed: authController.isSubmitting
+                                ? null
+                                : () => authController.signInWithGoogle(),
+                            icon: Image.asset(
+                              'assets/images/google_logo.png',
+                              height: 20,
+                            ),
+                            label: Text(
+                              "Continue With Google".tr,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.white, width: 1),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (Platform.isIOS) ...[
+                          const SizedBox(height: 10),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: OutlinedButton.icon(
+                              onPressed: authController.isSubmitting
+                                  ? null
+                                  : () => authController.signInWithApple(),
+                              icon: const FaIcon(
+                                FontAwesomeIcons.apple,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                              label: Text(
+                                "Continue With Apple".tr,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(color: Colors.white, width: 1),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 10),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0),

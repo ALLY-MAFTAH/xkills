@@ -8,10 +8,12 @@ class Endpoints {
   static String login = dotenv.env['LOGIN']!;
   static String signup = dotenv.env['SIGNUP']!;
   static String googleLogin = dotenv.env['GOOGLE_LOGIN']!;
+  static String appleLogin = dotenv.env['APPLE_LOGIN']!;
   static String changePassword = dotenv.env['CHANGE_PASSWORD']!;
   static String forgotPassword = dotenv.env['FORGOT_PASSWORD']!;
   static String getUserData = dotenv.env['GET_USER_DATA']!;
   static String updateProfile = dotenv.env['UPDATE_USER_DATA']!;
+  static String deleteAccount = dotenv.env['DELETE_ACCOUNT']!;
   // Categories
   static String getCategories = dotenv.env['GET_CATEGORIES']!;
   static String getSubCategories = dotenv.env['GET_SUB_CATEGORIES']!;
@@ -35,7 +37,8 @@ class Endpoints {
   static String addOrRemoveCart = dotenv.env['TOGGLE_CART_ITEMS']!;
   static String storeCourseRate = dotenv.env['STORE_COURSE_RATE']!;
   static String updateWatchHistory = dotenv.env['UPDATE_WATCH_HISTORY']!;
-  static String checkPaymentStatus = dotenv.env['CHECK_PAYMENT_STATUS']!;
-  static String zenoWebhook = dotenv.env['ZENO_WEBHOOK']!;
-  static String recordPayment = dotenv.env['RECORD_PAYMENT']!;
+
+  /// Public website base URL (native app links out for account / catalog pages only).
+  static String webStoreBaseUrl =
+      dotenv.env['WEB_STORE_BASE_URL'] ?? 'https://xkills.app';
 }

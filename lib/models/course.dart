@@ -103,7 +103,7 @@ List<Map<String, String>>? faqs;
       discountedPrice: json['discounted_price'] as num?,
       discountFlag: (json['discount_flag'] as int?) == 1,
       enableDripContent: (json['enable_drip_content'] as int?) == 1,
-      dripContentSettings: json['drip_content_settings'] as String?,
+      dripContentSettings: _toStrOrNull(json['drip_content_settings']),
       metaKeywords: json['meta_keywords'] as String?,
       metaDescription: json['meta_description'] as String?,
       thumbnail: json['thumbnail'] as String?,
@@ -120,12 +120,14 @@ faqs: (json['faqs'] as List<dynamic>?)
     .toList(),
    instructorIds: json['instructor_ids'] as String?,
       // Convert String to double
-      averageRating: double.tryParse(json['average_rating'] as String? ?? '0.0'),
+      averageRating: double.tryParse(json['average_rating']?.toString() ?? '0.0'),
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
       expiryPeriod: json['expiry_period'] as String?,
       // Instructors list conversion
-      instructors: (json['instructors'] as List<dynamic>?)?.cast<String>(),
+      instructors: (json['instructors'] as List<dynamic>?)
+          ?.map((e) => e is String ? e : e.toString())
+          .toList(),
       priceCart: json['price_cart'] as num?,
       instructorName: json['instructor_name'] as String?,
       instructorProfile: json['instructor_profile'] as String?,
@@ -182,6 +184,12 @@ faqs: (json['faqs'] as List<dynamic>?)
       'total_reviews': totalReviews,
     };
   }
+  static String? _toStrOrNull(dynamic v) {
+    if (v == null) return null;
+    if (v is String) return v;
+    return v.toString();
+  }
+
   static List<String>? _mapOrListToStringList(dynamic data) {
   if (data == null) return [];
 

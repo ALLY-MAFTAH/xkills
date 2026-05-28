@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import '../utils/image_url.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -328,7 +329,7 @@ Widget buildProfileCard({
                   child:
                       thisUser?.photo != null && thisUser!.photo!.isNotEmpty
                           ? CachedNetworkImage(
-                            imageUrl: thisUser!.photo!,
+                            imageUrl: fixImageUrl(thisUser!.photo!),
                             width: 100,
                             height: 100,
                             fit: BoxFit.cover,

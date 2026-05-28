@@ -35,21 +35,19 @@ class Lesson {
 
   factory Lesson.fromJson(Map<String, dynamic> json) {
     return Lesson(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      // The duration is a string like "00:00"
-      duration: json['duration'] as String,
-      courseId: json['course_id'] as int,
-      sectionId: json['section_id'] as int,
-      videoType: json['video_type'] as String,
-      videoUrl: json['video_url'] as String,
-      lessonType: json['lesson_type'] as String,
-      // JSON values like null are mapped to nullable types (bool?)
+      id: json['id'] as int?,
+      title: json['title'] as String?,
+      duration: json['duration']?.toString(),
+      courseId: json['course_id'] as int?,
+      sectionId: json['section_id'] as int?,
+      videoType: json['video_type'] as String?,
+      videoUrl: json['video_url']?.toString(),
+      lessonType: json['lesson_type'] as String?,
       isFree: json['is_free'] as bool?,
       attachment: json['attachment'] as String?,
       attachmentUrl: json['attachment_url'] as String?,
       attachmentType: json['attachment_type'] as String?,
-      summary: json['summary'] as String?,
+      summary: json['summary']?.toString(),
       isCompleted: json['is_completed'] as bool?,
       // userValidity: json['user_validity'] as bool,
     );

@@ -7,7 +7,6 @@ import 'package:share_plus/share_plus.dart';
 import '../enums/enums.dart';
 import '/includes/ratings.dart';
 import '../controllers/section_controller.dart';
-import '/components/custom_loader.dart';
 import '/components/slide_animations.dart';
 import '../controllers/course_controller.dart';
 import '../models/course.dart';
@@ -153,12 +152,8 @@ LinearGradient getLessonGradient(dynamic lesson) {
   );
 }
 
-Widget buildBuyButton(
-  Course thisCourse,
-  void Function()? onBuyPressed,
-  void Function()? onAddToCartPressed,
-  void Function()? onViewCartPressed,
-) {
+/// Single CTA: opens the course on the public website. No in-app cart or buy UI.
+Widget buildPaidCourseWebsiteCta({required VoidCallback onOpenWebsite}) {
   return BottomTopSlide(
     child: Container(
       height: Platform.isAndroid ? 85 : 100,
@@ -186,168 +181,25 @@ Widget buildBuyButton(
         right: 12,
         bottom: Platform.isAndroid ? 15 : 25,
       ),
-
-      child: GetBuilder<CourseController>(
-        builder: (courseController) {
-          final isLoading = courseController.loadingCartIds.contains(
-            thisCourse.id,
-          );
-
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              // choose breakpoint
-              final bool isNarrow = constraints.maxWidth < 350;
-
-              final buttons = <Widget>[
-                // BUY BUTTON
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onBuyPressed,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.tertiaryColor,
-                      surfaceTintColor: AppColors.tertiaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 2,
-                        horizontal: 4,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Buy '.tr,
-                          style: const TextStyle(
-                            color: Color(0xFF071B1A),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          thisCourse.isPaid!
-                              ? thisCourse.discountFlag! &&
-                                      thisCourse.discountedPrice != null
-                                  ? '\$${thisCourse.discountedPrice}'
-                                  : '${thisCourse.price}'
-                              : "Free".tr,
-                          style: const TextStyle(
-                            color: Color(0xFF071B1A),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        if (thisCourse.discountFlag!)
-                          Text(
-                            '${thisCourse.price}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                              decoration: TextDecoration.lineThrough,
-                              decorationColor: Colors.grey.withOpacity(0.9),
-                              decorationThickness: 2,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 10, height: 10),
-
-                // CART BUTTON
-                courseController.cartList.any(
-                      (item) => item.id == thisCourse.id,
-                    )
-                    ? ElevatedButton(
-                      onPressed: onViewCartPressed,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 2,
-                          horizontal: 4,
-                        ),
-                      ),
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Icon(
-                            Icons.shopping_cart_rounded,
-                            size: 30,
-                            color: AppColors.secondaryColor,
-                          ),
-                          Positioned(
-                            top: -2,
-                            left: 22,
-                            child: CircleAvatar(
-                              radius: 10,
-                              backgroundColor: AppColors.tertiaryColor,
-                              child: Text(
-                                courseController.cartList.length.toString(),
-                                style: const TextStyle(
-                                  color: AppColors.primaryColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    : ElevatedButton.icon(
-                      onPressed: onAddToCartPressed,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(10),
-                        backgroundColor: AppColors.tertiaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      icon:
-                          isLoading
-                              ? null
-                              : const Icon(Icons.add_shopping_cart),
-                      label:
-                          isLoading
-                              ? customLoader(color: AppColors.secondaryColor)
-                              : Text(
-                                'Add To Cart'.tr,
-                                style: const TextStyle(
-                                  color: Color(0xFF071B1A),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                    ),
-              ];
-
-              // 🔁 SWITCH LAYOUT
-              return isNarrow
-                  ? SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children:
-                          buttons.map((w) {
-                            if (w is Expanded) return w.child;
-                            return w;
-                          }).toList(),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: buttons,
-                  );
-            },
-          );
-        },
+      child: ElevatedButton.icon(
+        onPressed: onOpenWebsite,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.tertiaryColor,
+          surfaceTintColor: AppColors.tertiaryColor,
+          minimumSize: const Size.fromHeight(48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        icon: const Icon(Icons.open_in_new_rounded, color: Color(0xFF071B1A)),
+        label: Text(
+          'View on website'.tr,
+          style: const TextStyle(
+            color: Color(0xFF071B1A),
+            fontSize: 14,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
       ),
     ),
   );

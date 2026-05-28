@@ -100,10 +100,8 @@ class _PlayVideoFromAssetState extends State<NetworkVideoPlayerFull> {
 
   @override
   void dispose() {
+    timer?.cancel();
     controller.dispose();
-    if (widget.lessonId != null) {
-      timer!.cancel();
-    }
     super.dispose();
   }
 

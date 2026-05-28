@@ -123,19 +123,8 @@ class _CourseInfoFooterState extends State<CourseInfoFooter> {
                   ),
                 ],
               ),
-              Text(
-                widget.thisCourse.isPaid!
-                    ? widget.thisCourse.discountFlag! &&
-                            widget.thisCourse.discountedPrice != null
-                        ? '\$${widget.thisCourse.discountedPrice}'
-                        : '${widget.thisCourse.price}'
-                    : "Free".tr,
-                style: const TextStyle(
-                  color: Color(0xFFE6C068),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
+              // App Store: no in-app pricing or "Free" labels.
+              const SizedBox.shrink(),
             ],
           ),
         ),

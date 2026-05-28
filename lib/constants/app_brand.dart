@@ -14,7 +14,7 @@ Widget appBrand({
   VoidCallback? onCardPressed,
   BuildContext? context,
   bool hasBackButton = false,
-  bool showCartButton = true,
+  bool showCartButton = false,
 }) {
   return Positioned(
     top:
@@ -132,7 +132,7 @@ Widget appLogo({
   VoidCallback? onCardPressed,
   BuildContext? context,
   bool hasBackButton = false,
-  bool showCartButton = true,
+  bool showCartButton = false,
 }) {
   return Center(
     child: TopBottomSlide(

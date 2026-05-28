@@ -6,7 +6,6 @@ import '/components/custom_search.dart';
 import '/components/slide_animations.dart';
 import '/models/sub_category.dart';
 import '/components/grid_pack_card.dart';
-import '/components/toasts.dart';
 import '/controllers/category_controller.dart';
 import '/theme/app_metrices.dart';
 import '/controllers/course_controller.dart';
@@ -15,7 +14,7 @@ import '/components/shimmer_widgets/pack_grid_shimmer.dart';
 import '/theme/app_colors.dart';
 import '/constants/app_brand.dart';
 import 'dart:io';
-import 'payment_options_screen.dart';
+import '../../utils/web_store.dart';
 
 class PacksScreen extends StatefulWidget {
   const PacksScreen({super.key});
@@ -298,43 +297,13 @@ class _PacksScreenState extends State<PacksScreen> {
                                 return Column(
                                   children: [
                                     ...filteredPacks.map((pack) {
-                                      final amount = pack.priceForPayment ?? 0.0;
-                                    
                                       return BottomTopSlide(
                                         child: Padding(
                                           padding: const EdgeInsets.only(bottom: 1),
                                           child: GridPackCard(
                                             thisPack: pack,
-                                            onBuyPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder:
-                                                      (_) => PaymentOptionsScreen(
-                                                        courseIds: [pack.id!],
-                                                        totalAmount: amount,
-                                                      ),
-                                                ),
-                                              );
-                                            },
-                                            onAddToCartPressed: () {
-                                              if (!courseController.isLoading) {
-                                                courseController
-                                                    .addOrRemoveCart(pack.id!)
-                                                    .then((status) {
-                                                      if (status == "added") {
-                                                        successToast(
-                                                          "Pack Added To Cart".tr,
-                                                        );
-                                                      } else if (status ==
-                                                          "removed") {
-                                                        successToast(
-                                                          "Pack Removed From Cart".tr,
-                                                        );
-                                                      }
-                                                    });
-                                              }
-                                              setState(() {});
+                                            onOpenWebsite: () {
+                                              openWebCoursePage(pack);
                                             },
                                           ),
                                         ),

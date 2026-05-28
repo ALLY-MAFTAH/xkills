@@ -12,9 +12,10 @@ import '/constants/auth_user.dart';
 import '/views/auth/signin_page.dart';
 import '/models/user.dart';
 import '/components/custom_loader.dart';
+import '/components/delete_account_dialog.dart';
 import '/constants/app_brand.dart';
 import '/theme/app_colors.dart';
-import 'payment_history_screen.dart';
+import '../../utils/web_store.dart';
 import 'saved_courses_screen.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -503,15 +504,11 @@ class _AccountScreenState extends State<AccountScreen> {
                                   ),
 
                                   buildActionCard(
-                                    title: 'Payment History'.tr,
-                                    icon: Icons.history,
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (_) => PaymentHistoryScreen(),
-                                        ),
+                                    title: 'Orders on website'.tr,
+                                    icon: Icons.receipt_long_outlined,
+                                    onTap: () async {
+                                      await openWebStorePath(
+                                        '/purchase-history',
                                       );
                                     },
                                   ),
@@ -536,6 +533,51 @@ class _AccountScreenState extends State<AccountScreen> {
                                   ),
 
                                   const SizedBox(height: 30),
+
+                                  Card(
+                                    color: Colors.red.withOpacity(0.12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    margin: EdgeInsets.zero,
+                                    child: ListTile(
+                                      minTileHeight: 56,
+                                      leading: const Icon(
+                                        Icons.delete_forever_outlined,
+                                        color: Colors.redAccent,
+                                        size: 22,
+                                      ),
+                                      title: Text(
+                                        'delete_account_row_title'.tr,
+                                        style: const TextStyle(
+                                          color: Colors.redAccent,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'delete_account_row_subtitle'.tr,
+                                        style: TextStyle(
+                                          color: Colors.redAccent.withOpacity(0.85),
+                                          fontSize: 11,
+                                          height: 1.25,
+                                        ),
+                                      ),
+                                      trailing: Icon(
+                                        Icons.chevron_right_rounded,
+                                        color: Colors.redAccent.withOpacity(0.6),
+                                      ),
+                                      onTap: authController.isSubmitting
+                                          ? null
+                                          : () {
+                                              showDeleteAccountDialog(
+                                                context,
+                                                authController,
+                                              );
+                                            },
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
 
                                   Card(
                                     color: Colors.red.withOpacity(0.12),

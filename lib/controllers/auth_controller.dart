@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:image_picker/image_picker.dart';
 import '/views/auth/signin_page.dart';
 import '/views/screens/tab_screen.dart';
@@ -60,21 +61,25 @@ class AuthController extends GetxController {
 
   Future<void> _initializeGoogleSignIn() async {
     _googleSignIn = GoogleSignIn.instance;
-
-    await _googleSignIn.initialize(
-      clientId: dotenv.env["GOOGLE_CLIENT_ID"],
-      serverClientId: dotenv.env['GOOGLE_SERVER_CLIENT_ID'],
-    );
+    try {
+      await _googleSignIn.initialize(
+        clientId: dotenv.env["GOOGLE_CLIENT_ID"],
+        serverClientId: dotenv.env['GOOGLE_SERVER_CLIENT_ID'],
+      );
+    } catch (e, st) {
+      debugPrint('GoogleSignIn initialize failed: $e\n$st');
+    }
   }
 
   Future<void> signInWithGoogle() async {
+    // Prevent concurrent calls
+    if (isSubmitting) return;
+
     try {
       isSubmitting = true;
       update();
 
-      // Use nullable type
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
-
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
       final String? idToken = googleAuth.idToken;
@@ -103,12 +108,115 @@ class AuthController extends GetxController {
       clearFields();
       Get.offAll(() => TabsScreen());
     } on GoogleSignInException catch (e) {
-      print("GoogleSignInException: $e");
-      errorToast("Google Sign-In Failed");
+      // User canceled — do not show error toast for cancellation
+      if (e.code != GoogleSignInExceptionCode.canceled) {
+        errorToast("Google Sign-In Failed. Please try again.");
+      }
+      debugPrint("GoogleSignInException: $e");
     } catch (e) {
-      print("EXCEPTION::::: Google Sign-In Failed");
-      print(e.toString());
-      errorToast("Google Sign-In Failed");
+      debugPrint("Google Sign-In error: $e");
+      errorToast("Google Sign-In Failed. Please try again.");
+    } finally {
+      isSubmitting = false;
+      update();
+    }
+  }
+
+  Future<void> signInWithApple() async {
+    if (isSubmitting) return;
+    try {
+      isSubmitting = true;
+      update();
+
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final identityToken = credential.identityToken;
+      if (identityToken == null || identityToken.isEmpty) {
+        errorToast("Apple authentication failed");
+        return;
+      }
+
+      final responseData = await HttpService.sendHttpRequest(
+        "APPLE SIGN IN ENDPOINT :::",
+        RequestType.POST,
+        Endpoints.appleLogin,
+        {"token": identityToken},
+        isAuthRequest: false,
+      );
+
+      if (responseData == null) return;
+
+      final String userToken = responseData['token'];
+      final User authUser = User.fromJson(responseData['user']);
+
+      storage.write("userToken", userToken);
+      Auth().saveAuthUser(authUser);
+
+      clearFields();
+      Get.offAll(() => TabsScreen());
+    } on SignInWithAppleAuthorizationException catch (e, st) {
+      // User cancelled -> no toast
+      if (e.code != AuthorizationErrorCode.canceled) {
+        debugPrint('Apple sign-in error: $e\n$st');
+        errorToast("Apple Sign-In Failed. Please try again.");
+      }
+    } catch (e, st) {
+      debugPrint('Apple sign-in error: $e\n$st');
+      errorToast("Apple Sign-In Failed. Please try again.");
+    } finally {
+      isSubmitting = false;
+      update();
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    if (isSubmitting) return;
+    final dynamic rawToken = storage.read('userToken');
+    final String token = rawToken?.toString().trim() ?? '';
+    if (token.isEmpty || token == 'null') {
+      errorToast('session_expired_sign_in_again'.tr);
+      Get.offAll(() => const SigninPage());
+      return;
+    }
+    try {
+      isSubmitting = true;
+      update();
+
+      final responseData = await HttpService.sendHttpRequest(
+        "DELETE ACCOUNT ENDPOINT :::",
+        RequestType.POST,
+        Endpoints.deleteAccount,
+        {},
+        isAuthRequest: true,
+      );
+
+      final succeeded = responseData is Map &&
+          (responseData['success'] == true ||
+              responseData['success'] == 1 ||
+              responseData['success'] == 'true');
+
+      if (succeeded) {
+        final storage = GetStorage();
+        storage.erase();
+        successToast("Account deleted successfully".tr);
+        Get.offAll(() => const SigninPage());
+      } else {
+        errorToast((responseData['message'] ?? 'Could not delete account').toString());
+      }
+    } catch (e) {
+      final msg = e.toString();
+      if (msg.contains('Unauthenticated')) {
+        errorToast('session_expired_sign_in_again'.tr);
+        storage.erase();
+        Get.offAll(() => const SigninPage());
+      } else {
+        errorToast(msg);
+      }
     } finally {
       isSubmitting = false;
       update();
@@ -235,14 +343,18 @@ class AuthController extends GetxController {
       );
       if (responseData == null) return;
 
-      String message = responseData['message'];
-      bool succeeded = responseData['success'];
-      print(message);
+      final message =
+          responseData['message']?.toString() ?? 'Request completed';
+      final succeeded = responseData['success'] == true ||
+          responseData['success'] == 1 ||
+          responseData['success'] == 'true';
       if (succeeded) {
         successToast(message);
         clearFields();
         update();
         Get.offAll(() => SigninPage());
+      } else {
+        errorToast(message);
       }
     } catch (ex) {
       update();
@@ -258,11 +370,10 @@ class AuthController extends GetxController {
     try {
       final responseData = await HttpService.sendHttpRequest(
         "GET USER DATA ENDPOINT :::",
-
         RequestType.POST,
         Endpoints.getUserData,
-        {"user_id": Auth().user!.id},
-        isAuthRequest: false,
+        {},
+        isAuthRequest: true,
       );
       print(responseData);
       if (responseData == null) return;

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import '../utils/image_url.dart';
 import '/components/course_info_footer.dart';
 import '../controllers/course_controller.dart';
 import '../models/course.dart';
@@ -70,16 +71,29 @@ class _GridCourseCardState extends State<GridCourseCard> {
                 child:
                     widget.thisCourse.thumbnail!.isNotEmpty
                         ? CachedNetworkImage(
-                          imageUrl: widget.thisCourse.thumbnail!,
+                          imageUrl: fixImageUrl(widget.thisCourse.thumbnail!),
                           fit: BoxFit.cover,
                           placeholder: (context, url) => customLoader(),
-                          errorWidget:
-                              (context, url, error) => const Icon(Icons.error),
+                          errorWidget: (context, url, error) => Container(
+                            color: AppColors.primaryColor.withOpacity(0.8),
+                            child: Center(
+                              child: Icon(
+                                Icons.play_circle_outline,
+                                size: 50,
+                                color: Colors.white.withOpacity(0.4),
+                              ),
+                            ),
+                          ),
                         )
-                        : const Icon(
-                          Icons.image,
-                          size: 100,
-                          color: Colors.grey,
+                        : Container(
+                          color: AppColors.primaryColor.withOpacity(0.8),
+                          child: Center(
+                            child: Icon(
+                              Icons.play_circle_outline,
+                              size: 50,
+                              color: Colors.white.withOpacity(0.4),
+                            ),
+                          ),
                         ),
               ),
               if (widget.thisCourse.isBest!)

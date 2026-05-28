@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '/theme/app_colors.dart';
+import '../utils/image_url.dart';
 import 'custom_loader.dart';
 
 class GridCategoryCard extends StatelessWidget {
@@ -43,8 +44,8 @@ class GridCategoryCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImage(
-                    imageUrl: thumbnail,
-                    fit: BoxFit.cover, // 👈 fills entire area
+                    imageUrl: fixImageUrl(thumbnail),
+                    fit: BoxFit.cover,
                     placeholder:
                         (context, url) => customLoader(
                           color:
@@ -52,8 +53,16 @@ class GridCategoryCard extends StatelessWidget {
                                   ? AppColors.tertiaryColor
                                   : AppColors.secondaryColor,
                         ),
-                    errorWidget:
-                        (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) => Container(
+                      color: AppColors.primaryColor.withOpacity(0.7),
+                      child: Center(
+                        child: Icon(
+                          Icons.category_outlined,
+                          size: 40,
+                          color: Colors.white.withOpacity(0.4),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               )

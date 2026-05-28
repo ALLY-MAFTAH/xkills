@@ -18,17 +18,4 @@ enum InputStartPosition { CENTER, RIGHT, LEFT }
 
 enum LablePosition { CENTER, START }
 
-enum ServiceProviderName {
-  MPESA,
-  AIRTEL_MONEY,
-  HALOPESA,
-  MIXX,
-  VISA,
-  MASTERCARD,
-  DINERS,
-  PCI,
-}
-
-enum PaymentMethod { MOBILE, CARD, NONE }
-
 enum DialogType { REQUIREMENTS, OUTCOMES, FAQ }

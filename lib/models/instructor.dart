@@ -56,22 +56,29 @@ class Instructor {
       name: json['name'] as String?,
       phone: json['phone'] as String?,
       website: json['website'] as String?,
-      skills: json['skills'] as String?,
+      skills: _toStringOrNull(json['skills']),
       facebook: json['facebook'] as String?,
       twitter: json['twitter'] as String?,
       linkedin: json['linkedin'] as String?,
       address: json['address'] as String?,
       about: json['about'] as String?,
       biography: json['biography'] as String?,
-      educations: json['educations'] as String?,
+      educations: _toStringOrNull(json['educations']),
       photo: json['photo'] as String?,
       emailVerifiedAt: json['email_verified_at'] as String?,
-      paymentkeys: json['paymentkeys'] as String?,
+      paymentkeys: _toStringOrNull(json['paymentkeys']),
       videoUrl: json['video_url'] as String?,
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
       totalCourses: json['total_courses'] as int?,
     );
+  }
+
+  /// Safely converts a value that could be a String, Map, or List to String?.
+  static String? _toStringOrNull(dynamic value) {
+    if (value == null) return null;
+    if (value is String) return value;
+    return value.toString();
   }
 
   Map<String, dynamic> toJson() {
